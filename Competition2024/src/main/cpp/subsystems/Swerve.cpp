@@ -104,7 +104,7 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
 
 void Swerve::deadzone_correction(float *x, float *y, float *x2)
 {
-    /* Pass in the values and they are corrected, PRAYING TO GOD that it doesn't seg fault or something :D */
+    /* Pass in the values and they are corrected, PRAYING TO GOD that it doesn't seg fault or something :D .*/
     bool y_deadzone = false;
     bool x_deadzone = false;
     bool y_move_abs = false;
