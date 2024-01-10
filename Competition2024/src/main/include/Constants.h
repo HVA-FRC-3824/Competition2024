@@ -3,6 +3,7 @@
 
 /* Not on CAN Ids and naming, anything above or on the turret should be prefixed 2#, such as 20 for the physical turret */
 /* IDs should be numbered starting from the turret up, incrementing each time                                           */
+/* Anything below should be 1# or 0# */
 
 /* Turret variables */
 #define TURRET_GEAR_RATIO 14
@@ -11,6 +12,11 @@
 #define TURRET_D 0.0
 #define TURRET_CAN 20
 #define TURRET_ROTATIONS_PER_360 TURRET_GEAR_RATIO * TALONFX_UFR
+
+/* Launcher variables */
+#define LEFT_MOTOR_CAN 21
+#define RIGHT_MOTOR_CAN 22
+/* NOTE: both motors will share the same PIDs */
 
 /* Swerve variables */
 /* CAN IDS */
