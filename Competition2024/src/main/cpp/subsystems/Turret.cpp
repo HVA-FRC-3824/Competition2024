@@ -11,7 +11,7 @@ Turret::Turret()
 void Turret::Periodic()
 {
     /* Update live data to operator view */
-    frc::SmartDashboard::PutBoolean("Turret Locked: ", this->locked);
+    frc::SmartDashboard::PutBoolean("Turret Locked? ", this->locked);
     frc::SmartDashboard::PutNumber("Turret Heading: ", this->current_heading);
 
     /* Read values from encoder to find accurate heading, and assign it to current_heading */
@@ -67,4 +67,16 @@ void Turret::spin_simple(float percent)
     {
        this->TURRET_MOTOR.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,percent); 
     }
+}
+
+void Turret::turret_test()
+{
+    if(test_heading == 3)
+    {
+        snap_to_axis(test_heading);
+        test_heading = 0;
+        return;
+    }
+    snap_to_axis(test_heading);
+    test_heading++;
 }

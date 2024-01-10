@@ -1,6 +1,9 @@
 #ifndef CONSTANTS
 #define CONSTANTS
 
+/* Not on CAN Ids and naming, anything above or on the turret should be prefixed 2#, such as 20 for the physical turret */
+/* IDs should be numbered starting from the turret up, incrementing each time                                           */
+
 /* Turret variables */
 #define TURRET_GEAR_RATIO 14
 #define TURRET_P 0.0
@@ -44,5 +47,6 @@
 
 /* Global constants */
 #define TALONFX_UFR 2048
+#define OPERATOR_CONTROLLER 0
 
 #endif

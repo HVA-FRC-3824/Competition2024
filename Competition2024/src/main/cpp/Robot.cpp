@@ -6,11 +6,17 @@
 
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include "../include/io/OperatorController.hpp"
+#include "../include/subsystems/Turret.hpp"
+
+Turret TURRET{};
+OperatorController O_CONTROLLER{&TURRET}; 
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+
 }
 
 /**
@@ -55,7 +61,7 @@ void Robot::AutonomousPeriodic() {
   }
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {     }
 
 void Robot::TeleopPeriodic() {}
 
