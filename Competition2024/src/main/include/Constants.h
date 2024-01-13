@@ -18,6 +18,9 @@
 #define RIGHT_MOTOR_CAN 22
 /* NOTE: both motors will share the same PIDs */
 
+/* THE EYE VARIABLES */
+#define THE_EYE_PORT 5805
+
 /* Swerve variables */
 /* CAN IDS */
 #define FR_M 13

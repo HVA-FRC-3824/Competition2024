@@ -8,9 +8,11 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "../include/io/OperatorController.hpp"
 #include "../include/subsystems/Turret.hpp"
+#include "../include/subsystems/TheEye.hpp"
 
 Turret TURRET{};
 OperatorController O_CONTROLLER{&TURRET}; 
+TheEye THE_EYE{};
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
