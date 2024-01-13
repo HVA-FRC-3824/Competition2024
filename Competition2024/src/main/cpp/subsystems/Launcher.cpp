@@ -33,4 +33,6 @@ void Launcher::simple_spin(float input)
     /* Spin based on input */
     /* https://store.ctr-electronics.com/content/api/cpp/html/classctre_1_1phoenix_1_1motorcontrol_1_1can_1_1_w_p_i___talon_f_x.html */
     /* Your motors are defined in Launcher.hpp*/
+    LeftSpin.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity,input);
+    RightSpin.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, -input);
 }
