@@ -36,6 +36,13 @@ void Launcher::Periodic()
     /* Update current_velocity by reading it from the TalonFX's, remember to have one motor reversed! */
 }
 
+void Launcher::hold_velocity(float velocity) {
+    /*basically copied from simple_spin*/
+    /* Your motors are defined in Launcher.hpp*/
+    LeftSpin.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,input);
+    RightSpin.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -input);
+}
+
 void Launcher::simple_spin(float input)
 {
     /* Spin based on input */
