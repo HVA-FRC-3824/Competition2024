@@ -1,7 +1,8 @@
-#include "../../include/subsystems/TheEye.hpp"
+#include "../../include/subsystems/TheEye.h"
 
 /* Note on this reference: HORRIBLE WAY TO DO THIS! NO SIZE SAFETY! ICKY ICKY!! */
 void *april_reference;
+
 
 void *server_loop(void *parm)
 {
@@ -9,34 +10,31 @@ void *server_loop(void *parm)
 
     /* Bind the socket to the port for further questioning */
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-    if(sockfd < 0){std::cout << "The Eye cannot open socket... AHHHHHHHHHHH!!!!!!!\n";}
+    if(sockfd < 0){printf("The Eye cannot open socket... AHHHHHHHHHHH!!!!!!!\n");}
     cliaddr.sin_family = AF_INET;
     cliaddr.sin_port = htons(THE_EYE_PORT);
     cliaddr.sin_addr.s_addr = INADDR_ANY;
 
-
+    bind(sockfd, (struct sockaddr *)&cliaddr, sizeof(cliaddr));
     while(1)
     {
-        recvfrom(sockfd,april_reference,sizeof(struct aprildata),MSG_WAITALL,NULL,0);
+        recvfrom(sockfd,april_reference,sizeof(struct aprildata),0,NULL,0);
+        //printf("RECEIVED\n");
     }
 }
 
-void TheEye::launch_server()
+void launch_server(struct aprildata *current_tag)
 {
-    april_reference = (void *)&current_tag;
-    thread_ret = pthread_create(thread,NULL,server_loop,NULL);
+    pthread_t thread; int thread_ret;
+    april_reference = (void *)current_tag;
+    thread_ret = pthread_create(&thread,NULL,server_loop,NULL);
 }
 
-void TheEye::print_data()
+void print_data(struct aprildata current_tag)
 {
-    std::cout << "APRIL DATA FRAME: ";
-    std::cout << "\nID: " << this->current_tag.id;
-    std::cout << "\nAREA: " << this->current_tag.area;
-    std::cout << "\nX: " << this->current_tag.center_x;
-    std::cout << "\nY: " << this->current_tag.center_y;
-}
-
-TheEye::TheEye()
-{
-    print_data();
+    printf("\nAPRIL DATA FRAME: ");
+    printf("\nID: %i",current_tag.id);
+    printf("\nAREA: %i",current_tag.area);
+    printf("\nX: %f",current_tag.center_x);
+    printf("\nY: %f",current_tag.center_y);
 }

@@ -8,17 +8,17 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "../include/io/OperatorController.hpp"
 #include "../include/subsystems/Turret.hpp"
-#include "../include/subsystems/TheEye.hpp"
+#include "../include/subsystems/TheEye.h"
 
 Turret TURRET{};
 OperatorController O_CONTROLLER{&TURRET}; 
-TheEye THE_EYE{};
+struct aprildata tag;
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-
+  launch_server(&tag);
 }
 
 /**
@@ -29,7 +29,7 @@ void Robot::RobotInit() {
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() { print_data(tag); }
 
 /**
  * This autonomous (along with the chooser code above) shows how to select
@@ -65,7 +65,20 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {     }
 
-void Robot::TeleopPeriodic() {}
+int timer = 0;
+
+void Robot::TeleopPeriodic() {
+  if((tag.center_x <= 380 && tag.center_x >= 280))
+  {
+    TURRET.spin_simple(0); // lock in place 
+  }
+  if(timer = 1)
+  {
+    TURRET.spin_simple(0);
+  }
+  if(tag.center_x < 280){TURRET.spin_simple(.08); timer++;}
+  if(tag.center_x > 380){TURRET.spin_simple(-.08); timer++;}
+}
 
 void Robot::DisabledInit() {}
 
