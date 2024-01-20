@@ -16,7 +16,11 @@
 /* Launcher variables */
 #define LEFT_MOTOR_CAN 21
 #define RIGHT_MOTOR_CAN 22
-/* NOTE: both motors will share the same PIDs */
+/* NOTE: both motors will share the same PIDs 
+PID values for launch motors SUBJECT TO CHANGE*/
+#define LAUNCH_MOTOR_P 0.0
+#define LAUNCH_MOTOR_I 0.0
+#define LAUNCH_MOTOR_D 0.0
 
 /* THE EYE VARIABLES */
 #define THE_EYE_PORT 5805
