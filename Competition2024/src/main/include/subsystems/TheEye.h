@@ -7,9 +7,21 @@
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
 #include <stdio.h>
+#include <time.h>
+
+/* Note: there is no reason for the bit shifting, I just wanna do it */
+#define ACTIVE   0x01
+#define INACTIVE 0xff
+#define TRACKING 0x0f 
+#define IGNORE   0x00
+
+struct TheEye
+{
+	struct TheEye_Frame TheEyes_Subjects[MAX_TAGS];
+};
 
 struct aprildata
-	{
+{
 		uint32_t   camera_id;   /* ID of Camera                      */
 		float      dist;        /* Distance from tag                 */
 		uint32_t   area;        /* Area in pixels of tag             */
@@ -19,9 +31,18 @@ struct aprildata
 		double     center_y;    /* Center Y tag in image             */
 };
 
+struct TheEye_Frame
+{
+	struct aprildata tag;
+	uint8_t tag_status;
+	clock_t time_since; /* Time since last detection */
+};
+
 void *server_loop(void *parm);
-void print_data(struct aprildata current_tag); /* Debug function to print data               */
-void fill_in_data();                           /* Fills in data as it comes into current_tag */
-void launch_server(struct aprildata *tag);     /* Launches threads to receive the data       */
+void *processor(void *parm); /* Note: This handles logic for last detected tag */
+void print_data(struct aprildata current_tag); /* Debug function to print data                 */
+void fill_in_data();                           /* Handles incoming data to TheEye and sorts it */
+void launch_server(struct aprildata *tag);     /* Launches threads to receive the data         */
+void open_TheEye(struct TheEye Eye, uint8_t *block_list, uint8_t blocked_tags); /* PLEASE DON'T BLOCK ME!!!! */
 
 #endif

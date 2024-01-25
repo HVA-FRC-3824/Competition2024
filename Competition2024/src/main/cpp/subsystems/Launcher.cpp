@@ -21,11 +21,11 @@ Launcher::Launcher()
 {
     /* Constructor*/
     //sets PID values for motors
-    this->LeftSpin.Config_kP(.5,LAUNCH_MOTOR_P);
+    this->LeftSpin.Config_kP(0,LAUNCH_MOTOR_P);
     this->LeftSpin.Config_kI(0,LAUNCH_MOTOR_I);
     this->LeftSpin.Config_kD(0,LAUNCH_MOTOR_D);
 
-    this->RightSpin.Config_kP(.5,LAUNCH_MOTOR_P);
+    this->RightSpin.Config_kP(0,LAUNCH_MOTOR_P);
     this->RightSpin.Config_kI(0,LAUNCH_MOTOR_I);
     this->RightSpin.Config_kD(0,LAUNCH_MOTOR_D);
 }
