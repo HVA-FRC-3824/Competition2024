@@ -20,7 +20,7 @@ void Turret::Periodic()
 
 void Turret::spin_to_angle(int angle)
 {
-    if(~locked)
+    if(!locked)
     {
         /* Work on a non snapback thingy */
         if(angle < 0 && current_heading >= 0)
@@ -33,7 +33,7 @@ void Turret::spin_to_angle(int angle)
 
 void Turret::snap_to_swerve()
 {
-    if(~locked)
+    if(!locked)
     {
         /* TODO: fix your mfing memory buddy */
     }
@@ -41,7 +41,7 @@ void Turret::snap_to_swerve()
 
 void Turret::snap_to_axis(int heading)
 {
-    if(~locked)
+    if(!locked)
     {
         int desired = 0;
         switch(heading)
@@ -63,7 +63,7 @@ void Turret::lock_turret()
 
 void Turret::spin_simple(float percent)
 {
-    if(~locked)
+    if(!locked)
     {
        this->TURRET_MOTOR.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,percent); 
     }

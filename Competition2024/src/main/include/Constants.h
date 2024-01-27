@@ -24,6 +24,10 @@ PID values for launch motors SUBJECT TO CHANGE*/
 
 /* THE EYE VARIABLES */
 #define THE_EYE_PORT 5805
+#define MAX_TAGS 16  /* Note: this is also the max viewable at one time. */
+#define MATCH_TAGS MAX_TAGS / 2 
+#define THE_EYE_TIMEOUT .25 /* Seconds */
+
 
 /* Swerve variables */
 /* CAN IDS */

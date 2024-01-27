@@ -19,13 +19,13 @@ struct TheEye THE_EYE;
 
 frc::Joystick Jostick{0};
 uint8_t blocked_tags[8] = {8,9,10,11,12,13,14,15};
-open_TheEye(THE_EYE,blocked_tags,8);
+
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-  
+  open_TheEye(THE_EYE,blocked_tags,8);
 }
 
 /**

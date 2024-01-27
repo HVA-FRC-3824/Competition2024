@@ -15,11 +15,6 @@
 #define TRACKING 0x0f 
 #define IGNORE   0x00
 
-struct TheEye
-{
-	struct TheEye_Frame TheEyes_Subjects[MAX_TAGS];
-};
-
 struct aprildata
 {
 		uint32_t   camera_id;   /* ID of Camera                      */
@@ -36,6 +31,11 @@ struct TheEye_Frame
 	struct aprildata tag;
 	uint8_t tag_status;
 	clock_t time_since; /* Time since last detection */
+};
+
+struct TheEye
+{
+	struct TheEye_Frame TheEyes_Subjects[MAX_TAGS];
 };
 
 void *server_loop(void *parm);
