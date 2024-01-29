@@ -1,7 +1,5 @@
 #include "../../include/subsystems/TheEye.h"
 
-/* Note on this reference: HORRIBLE WAY TO DO THIS! NO SIZE SAFETY! ICKY ICKY!! */
-void *april_reference;
 struct TheEye *eye_reference;
 struct aprildata current_tag;
 
@@ -63,7 +61,6 @@ void *processor(void *parm)
 void launch_server(struct TheEye Eye_Struct)
 {
     pthread_t thread; int thread_ret;
-    april_reference = (void *)&current_tag;
     eye_reference = &Eye_Struct;
     thread_ret = pthread_create(&thread,NULL,server_loop,NULL);
 }

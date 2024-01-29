@@ -1,11 +1,12 @@
 #include "../../include/subsystems/Turret.hpp"
 
-Turret::Turret()
+Turret::Turret(angle_mem_share *share)
 {
-    this->TURRET_MOTOR.Config_kP(.5,TURRET_P);
+    this->TURRET_MOTOR.Config_kP(0,TURRET_P);
     this->TURRET_MOTOR.Config_kI(0,TURRET_I);
     this->TURRET_MOTOR.Config_kD(0,TURRET_D);
     this->TURRET_MOTOR.ConfigIntegratedSensorAbsoluteRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
+    internal_reference = share;
 }
 
 void Turret::Periodic()
@@ -16,17 +17,13 @@ void Turret::Periodic()
 
     /* Read values from encoder to find accurate heading, and assign it to current_heading */
     this->current_heading = this->TURRET_MOTOR.GetSelectedSensorPosition(0)/TURRET_ROTATIONS_PER_360;
+    this->internal_reference->turret_heading = this->current_heading;
 }
 
 void Turret::spin_to_angle(int angle)
 {
     if(!locked)
     {
-        /* Work on a non snapback thingy */
-        if(angle < 0 && current_heading >= 0)
-        {
-
-        }
         this->TURRET_MOTOR.Set(ctre::phoenix::motorcontrol::ControlMode::Position,((angle/360)*TURRET_ROTATIONS_PER_360));
     }
 } 
@@ -35,7 +32,8 @@ void Turret::snap_to_swerve()
 {
     if(!locked)
     {
-        /* TODO: fix your mfing memory buddy */
+        /* Set target angle to swerves */
+        spin_to_angle(this->internal_reference->swerve_heading);
     }
 }  
 
@@ -46,10 +44,10 @@ void Turret::snap_to_axis(int heading)
         int desired = 0;
         switch(heading)
         {
-            case 0: desired = 0;   /* Front */
-            case 1: desired = 90;  /* Right */
-            case 2: desired = -90; /*  Left */
-            case 3: desired = 180; /*  Back */
+            case 0: desired = 0; break;   /* Front */
+            case 1: desired = 90; break;  /* Right */
+            case 2: desired = -90; break; /*  Left */
+            case 3: desired = 180; break; /*  Back */
             default: desired = 0;
         }
         spin_to_angle(desired);

@@ -11,8 +11,11 @@
 #include "../include/subsystems/Turret.hpp"
 #include "../include/subsystems/TheEye.h"
 #include "../include/subsystems/Laucher.hpp"
+#include "../include/Memory.h"
 
-Turret TURRET{};
+/* Object and struct declaration */
+angle_mem_share angles_share;
+Turret TURRET{&angles_share};
 //OperatorController O_CONTROLLER{&TURRET}; 
 Launcher LAUNCHER{};
 struct TheEye THE_EYE;

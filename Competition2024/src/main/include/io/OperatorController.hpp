@@ -9,6 +9,12 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/PrintCommand.h>
 
+/* As of 1/29/24 operator only needs to control: Launcher, Turret, Intake */
+/* Each said subsystem will have a "soft lock" that prevents operator input (controlled by operator ofc) 
+   that stops all movement (prevents accidental inputs) and allows computer to run it's magic
+   However, this lock usually works independent from a full hard lock within the subsystems (ie. Turret) that
+   prevents ALL changes */
+
 class OperatorController : frc2::SubsystemBase
 {
     public:

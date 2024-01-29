@@ -223,7 +223,7 @@ void Swerve::drive(float y, float x, float x2, float gyro)
         }
       
         /* Debug */
-                /* Clear "sticky" values that are stuck in memory, if the robot is receiving input this doesn't matter anyways. */
+        /* Clear "sticky" values that are stuck in memory, if the robot is receiving input this doesn't matter anyways. */
         /* Only affects the robot when stopped!! */
         this->math_dest.wheel_speeds[i] = 0;
 

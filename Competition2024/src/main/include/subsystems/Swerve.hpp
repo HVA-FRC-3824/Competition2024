@@ -6,9 +6,6 @@
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
 
-/* 180 / Pi */
-#define MAGIC_NUMBER 57.29577f
-
 struct wheel_information
 {
 	/* Order of wheels as in the real world: */
@@ -42,7 +39,7 @@ class Swerve : frc2::SubsystemBase
         void clear_swerve_memory(); // call when values are stuckington
     private:
         void deadzone_correction(float *x, float *y, float *x2);
-        double last_units[4]; // 0,3 element not used, just for alignment
+        double last_units[4]; 
         bool use_old = false;
 
         /* Save point for speed and angle values */
