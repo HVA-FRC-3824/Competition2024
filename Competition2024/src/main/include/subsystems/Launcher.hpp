@@ -19,5 +19,4 @@ class Launcher : frc2::SubsystemBase
 };
 
 
-
 #endif

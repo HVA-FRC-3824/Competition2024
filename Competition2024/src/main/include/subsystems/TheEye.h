@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <time.h>
 
-/* Note: there is no reason for the bit shifting, I just wanna do it */
+/* No need for the hexa just looks coola */
 #define ACTIVE   0x01
 #define INACTIVE 0xff
 #define TRACKING 0x0f 

@@ -1,4 +1,4 @@
-#include "../../include/subsystems/Laucher.hpp"
+#include "../../include/subsystems/Launcher.hpp"
 
 /* The launcher works by spinning two wheels at the same time in opposite directions
     the wheels are controlled by two motors, which are controlled by TalonFX's
