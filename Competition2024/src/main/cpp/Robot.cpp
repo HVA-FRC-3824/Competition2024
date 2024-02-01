@@ -21,7 +21,7 @@ Turret TURRET{&angles_share};
 Launcher LAUNCHER{};
 struct TheEye THE_EYE;
 AHRS *navx;
-OperatorController O_CONTROLLER{&TURRET,navx,&LAUNCHER}; 
+OperatorController *O_CONTROLLER; 
 
 frc::Joystick Jostick{0};
 uint8_t blocked_tags[8] = {8,9,10,11,12,13,14,15};
@@ -33,6 +33,7 @@ void Robot::RobotInit() {
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
   open_TheEye(THE_EYE,blocked_tags,8);
   navx = new AHRS{frc::SerialPort::SerialPort::Port::kMXP};
+  O_CONTROLLER = new OperatorController{&TURRET,navx,&LAUNCHER}; 
   navx->Reset();
 }
 
@@ -97,7 +98,7 @@ void Robot::TeleopPeriodic() {
   if(tag.center_x > 380){TURRET.spin_simple(-.08); timer++;} */
 
   
-  LAUNCHER.simple_spin(Jostick.GetY());
+  //LAUNCHER.simple_spin(Jostick.GetY());
 }
 
 void Robot::DisabledInit() { }
