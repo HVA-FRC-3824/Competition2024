@@ -28,6 +28,14 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define MATCH_TAGS MAX_TAGS / 2 
 #define THE_EYE_TIMEOUT .25 /* Seconds */
 
+/* Intake variables */
+#define INTAKE_MOTOR 16
+
+/* Actuation variables */
+#define ACTUATION_ID 15
+#define ACTUATION_P 0
+#define ACTUATION_I 0
+#define ACTUATION_D 0 
 
 /* Swerve variables */
 /* CAN IDS */
