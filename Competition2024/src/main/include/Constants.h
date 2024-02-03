@@ -27,6 +27,20 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define MAX_TAGS 16  /* Note: this is also the max viewable at one time. */
 #define MATCH_TAGS MAX_TAGS / 2 
 #define THE_EYE_TIMEOUT .25 /* Seconds */
+#define EYE_X 640
+#define EYE_Y 480
+
+
+/* THE MIND VARIABLES */
+#define T3_CORRECTION_HOR (5.0/360) * (TURRET_ROTATIONS_PER_360)
+#define T2_CORRECTION_HOR (2.0/360) * (TURRET_ROTATIONS_PER_360)
+#define T1_CORRECTION_HOR (.5/360) * (TURRET_ROTATIONS_PER_360)
+#define X_ACCEPTABLE_RANGE 25 /* 25 pixel diff, may need to be adjusted based on distance!*/
+// tbd: need to test actuation and actual angle
+#define T3_CORRECTION_VERT (5.0/360) * (TURRET_ROTATIONS_PER_360)
+#define T2_CORRECTION_VERT (5.0/360) * (TURRET_ROTATIONS_PER_360)
+#define T1_CORRECTION_VERT (5.0/360) * (TURRET_ROTATIONS_PER_360)
+
 
 /* Intake variables */
 #define INTAKE_MOTOR 16

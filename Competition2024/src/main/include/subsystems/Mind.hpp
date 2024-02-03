@@ -28,7 +28,10 @@ class Mind : frc2::SubsystemBase
         int tracked_tag = 0;
         uint8_t status = READY;
     private:
+        void adaptive_x(float x);  /* Moves turret based on x coordinates */
+        void adaptive_y(float y);  /* Moves turret basde on y coordinates */
         bool brain_freeze = false;
+        bool thinking_direction = 0; /* 1 = left ... 2 = right ... 0 = init / invalid */
         Turret *Orb;
         Launcher *Head;
         struct TheEye *Eye;
