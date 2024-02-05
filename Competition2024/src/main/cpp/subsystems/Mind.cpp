@@ -71,26 +71,26 @@ void Mind::adaptive_x(float x)
 
 void Mind::track_to_tag(int id)
 {
-    if(brain_freeze){return;}
+    if(brain_freeze){return;} 
 
     tracked_tag = id;
-    status = HEAD_TRACKING;
     if(Eye->TheEyes_Subjects[id-1].tag_status == ACTIVE)
     {
         adaptive_x(Eye->TheEyes_Subjects[id-1].tag.center_x);
     } else if (Eye->TheEyes_Subjects[id-1].tag_status == INACTIVE)
     {
+        /* Write code for loss of tag, atm it just stops/nothing happens */
+        /*
         if(thinking_direction == 1)
         {
             Orb->spin_to_angle(Orb->current_heading-T2_CORRECTION_HOR);
         } else if (thinking_direction == 2)
         {
             Orb->spin_to_angle(Orb->current_heading+T2_CORRECTION_HOR);
-        }
+        }*/
         
     }
     tracked_tag = 0;
-    status = READY;
 }
 
 void Mind::lock_to_tag(int id)
@@ -105,7 +105,7 @@ void Mind::lock_to_tag(int id)
 
 void Mind::drop()
 {
-    status = READY; /* breaks while loop above and readies mind */
+    status = READY; /* breaks while loop above and readies the mind */
     tracked_tag = 0;
     thinking_direction = 0;
 }

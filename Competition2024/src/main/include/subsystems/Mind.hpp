@@ -8,7 +8,6 @@
 
 #define HEAD_LOCKED_TO_TAG 0xff
 #define HEAD_TRACKING      0x0a
-#define HEAD_ADAPTIVE_ON   0x0b
 #define READY              0x00
 
 // todo write actuation 
