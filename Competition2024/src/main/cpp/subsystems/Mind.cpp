@@ -96,7 +96,8 @@ void Mind::track_to_tag(int id)
 void Mind::slam_mf_dunk()
 {
     /* see Mind.hpp for idea behind the mind's main circuit!! */
-
+    float adjustment_angle;
+    float final_angle;
 
 
 
@@ -115,6 +116,7 @@ void Mind::lock_to_tag(int id)
     if(status != HEAD_LOCKED_TO_TAG){status = HEAD_LOCKED_TO_TAG;}
     while(HEAD_LOCKED_TO_TAG)
     {
+        if(status == SCORE_PLEASE){slam_mf_dunk(); status = HEAD_LOCKED_TO_TAG; continue;}
         track_to_tag(id);
     }
 }

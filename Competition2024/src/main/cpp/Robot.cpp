@@ -23,6 +23,10 @@ struct TheEye THE_EYE;
 AHRS *navx;
 OperatorController *O_CONTROLLER; 
 
+/* Test */
+Turret *t_hold;
+Launcher *l_hold;
+
 frc::Joystick Jostick{0};
 uint8_t blocked_tags[8] = {8,9,10,11,12,13,14,15};
 
@@ -33,7 +37,7 @@ void Robot::RobotInit() {
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
   open_TheEye(THE_EYE,blocked_tags,8);
   navx = new AHRS{frc::SerialPort::SerialPort::Port::kMXP};
-  O_CONTROLLER = new OperatorController{&TURRET,navx,&LAUNCHER}; 
+  O_CONTROLLER = new OperatorController{t_hold,navx,l_hold}; 
   navx->Reset();
 }
 

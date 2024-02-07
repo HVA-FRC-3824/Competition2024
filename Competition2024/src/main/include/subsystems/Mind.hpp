@@ -19,7 +19,7 @@ class Mind : frc2::SubsystemBase
 {
     public:
         Mind(Turret *orb, Launcher *head, struct TheEye *eye);
-        void Periodic() override;
+        //void Periodic() override;
         void track_to_tag(int id); /* Tracks then stops, mainly used for testing */
         void lock_to_tag(int id);  /* Keeps tag completely locked, including adaptive tracking */
         void drop();               /* Stops tracking the tag */
@@ -29,9 +29,9 @@ class Mind : frc2::SubsystemBase
         int tracked_tag = 0;
         uint8_t status = READY;
     private:
-        void slam_mf_dunk();      /* Internall score */
+        void slam_mf_dunk();       /* Internal scoring */
         void adaptive_x(float x);  /* Moves turret based on x coordinates */
-        void adaptive_y(float y);  /* Moves turret basde on y coordinates */
+        //void adaptive_y(float y);  /* Moves turret basde on y coordinates */
         bool brain_freeze = false;
         bool thinking_direction = 0; /* 1 = left ... 2 = right ... 0 = init / invalid */
         Turret *Orb;

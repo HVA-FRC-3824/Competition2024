@@ -11,6 +11,13 @@ void OperatorController::reset_gyro()
     this->ahrs->Reset();
 }
 
+frc2::CommandPtr OperatorController::last_damn_try()
+{
+    return this->RunOnce(
+        [this] { this->ahrs->Reset(); }
+    );
+}
+
 OperatorController::OperatorController(Turret *turret_obj, AHRS *ahrs_obj, Launcher *launcher_obj)
 {
     m_turret = turret_obj;

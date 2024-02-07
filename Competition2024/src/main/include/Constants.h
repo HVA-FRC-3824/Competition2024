@@ -35,7 +35,7 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define T3_CORRECTION_HOR (5.0/360) * (TURRET_ROTATIONS_PER_360)
 #define T2_CORRECTION_HOR (2.0/360) * (TURRET_ROTATIONS_PER_360)
 #define T1_CORRECTION_HOR (.5/360) * (TURRET_ROTATIONS_PER_360)
-#define X_ACCEPTABLE_RANGE 25 /* 25 pixel diff, may need to be adjusted based on distance!*/
+#define X_ACCEPTABLE_RANGE 25 /* 25 pixel diff, may need to be adjusted based on distance! */
 // tbd: need to test actuation and actual angle
 #define T3_CORRECTION_VERT (5.0/360) * (TURRET_ROTATIONS_PER_360)
 #define T2_CORRECTION_VERT (5.0/360) * (TURRET_ROTATIONS_PER_360)
@@ -47,6 +47,7 @@ PID values for launch motors SUBJECT TO CHANGE*/
 
 /* Actuation variables */
 #define ACTUATION_ID 15
+#define ACTUATION_GR 64 /*I believe??*/
 #define ACTUATION_P 0
 #define ACTUATION_I 0
 #define ACTUATION_D 0 

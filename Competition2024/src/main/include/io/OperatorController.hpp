@@ -28,6 +28,7 @@ class OperatorController : frc2::SubsystemBase
         OperatorController(Turret *turret_obj, AHRS *ahrs_obj, Launcher *launcher_obj);
     private:
         frc::Joystick OperatorStick {OPERATOR_CONTROLLER};
+        frc2::CommandPtr last_damn_try();
         Turret* m_turret;
         AHRS* ahrs;
         Launcher* m_launcher;

@@ -67,7 +67,7 @@ void Turret::snap_to_axis(int heading)
 
 void Turret::lock_turret()
 {
-    this->locked = ~this->locked;
+    this->locked = !this->locked;
 }    
 
 void Turret::spin_simple(float percent)
