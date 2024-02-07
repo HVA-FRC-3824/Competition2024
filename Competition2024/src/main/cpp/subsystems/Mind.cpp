@@ -93,6 +93,22 @@ void Mind::track_to_tag(int id)
     tracked_tag = 0;
 }
 
+void Mind::slam_mf_dunk()
+{
+    /* see Mind.hpp for idea behind the mind's main circuit!! */
+
+
+
+
+}
+
+void Mind::score()
+{
+    /* Flags the minds loop so it can score while remaining locked */
+    if(status == HEAD_LOCKED_TO_TAG){status = SCORE_PLEASE; return;};
+    slam_mf_dunk();
+}
+
 void Mind::lock_to_tag(int id)
 {
     tracked_tag = id;
