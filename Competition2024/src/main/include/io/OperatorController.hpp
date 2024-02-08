@@ -20,6 +20,8 @@
 class OperatorController : frc2::SubsystemBase
 {
     public:
+        void Periodic() override;
+        void SimulationPeriodic() override;
         void test_command();
         void reset_gyro();
         frc2::InstantCommand test_command2{[this] {test_command();}, {this}};

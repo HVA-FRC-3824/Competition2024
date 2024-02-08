@@ -16,16 +16,18 @@
 #include "../include/Memory.h"
 
 /* Object and struct declaration */
-angle_mem_share angles_share;
-Turret TURRET{&angles_share};
+//angle_mem_share angles_share;
+//Turret TURRET{&angles_share};
 Launcher LAUNCHER{};
-struct TheEye THE_EYE;
-AHRS *navx;
-OperatorController *O_CONTROLLER; 
-
+//struct TheEye THE_EYE;
 /* Test */
 Turret *t_hold;
 Launcher *l_hold;
+
+AHRS *navx;
+OperatorController O_CONTROLLER{t_hold,navx,l_hold}; 
+
+
 
 frc::Joystick Jostick{0};
 uint8_t blocked_tags[8] = {8,9,10,11,12,13,14,15};
@@ -35,9 +37,9 @@ void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-  open_TheEye(THE_EYE,blocked_tags,8);
+  //open_TheEye(THE_EYE,blocked_tags,8);
   navx = new AHRS{frc::SerialPort::SerialPort::Port::kMXP};
-  O_CONTROLLER = new OperatorController{t_hold,navx,l_hold}; 
+  //O_CONTROLLER = new OperatorController{t_hold,navx,l_hold}; 
   navx->Reset();
 }
 
@@ -88,8 +90,8 @@ void Robot::TeleopInit() {     }
 int timer = 0;
 
 void Robot::TeleopPeriodic() {
-  angles_share.swerve_heading = navx->GetAngle();
-  std::cout << navx->GetAngle() << "\n";
+  //angles_share.swerve_heading = navx->GetAngle();
+  //std::cout << navx->GetAngle() << "\n";
   /* if((tag.center_x <= 380 && tag.center_x >= 280))
   {
     TURRET.spin_simple(0); // lock in place 
