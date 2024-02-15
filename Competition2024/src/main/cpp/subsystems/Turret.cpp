@@ -1,4 +1,5 @@
 #include "../../include/subsystems/Turret.hpp"
+#include <iostream>
 
 Turret::Turret(angle_mem_share *share)
 {
@@ -56,12 +57,14 @@ void Turret::snap_to_axis(int heading)
         switch(heading)
         {
             case 0: desired = 0; break;   /* Front */
-            case 1: desired = 270; break; /* Right */
-            case 2: desired = 90; break;  /*  Left */
-            case 3: desired = 180; break; /*  Back */
+            case 1: desired = 90; break;  /* Left  */
+            case 2: desired = 180; break; /* Back  */
+            case 3: desired = 270; break; /* Right */
             default: desired = 0;
         }
         spin_to_angle(desired);
+        std::cout << desired << "\n";
+        std::cout << this->TURRET_MOTOR.GetSelectedSensorPosition() << "\n";
     }
 }
 

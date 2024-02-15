@@ -7,7 +7,7 @@
 
 /* Turret variables */
 #define TURRET_GEAR_RATIO 14
-#define TURRET_P 0.0
+#define TURRET_P 0.1
 #define TURRET_I 0.0
 #define TURRET_D 0.0
 #define TURRET_CAN 20
@@ -16,6 +16,8 @@
 /* Launcher variables */
 #define LEFT_MOTOR_CAN 21
 #define RIGHT_MOTOR_CAN 22
+#define INDEX_MOTOR_CAN 23
+
 /* NOTE: both motors will share the same PIDs 
 PID values for launch motors SUBJECT TO CHANGE*/
 #define LAUNCH_MOTOR_P 0.01
@@ -41,13 +43,12 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define T2_CORRECTION_VERT (5.0/360) * (TURRET_ROTATIONS_PER_360)
 #define T1_CORRECTION_VERT (5.0/360) * (TURRET_ROTATIONS_PER_360)
 
-
 /* Intake variables */
 #define INTAKE_MOTOR 16
 
 /* Actuation variables */
-#define ACTUATION_ID 15
-#define ACTUATION_GR 64 /*I believe??*/
+#define ACTUATION_ID 24
+#define ACTUATION_GR 183.5 /*I believe??*/
 #define ACTUATION_P 0
 #define ACTUATION_I 0
 #define ACTUATION_D 0 
@@ -88,5 +89,6 @@ PID values for launch motors SUBJECT TO CHANGE*/
 /* Global constants */
 #define TALONFX_UFR 2048
 #define OPERATOR_CONTROLLER 0
+#define DRIVER_CONTROLLER 1
 
 #endif

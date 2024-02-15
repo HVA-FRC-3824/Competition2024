@@ -10,23 +10,28 @@
 #include <iostream>
 #include "AHRS.h"
 #include "../include/io/OperatorController.hpp"
+#include "../include/io/DriverController.hpp"
 #include "../include/subsystems/Turret.hpp"
 #include "../include/subsystems/TheEye.h"
 #include "../include/subsystems/Launcher.hpp"
+#include "../include/subsystems/Swerve.hpp"
 #include "../include/Memory.h"
 
 /* Object and struct declaration */
-//angle_mem_share angles_share;
-//Turret TURRET{&angles_share};
+angle_mem_share angles_share;
+Turret TURRET{&angles_share};
 Launcher LAUNCHER{};
 //struct TheEye THE_EYE;
 /* Test */
 Turret *t_hold;
 Launcher *l_hold;
+Intake INTAKE{};
 
-AHRS *navx;
-OperatorController O_CONTROLLER{t_hold,navx,l_hold}; 
+AHRS navx{frc::SerialPort::SerialPort::Port::kMXP};
+Swerve SWERVE{24,24,&navx};
 
+OperatorController O_CONTROLLER{&TURRET,&navx,l_hold,&INTAKE}; 
+//DriverController D_CONTROLLER{&SWERVE};
 
 
 frc::Joystick Jostick{0};
@@ -38,9 +43,8 @@ void Robot::RobotInit() {
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
   //open_TheEye(THE_EYE,blocked_tags,8);
-  navx = new AHRS{frc::SerialPort::SerialPort::Port::kMXP};
   //O_CONTROLLER = new OperatorController{t_hold,navx,l_hold}; 
-  navx->Reset();
+  navx.Reset();
 }
 
 /**
@@ -90,7 +94,9 @@ void Robot::TeleopInit() {     }
 int timer = 0;
 
 void Robot::TeleopPeriodic() {
-  //angles_share.swerve_heading = navx->GetAngle();
+  O_CONTROLLER.robo_periodic(); /* Operator Periodic */
+  //D_CONTROLLER.robo_periodic(); /* Driver Periodic   */
+  angles_share.swerve_heading = navx.GetAngle();
   //std::cout << navx->GetAngle() << "\n";
   /* if((tag.center_x <= 380 && tag.center_x >= 280))
   {

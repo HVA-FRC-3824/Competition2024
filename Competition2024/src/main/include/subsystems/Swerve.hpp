@@ -5,6 +5,7 @@
 
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
+#include "AHRS.h"
 
 struct wheel_information
 {
@@ -31,12 +32,13 @@ class Swerve : frc2::SubsystemBase
     public:
         int setUnits = 0; /* test value */
         bool field_centered = false;
-        Swerve(float length, float width);
+        Swerve(float length, float width, AHRS *gyro_obj);
         void drive(float x, float y, float x2, float gyro); // gyro is ignored when field_centered is false
         void print_swerve_math(wheel_info math); // debug
         bool toggle_field_centricity(); // returns changed state
         void calculate_wheel_information(wheel_info *dest, struct size_constants cons, float fwd, float str, float rotate, uint8_t field_centric, float gyro);
         void clear_swerve_memory(); // call when values are stuckington
+        AHRS *gyro;
     private:
         void deadzone_correction(float *x, float *y, float *x2);
         double last_units[4]; 

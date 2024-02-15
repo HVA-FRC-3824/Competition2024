@@ -3,6 +3,7 @@
 #include "../Constants.h"
 #include <frc2/command/SubsystemBase.h>
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
+#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 using namespace ctre::phoenix::motorcontrol::can;
 
 class Launcher : frc2::SubsystemBase
@@ -13,9 +14,11 @@ class Launcher : frc2::SubsystemBase
         void Periodic() override;
         void simple_spin(float input);      /* Spin based on simple input*/
         void hold_velocity(float velocity); /* Spin and hold velocity    */
+        void index_spin(float input);
     private:
         WPI_TalonFX LeftSpin{LEFT_MOTOR_CAN};
         WPI_TalonFX RightSpin{RIGHT_MOTOR_CAN};
+        WPI_TalonSRX Index{INDEX_MOTOR_CAN};
 };
 
 

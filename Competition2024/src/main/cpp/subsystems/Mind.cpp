@@ -110,6 +110,7 @@ void Mind::score()
     slam_mf_dunk();
 }
 
+/* NOTE: this MUST be popped out in a thread... for this while loopy !! */
 void Mind::lock_to_tag(int id)
 {
     tracked_tag = id;

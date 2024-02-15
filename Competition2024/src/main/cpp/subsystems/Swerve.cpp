@@ -13,8 +13,9 @@ void Swerve::clear_swerve_memory()
     }
 }
 
-Swerve::Swerve(float length, float width)
+Swerve::Swerve(float length, float width, AHRS *gyro_obj)
 {
+    this->gyro = gyro_obj;
     this->chassis_info.length = length;
     this->chassis_info.width = width;
 
@@ -201,32 +202,20 @@ void Swerve::drive(float y, float x, float x2, float gyro)
     {
         this->DRIVE_MOTORS[i]->Set(this->math_dest.wheel_speeds[i] * SWERVE_SPEED_MULTIPLIER);
 
-        /* This stop it from going 360 around (all michael's fault if it breaks)*/
-        if((this->raw_usable[i] - this->ANGLE_ENCODERS[i]->GetPosition()) > SWERVE_WHEEL_COUNTS_PER_REVOLUTION)
-        {
-            this->raw_usable[i] = -((SWERVE_WHEEL_COUNTS_PER_REVOLUTION*2)-abs(this->raw_usable[i]));
-        }
-        if((this->raw_usable[i] - this->ANGLE_ENCODERS[i]->GetPosition()) < -SWERVE_WHEEL_COUNTS_PER_REVOLUTION)
-        {
-            this->raw_usable[i] = ((SWERVE_WHEEL_COUNTS_PER_REVOLUTION*2)-abs(this->raw_usable[i]));
-        }
-
         if(use_old)
         {
             this->PID_CONTROLLERS[i]->SetReference(this->last_units[i],CANSparkMax::ControlType::kPosition);
-            std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Old_Desired: " << this->last_units[i] <<"\n";
+            //std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Old_Desired: " << this->last_units[i] <<"\n";
         } else 
         {
             this->PID_CONTROLLERS[i]->SetReference(this->raw_usable[i],CANSparkMax::ControlType::kPosition);
-            std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Desired: " << this->raw_usable[i] <<"\n";
+            //std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Desired: " << this->raw_usable[i] <<"\n";
             this->last_units[i] = this->raw_usable[i];
         }
-      
-        /* Debug */
+
         /* Clear "sticky" values that are stuck in memory, if the robot is receiving input this doesn't matter anyways. */
         /* Only affects the robot when stopped!! */
         this->math_dest.wheel_speeds[i] = 0;
-
     }
     this->use_old = false;
 }
