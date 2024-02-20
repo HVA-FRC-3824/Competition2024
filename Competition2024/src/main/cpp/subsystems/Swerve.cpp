@@ -31,10 +31,6 @@ Swerve::Swerve(float length, float width, AHRS *gyro_obj)
         this->DRIVE_MOTORS[i]->SetIdleMode(CANSparkMax::IdleMode::kBrake);
         this->ANGLE_MOTORS[i]->SetIdleMode(CANSparkMax::IdleMode::kBrake);
 
-        /* Burn flash everytime */
-        this->DRIVE_MOTORS[i]->BurnFlash();
-        this->ANGLE_MOTORS[i]->BurnFlash();
-
         /* PIDs */
         this->PID_CONTROLLERS[i] = new SparkMaxPIDController(this->ANGLE_MOTORS[i]->GetPIDController());
         this->PID_CONTROLLERS[i]->SetP(SWERVE_P);
@@ -43,7 +39,10 @@ Swerve::Swerve(float length, float width, AHRS *gyro_obj)
 
         /* Get real relative encoders */
         this->ANGLE_ENCODERS[i] = new SparkMaxRelativeEncoder(this->ANGLE_MOTORS[i]->GetEncoder());
-        std::cout << this->ANGLE_ENCODERS[i]->GetCountsPerRevolution() << "\n";
+
+        /* Burn flash everytime */
+        this->DRIVE_MOTORS[i]->BurnFlash();
+        this->ANGLE_MOTORS[i]->BurnFlash();
     }
 };
 
@@ -205,11 +204,11 @@ void Swerve::drive(float y, float x, float x2, float gyro)
         if(use_old)
         {
             this->PID_CONTROLLERS[i]->SetReference(this->last_units[i],CANSparkMax::ControlType::kPosition);
-            //std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Old_Desired: " << this->last_units[i] <<"\n";
+            std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Old_Desired: " << this->last_units[i] <<"\n";
         } else 
         {
             this->PID_CONTROLLERS[i]->SetReference(this->raw_usable[i],CANSparkMax::ControlType::kPosition);
-            //std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Desired: " << this->raw_usable[i] <<"\n";
+            std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Desired: " << this->raw_usable[i] <<"\n";
             this->last_units[i] = this->raw_usable[i];
         }
 

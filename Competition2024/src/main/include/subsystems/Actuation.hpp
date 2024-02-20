@@ -9,6 +9,7 @@ using namespace ctre::phoenix::motorcontrol::can;
 class Actuation : frc2::SubsystemBase
 {
     public:
+        Actuation();
         void actuate_to_point(float angle);
         void Periodic() override;
         void linear_actuation(float input);

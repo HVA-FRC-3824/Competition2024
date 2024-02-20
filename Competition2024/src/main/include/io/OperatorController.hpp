@@ -4,6 +4,7 @@
 #include "../subsystems/Turret.hpp"
 #include "../subsystems/Launcher.hpp"
 #include "../subsystems/Intake.hpp"
+#include "../subsystems/Actuation.hpp"
 #include "AHRS.h"
 #include <frc2/command/SubsystemBase.h>
 #include <frc/Joystick.h>
@@ -39,13 +40,14 @@ class OperatorController : frc2::SubsystemBase
     public:
         void reset_gyro();
         void robo_periodic(); /* Links to teleop periodic */
-        OperatorController(Turret *turret_obj, AHRS *ahrs_obj, Launcher *launcher_obj, Intake *intake_obj);
+        OperatorController(Turret *turret_obj, AHRS *ahrs_obj, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj);
     private:
         frc::Joystick OperatorStick {OPERATOR_CONTROLLER};
         Intake* m_intake;
         Turret* m_turret;
         AHRS* ahrs;
         Launcher* m_launcher;
+        Actuation *m_actuation;
         uint8_t state = 0xf0;
         uint8_t mode = 0x0a;
 };

@@ -26,11 +26,12 @@ Launcher LAUNCHER{};
 Turret *t_hold;
 Launcher *l_hold;
 Intake INTAKE{};
+Actuation ACTUATION{};
 
 AHRS navx{frc::SerialPort::SerialPort::Port::kMXP};
 Swerve SWERVE{24,24,&navx};
 
-OperatorController O_CONTROLLER{&TURRET,&navx,l_hold,&INTAKE}; 
+OperatorController O_CONTROLLER{&TURRET,&navx,l_hold,&INTAKE,&ACTUATION}; 
 //DriverController D_CONTROLLER{&SWERVE};
 
 
