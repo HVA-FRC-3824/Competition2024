@@ -46,10 +46,11 @@ PID values for launch motors SUBJECT TO CHANGE*/
 /* Intake variables */
 #define INTAKE_MOTOR 16
 #define INTAKE_ACTUATION 17
-#define INTAKE_ACTUATION_P 0
-#define INTAKE_ACTUATION_I 0
-#define INTAKE_ACTUATION_D 0 
-
+#define INTAKE_ACTUATION_P .005
+#define INTAKE_ACTUATION_I 0.0
+#define INTAKE_ACTUATION_D 0.0
+#define INTAKE_ACTUATION_UFR TALONFX_UFR * (24/18)
+#define INTAKE_BOTTOM_POINT 40835
 
 /* Actuation variables */
 #define ACTUATION_ID 24
@@ -60,15 +61,15 @@ PID values for launch motors SUBJECT TO CHANGE*/
 
 /* Swerve variables */
 /* CAN IDS */
-#define FR_M 13
-#define FL_M 10
-#define RL_M 7
-#define RR_M 12
+#define FR_M 7
+#define FL_M 12
+#define RL_M 13
+#define RR_M 10
 
-#define FR_A 6
-#define FL_A 9
-#define RL_A 8
-#define RR_A 4
+#define FR_A 8
+#define FL_A 4
+#define RL_A 6
+#define RR_A 9
 
 /* Hardware Constants */
 #define SWERVE_MAX_AMPERAGE 40
@@ -80,20 +81,20 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define SWERVE_WHEEL_COUNTS_PER_REVOLUTION 21 /* god neos are weird! */
 
 /* Speed multipliers (rot. speed is a set speed)*/
-#define SWERVE_SPEED_MULTIPLIER .5f
+#define SWERVE_SPEED_MULTIPLIER 1f
 #define SWERVE_ROTATION_SPEED .5
 
 /* PID Values for the motorcontrollers */
-#define SWERVE_P .1
+#define SWERVE_P .7
 #define SWERVE_I 0.0
-#define SWERVE_D 0.0
+#define SWERVE_D 0.001
 
 /* 180 / Pi */
 #define MAGIC_NUMBER 57.29577f
 
 /* Global constants */
 #define TALONFX_UFR 2048
-#define OPERATOR_CONTROLLER 0
-#define DRIVER_CONTROLLER 1
+#define OPERATOR_CONTROLLER 1
+#define DRIVER_CONTROLLER 0
 
 #endif

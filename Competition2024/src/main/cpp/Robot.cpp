@@ -32,7 +32,7 @@ AHRS navx{frc::SerialPort::SerialPort::Port::kMXP};
 Swerve SWERVE{24,24,&navx};
 
 OperatorController O_CONTROLLER{&TURRET,&navx,l_hold,&INTAKE,&ACTUATION}; 
-//DriverController D_CONTROLLER{&SWERVE};
+DriverController D_CONTROLLER{&SWERVE};
 
 
 frc::Joystick Jostick{0};
@@ -90,13 +90,14 @@ void Robot::AutonomousPeriodic() {
   }
 }
 
-void Robot::TeleopInit() {     }
+void Robot::TeleopInit() {  /*INTAKE.intake_actuate_point(0);*/   }
 
 int timer = 0;
 
 void Robot::TeleopPeriodic() {
-  O_CONTROLLER.robo_periodic(); /* Operator Periodic */
-  //D_CONTROLLER.robo_periodic(); /* Driver Periodic   */
+  //O_CONTROLLER.robo_periodic(); /* Operator Periodic */
+  D_CONTROLLER.robo_periodic(); /* Driver Periodic   */
+  INTAKE.robo_periodic();
   angles_share.swerve_heading = navx.GetAngle();
   //std::cout << navx->GetAngle() << "\n";
   /* if((tag.center_x <= 380 && tag.center_x >= 280))

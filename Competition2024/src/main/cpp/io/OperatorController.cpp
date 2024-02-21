@@ -43,6 +43,7 @@ void OperatorController::robo_periodic()
             switch(mode)
             {
                 case A_MODE:
+                    this->m_intake->intake_actuate_point(0);
                     break;
                 case B_MODE:
                     break;
@@ -59,6 +60,7 @@ void OperatorController::robo_periodic()
             switch(mode)
             {
                 case A_MODE:
+                    this->m_intake->intake_actuate_point(INTAKE_BOTTOM_POINT);
                     break;
                 case B_MODE:
                     break;

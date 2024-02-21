@@ -74,12 +74,12 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
 	c_sqrd = C*C;
 	d_sqrd = D*D;
 
-	float wheel_speeds[4];
+	//float wheel_speeds[4];
 
-	wheel_speeds[0] = sqrtf((b_sqrd) + (c_sqrd));
-	wheel_speeds[1] = sqrtf((b_sqrd) + (d_sqrd));
-	wheel_speeds[2] = sqrtf((a_sqrd) + (d_sqrd));
-	wheel_speeds[3] = sqrtf((a_sqrd) + (c_sqrd));
+	dest->wheel_speeds[0] = sqrtf((b_sqrd) + (c_sqrd));
+	dest->wheel_speeds[1] = sqrtf((b_sqrd) + (d_sqrd));
+	dest->wheel_speeds[2] = sqrtf((a_sqrd) + (d_sqrd));
+	dest->wheel_speeds[3] = sqrtf((a_sqrd) + (c_sqrd));
 
 	float max = 0;
 
@@ -87,12 +87,12 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
 	int i;
 	for(i = 0; i < 4; i++)
 	{
-		if(wheel_speeds[i] > max) { max = wheel_speeds[i]; }
+		if(dest->wheel_speeds[i] > max) { max = dest->wheel_speeds[i]; }
 	}
 
 	if(max > 1)
 	{
-		for(i = 0; i < 4; i++) { dest->wheel_speeds[i] = wheel_speeds[i] / max; }
+		for(i = 0; i < 4; i++) { dest->wheel_speeds[i] = dest->wheel_speeds[i] / max; }
 	}
 
 	dest->wheel_angle[0] = atan2f(B,C) * MAGIC_NUMBER;
@@ -199,16 +199,16 @@ void Swerve::drive(float y, float x, float x2, float gyro)
     /* Only run our motors once everything is calculated */
     for(int i = 0; i < 4; i++)
     {
-        this->DRIVE_MOTORS[i]->Set(this->math_dest.wheel_speeds[i] * SWERVE_SPEED_MULTIPLIER);
+        this->DRIVE_MOTORS[i]->Set(this->math_dest.wheel_speeds[i] * 1);
 
         if(use_old)
         {
             this->PID_CONTROLLERS[i]->SetReference(this->last_units[i],CANSparkMax::ControlType::kPosition);
-            std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Old_Desired: " << this->last_units[i] <<"\n";
+            //std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Old_Desired: " << this->last_units[i] <<"\n";
         } else 
         {
             this->PID_CONTROLLERS[i]->SetReference(this->raw_usable[i],CANSparkMax::ControlType::kPosition);
-            std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Desired: " << this->raw_usable[i] <<"\n";
+            //std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Desired: " << this->raw_usable[i] <<"\n";
             this->last_units[i] = this->raw_usable[i];
         }
 
