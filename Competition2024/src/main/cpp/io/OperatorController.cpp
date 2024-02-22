@@ -37,11 +37,8 @@ void OperatorController::one_button_intake()
     m_launcher->index_spin(.5);
     m_intake->suck(-.3);
 
-    std::cout << "before sleep\n";
-
     sleep(3);
-
-    std::cout << "after sleep\n";
+    
     /* Return intake */
     m_intake->suck(0);
     m_launcher->index_spin(0);

@@ -74,7 +74,7 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define RR_A 9
 
 /* Hardware Constants */
-#define SWERVE_MAX_AMPERAGE 40
+#define SWERVE_MAX_AMPERAGE 30
 
 /* Swerve Constants */
 #define DEADZONE_THRES .25   /* Raise to counter joystick drift this number is on a controller to controller basis */
