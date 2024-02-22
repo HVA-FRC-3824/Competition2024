@@ -13,9 +13,9 @@ class Actuation : frc2::SubsystemBase
         void actuate_to_point(float angle);
         void Periodic() override;
         void linear_actuation(float input);
+        bool locked = false;
     private:
         WPI_TalonFX actuation_motor{ACTUATION_ID};
-        bool locked = false;
 };
 
 

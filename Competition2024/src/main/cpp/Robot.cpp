@@ -10,6 +10,7 @@
 #include <iostream>
 #include "AHRS.h"
 #include "../include/io/OperatorController.hpp"
+#include "../include/io/CommandHelper.hpp"
 #include "../include/io/DriverController.hpp"
 #include "../include/subsystems/Turret.hpp"
 #include "../include/subsystems/TheEye.h"
@@ -18,6 +19,7 @@
 #include "../include/Memory.h"
 
 /* Object and struct declaration */
+cmd_share cmd_control;
 angle_mem_share angles_share;
 Turret TURRET{&angles_share};
 Launcher LAUNCHER{};
@@ -31,8 +33,8 @@ Actuation ACTUATION{};
 AHRS navx{frc::SerialPort::SerialPort::Port::kMXP};
 Swerve SWERVE{24,24,&navx};
 
-OperatorController O_CONTROLLER{&TURRET,&navx,l_hold,&INTAKE,&ACTUATION}; 
-DriverController D_CONTROLLER{&SWERVE};
+OperatorController O_CONTROLLER{&cmd_control,&TURRET,&navx,&LAUNCHER,&INTAKE,&ACTUATION}; 
+//DriverController D_CONTROLLER{&SWERVE};
 
 
 frc::Joystick Jostick{0};
@@ -46,6 +48,7 @@ void Robot::RobotInit() {
   //open_TheEye(THE_EYE,blocked_tags,8);
   //O_CONTROLLER = new OperatorController{t_hold,navx,l_hold}; 
   navx.Reset();
+  runner_launcher(&cmd_control,&O_CONTROLLER);
 }
 
 /**
@@ -95,9 +98,10 @@ void Robot::TeleopInit() {  /*INTAKE.intake_actuate_point(0);*/   }
 int timer = 0;
 
 void Robot::TeleopPeriodic() {
-  //O_CONTROLLER.robo_periodic(); /* Operator Periodic */
-  D_CONTROLLER.robo_periodic(); /* Driver Periodic   */
+  O_CONTROLLER.robo_periodic(); /* Operator Periodic */
+  //D_CONTROLLER.robo_periodic(); /* Driver Periodic   */
   INTAKE.robo_periodic();
+  TURRET.robo_periodic();
   angles_share.swerve_heading = navx.GetAngle();
   //std::cout << navx->GetAngle() << "\n";
   /* if((tag.center_x <= 380 && tag.center_x >= 280))

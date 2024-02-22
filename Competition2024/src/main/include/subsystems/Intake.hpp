@@ -13,11 +13,10 @@ class Intake : frc2::SubsystemBase
         void intake_actuate_point(float angle);
         void suck(float input);
         void robo_periodic();
+        void flip_retraction();
     private:
         ctre::phoenix::motorcontrol::can::WPI_TalonSRX intake_motor{INTAKE_MOTOR};
         ctre::phoenix::motorcontrol::can::WPI_TalonFX actuation_motor{INTAKE_ACTUATION};
-
-
-        
+        bool retracted = true;
 };
 #endif

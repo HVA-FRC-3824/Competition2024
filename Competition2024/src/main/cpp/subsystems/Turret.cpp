@@ -10,7 +10,7 @@ Turret::Turret(angle_mem_share *share)
     internal_reference = share;
 }
 
-void Turret::Periodic()
+void Turret::robo_periodic()
 {
     /* Update live data to operator view */
     frc::SmartDashboard::PutBoolean("Turret Locked? ", this->locked);
@@ -20,12 +20,12 @@ void Turret::Periodic()
     this->current_heading = this->TURRET_MOTOR.GetSelectedSensorPosition(0)/TURRET_ROTATIONS_PER_360;
 
     /* This stops the turret from internally going above 360, preventing snapback issues! */
-    if(this->current_heading >= 360)
+    /*if(this->current_heading >= 360)
     {
         this->current_heading = this->current_heading - 360;
         this->TURRET_MOTOR.Set(ctre::phoenix::motorcontrol::ControlMode::Position,((this->current_heading/360)*TURRET_ROTATIONS_PER_360));
     }
-    this->internal_reference->turret_heading = this->current_heading;
+    this->internal_reference->turret_heading = this->current_heading; */
 }
 
 void Turret::spin_to_angle(int angle)

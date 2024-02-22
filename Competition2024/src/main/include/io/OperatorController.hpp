@@ -39,8 +39,10 @@ class OperatorController : frc2::SubsystemBase
 {
     public:
         void reset_gyro();
+        void one_button_intake();
         void robo_periodic(); /* Links to teleop periodic */
-        OperatorController(Turret *turret_obj, AHRS *ahrs_obj, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj);
+        OperatorController(cmd_share *share, Turret *turret_obj, AHRS *ahrs_obj, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj);
+        cmd_share *shared;
     private:
         frc::Joystick OperatorStick {OPERATOR_CONTROLLER};
         Intake* m_intake;
@@ -50,5 +52,7 @@ class OperatorController : frc2::SubsystemBase
         Actuation *m_actuation;
         uint8_t state = 0xf0;
         uint8_t mode = 0x0a;
+
+        bool command_active = false;
 };
 #endif

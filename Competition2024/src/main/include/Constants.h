@@ -11,6 +11,7 @@
 #define TURRET_I 0.0
 #define TURRET_D 0.0
 #define TURRET_CAN 20
+#define TURRET_MARGIN_OF_ERROR 2 /* +- degrees */
 #define TURRET_ROTATIONS_PER_360 TURRET_GEAR_RATIO * TALONFX_UFR
 
 /* Launcher variables */
@@ -55,9 +56,10 @@ PID values for launch motors SUBJECT TO CHANGE*/
 /* Actuation variables */
 #define ACTUATION_ID 24
 #define ACTUATION_GR 183.5 /*I believe??*/
-#define ACTUATION_P 0
+#define ACTUATION_P 0.005
 #define ACTUATION_I 0
 #define ACTUATION_D 0 
+#define ACTUATION_INDEX_ANGLE 0
 
 /* Swerve variables */
 /* CAN IDS */
@@ -94,7 +96,30 @@ PID values for launch motors SUBJECT TO CHANGE*/
 
 /* Global constants */
 #define TALONFX_UFR 2048
-#define OPERATOR_CONTROLLER 1
-#define DRIVER_CONTROLLER 0
+#define OPERATOR_CONTROLLER 0
+#define DRIVER_CONTROLLER 1
+
+/* Command constants */
+
+/* Explanation on commands: 
+   commands are created in OperatorController.cpp as standard methods, written as if they will be popped into another thread
+   those commands are then given an ID as below (see C_INTAKE_OB) and in CommandHelper.cpp it is added in the switch statement
+   in OperatorController.cpp the flags are set in the memory shared between the two causing the command to run.
+*/
+
+#define C_ACTIVE    0xff
+#define C_NONE      0x10
+#define C_RUN       0xf0
+#define C_INACTIVE  0xf1
+#define C_DISABLED  0x00
+#define C_INTAKE_OB 0x01
+
+struct CommandMemoryShare
+{
+    unsigned char command_being_run = C_NONE;
+    unsigned char state = C_INACTIVE;
+    unsigned char my_wishes = C_NONE;
+};
+typedef CommandMemoryShare cmd_share;
 
 #endif

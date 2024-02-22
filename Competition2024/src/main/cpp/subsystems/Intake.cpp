@@ -8,9 +8,9 @@ Intake::Intake()
     this->actuation_motor.Config_kD(0,INTAKE_ACTUATION_D);
     this->actuation_motor.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor,0,0);
     this->actuation_motor.ConfigIntegratedSensorAbsoluteRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
-    this->actuation_motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+    this->actuation_motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
     this->actuation_motor.ConfigPeakOutputForward(.5);
-    this->actuation_motor.ConfigPeakOutputReverse(1);
+    //this->actuation_motor.ConfigPeakOutputReverse(1);
 }
 
 void Intake::intake_actuate_simple(float input)
@@ -31,5 +31,20 @@ void Intake::suck(float input)
 
 void Intake::robo_periodic()
 {
-    std::cout << "INTAKE POS: " << this->actuation_motor.GetSelectedSensorPosition(0) << "\n";
+    //std::cout << "INTAKE POS: " << this->actuation_motor.GetSelectedSensorPosition(0) << "\n";
+}
+
+
+/* This works with the correct position for it being at 0 */
+void Intake::flip_retraction()
+{
+    if(retracted)
+    {
+        retracted = false;
+        intake_actuate_point(INTAKE_BOTTOM_POINT);
+    } else 
+    {
+        retracted = true;
+        intake_actuate_point(0);
+    }
 }

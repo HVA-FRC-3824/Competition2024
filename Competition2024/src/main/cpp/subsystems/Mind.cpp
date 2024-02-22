@@ -96,8 +96,8 @@ void Mind::track_to_tag(int id)
 void Mind::slam_mf_dunk()
 {
     /* see Mind.hpp for idea behind the mind's main circuit!! */
-    float adjustment_angle;
-    float final_angle;
+    /* float adjustment_angle;
+    float final_angle; */
 
 
 
