@@ -99,6 +99,23 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
 	dest->wheel_angle[1] = atan2f(B,D) * MAGIC_NUMBER;
 	dest->wheel_angle[2] = atan2f(A,D) * MAGIC_NUMBER;
 	dest->wheel_angle[3] = atan2f(A,C) * MAGIC_NUMBER;
+
+
+    /* Instead of flippig 180 just reverse our speeds, this might be a problem and needs testing */
+    for(i = 0; i < 4; i++)
+    {
+        if(dest->wheel_angle[i] == 180){dest->wheel_speeds[i] = dest->wheel_speeds[i] * -1;}
+        if(dest->wheel_angle[i] < -90)
+        {
+            dest->wheel_angle[i] = dest->wheel_angle[i] += 180;
+            dest->wheel_speeds[i] = dest->wheel_speeds[i] * -1;
+        }
+        if(dest->wheel_angle[i] > 90)
+        {
+            dest->wheel_angle[i] = dest->wheel_angle[i] -= 180;
+            dest->wheel_speeds[i] = dest->wheel_speeds[i] * -1;
+        }
+    }
 	return;
 }
 
@@ -199,7 +216,7 @@ void Swerve::drive(float y, float x, float x2, float gyro)
     /* Only run our motors once everything is calculated */
     for(int i = 0; i < 4; i++)
     {
-        this->DRIVE_MOTORS[i]->Set(this->math_dest.wheel_speeds[i] * 1);
+        this->DRIVE_MOTORS[i]->Set(this->math_dest.wheel_speeds[i] * SWERVE_SPEED_MULTIPLIER);
 
         if(use_old)
         {
@@ -215,6 +232,7 @@ void Swerve::drive(float y, float x, float x2, float gyro)
         /* Clear "sticky" values that are stuck in memory, if the robot is receiving input this doesn't matter anyways. */
         /* Only affects the robot when stopped!! */
         this->math_dest.wheel_speeds[i] = 0;
+        this->true_angles[i] = (this->ANGLE_ENCODERS[i]->GetPosition() * 360)/SWERVE_WHEEL_COUNTS_PER_REVOLUTION;
     }
     this->use_old = false;
 }

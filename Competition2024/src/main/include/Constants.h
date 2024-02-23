@@ -83,7 +83,7 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define SWERVE_WHEEL_COUNTS_PER_REVOLUTION 21 /* god neos are weird! */
 
 /* Speed multipliers (rot. speed is a set speed)*/
-#define SWERVE_SPEED_MULTIPLIER 1f
+#define SWERVE_SPEED_MULTIPLIER 1
 #define SWERVE_ROTATION_SPEED .5
 
 /* PID Values for the motorcontrollers */

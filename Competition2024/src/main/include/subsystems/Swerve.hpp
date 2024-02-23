@@ -53,6 +53,9 @@ class Swerve : frc2::SubsystemBase
         /* Stores the raw usable units for the motor controllers */
         double raw_usable[4];
 
+        /* Stores true angle */
+        int true_angles[4];
+
         /* Motor bank. Follows the format in the math_dest 
             0 = front right, 1 = front left 
             2 = rear left,   3 = rear right */
