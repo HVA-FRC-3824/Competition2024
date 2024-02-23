@@ -104,7 +104,7 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
     /* Instead of flippig 180 just reverse our speeds, this might be a problem and needs testing */
     for(i = 0; i < 4; i++)
     {
-        if(dest->wheel_angle[i] == 180){dest->wheel_speeds[i] = dest->wheel_speeds[i] * -1;}
+        if(dest->wheel_angle[i] == 180){dest->wheel_speeds[i] = dest->wheel_speeds[i] * -1; continue;}
         if(dest->wheel_angle[i] < -90)
         {
             dest->wheel_angle[i] = dest->wheel_angle[i] += 180;

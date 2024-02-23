@@ -12,31 +12,43 @@ cmd_share *control;
    up to command maker to place in proper checks and balances :D
 */
 
+void *command_thread(void *parm)
+{
+    control->state = C_ACTIVE;
+    control->my_wishes = C_NONE;
 
-/* WARNING: ZANE REMEMBER THIS!! this is a TEMP solution and IF this thread crashes we lose commands
-   TODO: rework this so that there is a PROPER scheduler
-*/
+    switch(control->command_being_run)
+    {
+        case C_INTAKE_OB:
+            o_controller->one_button_intake();
+            break;
+        case C_NONE:
+            break;
+    }
+
+    control->state = C_INACTIVE;
+    control->command_being_run = C_NONE;
+}
 
 void *command_runner(void *parm)
 {
+    pthread_t command_ref;
     while(1)
     {
-        if(control->state == C_DISABLED){continue;}
-        /* Run logic */
-        if(control->my_wishes == C_RUN)
+        /* Terminatable, resets to old state */
+        if(control->state == C_KILL)
         {
-            control->state = C_ACTIVE;
-            control->my_wishes = C_NONE;
-            switch(control->command_being_run)
-            {
-                case C_INTAKE_OB:
-                    o_controller->one_button_intake();
-                    break;
-                case C_NONE:
-                    break;
-            }
+            pthread_cancel(command_ref);
             control->state = C_INACTIVE;
-            control->command_being_run = C_NONE;
+            control->my_wishes = C_NONE;
+        }
+
+        if(control->state == C_DISABLED){continue;}
+
+        /* Run logic */
+        if(control->my_wishes == C_RUN && control->state == C_INACTIVE)
+        {
+            pthread_create(&command_ref,NULL,command_thread,NULL);
         }
     }
 }

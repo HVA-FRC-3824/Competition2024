@@ -108,6 +108,7 @@ PID values for launch motors SUBJECT TO CHANGE*/
 */
 
 #define C_ACTIVE    0xff
+#define C_KILL      0x20
 #define C_NONE      0x10
 #define C_RUN       0xf0
 #define C_INACTIVE  0xf1
