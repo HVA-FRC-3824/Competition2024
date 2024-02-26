@@ -7,12 +7,12 @@
 
 /* Turret variables */
 #define TURRET_GEAR_RATIO 14
-#define TURRET_P 0.1
+#define TURRET_P .015
 #define TURRET_I 0.0
-#define TURRET_D 0.0
+#define TURRET_D 0.00
 #define TURRET_CAN 20
-#define TURRET_MARGIN_OF_ERROR 2 /* +- degrees */
-#define TURRET_ROTATIONS_PER_360 TURRET_GEAR_RATIO * TALONFX_UFR
+#define TURRET_MARGIN_OF_ERROR 2 /* +- angles */
+#define TURRET_ROTATIONS_PER_360 114688
 
 /* Launcher variables */
 #define LEFT_MOTOR_CAN 21
@@ -47,7 +47,7 @@ PID values for launch motors SUBJECT TO CHANGE*/
 /* Intake variables */
 #define INTAKE_MOTOR 16
 #define INTAKE_ACTUATION 17
-#define INTAKE_ACTUATION_P .005
+#define INTAKE_ACTUATION_P .05
 #define INTAKE_ACTUATION_I 0.0
 #define INTAKE_ACTUATION_D 0.0
 #define INTAKE_ACTUATION_UFR TALONFX_UFR * (24/18)
@@ -55,11 +55,12 @@ PID values for launch motors SUBJECT TO CHANGE*/
 
 /* Actuation variables */
 #define ACTUATION_ID 24
-#define ACTUATION_GR 183.5 /*I believe??*/
-#define ACTUATION_P 0.005
-#define ACTUATION_I 0
-#define ACTUATION_D 0 
-#define ACTUATION_INDEX_ANGLE 0
+#define ACTUATION_GR 131.25 /*I believe??*/
+#define ACTUATION_P .035
+#define ACTUATION_I .00
+#define ACTUATION_D .005
+#define ACTUATION_INDEX_ANGLE -20
+#define ACTUATION_UFR 268669
 
 /* Swerve variables */
 /* CAN IDS */
@@ -83,7 +84,7 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define SWERVE_WHEEL_COUNTS_PER_REVOLUTION 21 /* god neos are weird! */
 
 /* Speed multipliers (rot. speed is a set speed)*/
-#define SWERVE_SPEED_MULTIPLIER 1
+#define SWERVE_SPEED_MULTIPLIER .5
 #define SWERVE_ROTATION_SPEED .5
 
 /* PID Values for the motorcontrollers */
@@ -111,8 +112,8 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define C_KILL      0x20
 #define C_NONE      0x10
 #define C_RUN       0xf0
-#define C_INACTIVE  0xf1
-#define C_DISABLED  0x00
+#define C_INACTIVE  0x00
+#define C_DISABLED  0xf1
 #define C_INTAKE_OB 0x01
 
 struct CommandMemoryShare

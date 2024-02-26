@@ -11,7 +11,7 @@ class Actuation : frc2::SubsystemBase
     public:
         Actuation();
         void actuate_to_point(float angle);
-        void Periodic() override;
+        void robo_periodic();
         void linear_actuation(float input);
         bool locked = false;
     private:

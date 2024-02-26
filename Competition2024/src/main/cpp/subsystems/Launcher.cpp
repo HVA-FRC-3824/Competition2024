@@ -11,6 +11,9 @@ Launcher::Launcher()
     this->RightSpin.Config_kI(0,LAUNCH_MOTOR_I);
     this->RightSpin.Config_kD(0,LAUNCH_MOTOR_D);
 
+    this->LeftSpin.SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
+    this->RightSpin.SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
+    this->Index.SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
     std::cout << "asdfasdf\n";
 }
 

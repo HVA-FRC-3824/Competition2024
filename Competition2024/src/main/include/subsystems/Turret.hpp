@@ -16,7 +16,7 @@ class Turret : frc2::SubsystemBase
     public:
         Turret(angle_mem_share *share);
         void robo_periodic();            /* Update our dash and calculate live angle */
-        void spin_to_angle(int angle);   /* Go to specified angle                    */
+        void spin_to_angle(float angle);   /* Go to specified angle                    */
         void snap_to_swerve();           /* Snaps to heading of chassis              */
         void snap_to_axis(int heading);  /* Locks to n,w,e,s of chassis              */
         void lock_turret();              /* Locks turret position                    */

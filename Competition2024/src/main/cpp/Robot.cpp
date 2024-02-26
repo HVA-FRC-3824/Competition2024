@@ -34,7 +34,7 @@ AHRS navx{frc::SerialPort::SerialPort::Port::kMXP};
 Swerve SWERVE{24,24,&navx};
 
 OperatorController O_CONTROLLER{&cmd_control,&TURRET,&navx,&LAUNCHER,&INTAKE,&ACTUATION}; 
-//DriverController D_CONTROLLER{&SWERVE};
+DriverController D_CONTROLLER{&SWERVE};
 
 
 frc::Joystick Jostick{0};
@@ -46,7 +46,6 @@ void Robot::RobotInit() {
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
   //open_TheEye(THE_EYE,blocked_tags,8);
-  //O_CONTROLLER = new OperatorController{t_hold,navx,l_hold}; 
   navx.Reset();
   runner_launcher(&cmd_control,&O_CONTROLLER);
 }
@@ -93,17 +92,21 @@ void Robot::AutonomousPeriodic() {
   }
 }
 
-void Robot::TeleopInit() {  /*INTAKE.intake_actuate_point(0);*/   }
+void Robot::TeleopInit() {  }
 
 int timer = 0;
 
 void Robot::TeleopPeriodic() {
   O_CONTROLLER.robo_periodic(); /* Operator Periodic */
   //D_CONTROLLER.robo_periodic(); /* Driver Periodic   */
-  INTAKE.robo_periodic();
-  TURRET.robo_periodic();
+
+  command_runner();
+  //INTAKE.robo_periodic();
+  //TURRET.spin_to_angle(75);
+  //TURRET.robo_periodic();
+  //ACTUATION.robo_periodic();
   angles_share.swerve_heading = navx.GetAngle();
-  //std::cout << navx->GetAngle() << "\n";
+  //std::cout << navx.GetAngle() << "\n";
   /* if((tag.center_x <= 380 && tag.center_x >= 280))
   {
     TURRET.spin_simple(0); // lock in place 

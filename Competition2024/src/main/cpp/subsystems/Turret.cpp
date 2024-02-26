@@ -6,7 +6,8 @@ Turret::Turret(angle_mem_share *share)
     this->TURRET_MOTOR.Config_kP(0,TURRET_P);
     this->TURRET_MOTOR.Config_kI(0,TURRET_I);
     this->TURRET_MOTOR.Config_kD(0,TURRET_D);
-    this->TURRET_MOTOR.ConfigIntegratedSensorAbsoluteRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
+    this->TURRET_MOTOR.ConfigIntegratedSensorAbsoluteRange(ctre::phoenix::sensors::AbsoluteSensorRange::Unsigned_0_to_360);
+    this->TURRET_MOTOR.SetNeutralMode(ctre::phoenix::motorcontrol::Brake);
     internal_reference = share;
 }
 
@@ -17,22 +18,20 @@ void Turret::robo_periodic()
     frc::SmartDashboard::PutNumber("Turret Heading: ", this->current_heading);
 
     /* Read values from encoder to find accurate heading, and assign it to current_heading */
-    this->current_heading = this->TURRET_MOTOR.GetSelectedSensorPosition(0)/TURRET_ROTATIONS_PER_360;
-
-    /* This stops the turret from internally going above 360, preventing snapback issues! */
-    /*if(this->current_heading >= 360)
-    {
-        this->current_heading = this->current_heading - 360;
-        this->TURRET_MOTOR.Set(ctre::phoenix::motorcontrol::ControlMode::Position,((this->current_heading/360)*TURRET_ROTATIONS_PER_360));
-    }
-    this->internal_reference->turret_heading = this->current_heading; */
+    this->current_heading = (this->TURRET_MOTOR.GetSelectedSensorPosition()/TURRET_ROTATIONS_PER_360) *360;
+    std::cout << "T_A: " << this->TURRET_MOTOR.GetSelectedSensorPosition() << "\n";
 }
 
-void Turret::spin_to_angle(int angle)
+void Turret::spin_to_angle(float angle)
 {
     if(!locked)
     {
-        this->TURRET_MOTOR.Set(ctre::phoenix::motorcontrol::ControlMode::Position,((angle/360)*TURRET_ROTATIONS_PER_360));
+        double angle_half = angle/360;
+        std::cout << angle_half << "\n";
+        double raw = angle_half * 114688;
+        //this->TURRET_MOTOR.Set(ctre::phoenix::motorcontrol::ControlMode::Position,((angle/360)*TURRET_ROTATIONS_PER_360));
+        this->TURRET_MOTOR.Set(ctre::phoenix::motorcontrol::ControlMode::Position,raw);
+        std::cout << raw << "\n";
     }
 } 
 

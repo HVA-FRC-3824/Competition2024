@@ -52,6 +52,7 @@ class Swerve : frc2::SubsystemBase
 
         /* Stores the raw usable units for the motor controllers */
         double raw_usable[4];
+        float last_speed[4];
 
         /* Stores true angle */
         int true_angles[4];
