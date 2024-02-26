@@ -97,8 +97,8 @@ void Robot::TeleopInit() {  }
 int timer = 0;
 
 void Robot::TeleopPeriodic() {
-  O_CONTROLLER.robo_periodic(); /* Operator Periodic */
-  //D_CONTROLLER.robo_periodic(); /* Driver Periodic   */
+  //O_CONTROLLER.robo_periodic(); /* Operator Periodic */
+  D_CONTROLLER.robo_periodic(); /* Driver Periodic   */
 
   command_runner();
   //INTAKE.robo_periodic();

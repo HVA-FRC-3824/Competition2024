@@ -85,7 +85,7 @@ PID values for launch motors SUBJECT TO CHANGE*/
 
 /* Speed multipliers (rot. speed is a set speed)*/
 #define SWERVE_SPEED_MULTIPLIER .5
-#define SWERVE_ROTATION_SPEED .5
+#define SWERVE_ROTATION_SPEED .75
 
 /* PID Values for the motorcontrollers */
 #define SWERVE_P .7

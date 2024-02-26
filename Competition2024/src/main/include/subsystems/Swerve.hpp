@@ -31,7 +31,7 @@ class Swerve : frc2::SubsystemBase
 {
     public:
         int setUnits = 0; /* test value */
-        bool field_centered = false;
+        bool field_centered = true;
         Swerve(float length, float width, AHRS *gyro_obj);
         void drive(float x, float y, float x2, float gyro); // gyro is ignored when field_centered is false
         void print_swerve_math(wheel_info math); // debug

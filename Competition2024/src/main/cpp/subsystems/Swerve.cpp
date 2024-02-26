@@ -53,13 +53,9 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
 
 	if(field_centric)
 	{
-        float cos_ang = cosf(gyro) * MAGIC_NUMBER;
-        float sin_ang = sinf(gyro) * MAGIC_NUMBER;
-
-
 		/* If field centric take in account the gyro */
-        float temp = (fwd * cosf(gyro)) + (str * sinf(gyro));
-        strafe = -(fwd * sinf(gyro)) + (str * cosf(gyro));
+        float temp = (fwd * cosf(gyro * MAGIC_NUMBER)) + (str * sinf(gyro * MAGIC_NUMBER));
+        strafe = -(fwd * sinf(gyro * MAGIC_NUMBER)) + (str * cosf(gyro * MAGIC_NUMBER));
 		forward = temp;
 	}
 
@@ -107,7 +103,7 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
 
 
     /* Instead of flippig 180 just reverse our speeds, this might be a problem and needs testing */
-    /*for(i = 0; i < 4; i++)
+    for(i = 0; i < 4; i++)
     {
         if(dest->wheel_angle[i] == 180){dest->wheel_speeds[i] = dest->wheel_speeds[i] * -1; continue;}
         if(dest->wheel_angle[i] < -90)
@@ -120,7 +116,7 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
             dest->wheel_angle[i] = dest->wheel_angle[i] -= 180;
             dest->wheel_speeds[i] = dest->wheel_speeds[i] * -1;
         }
-    } */
+    } 
 	return;
 }
 
@@ -211,7 +207,7 @@ void Swerve::drive(float y, float x, float x2, float gyro)
     {
         for(int i = 0; i < 4; i++)
         {
-            //if(this->last_speed < 0){this->math_dest.wheel_speeds[i] = SWERVE_ROTATION_SPEED*-1; continue; };
+            if(y < 0){ this->math_dest.wheel_angle[i] = -SWERVE_ROTATION_SPEED; continue;}
             this->math_dest.wheel_speeds[i] = SWERVE_ROTATION_SPEED;
         } 
     }
