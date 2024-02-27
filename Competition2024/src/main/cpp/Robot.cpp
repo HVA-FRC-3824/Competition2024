@@ -97,29 +97,15 @@ void Robot::TeleopInit() {  }
 int timer = 0;
 
 void Robot::TeleopPeriodic() {
-  //O_CONTROLLER.robo_periodic(); /* Operator Periodic */
+  O_CONTROLLER.robo_periodic(); /* Operator Periodic */
   D_CONTROLLER.robo_periodic(); /* Driver Periodic   */
 
   command_runner();
   //INTAKE.robo_periodic();
-  //TURRET.spin_to_angle(75);
   //TURRET.robo_periodic();
   //ACTUATION.robo_periodic();
   angles_share.swerve_heading = navx.GetAngle();
   //std::cout << navx.GetAngle() << "\n";
-  /* if((tag.center_x <= 380 && tag.center_x >= 280))
-  {
-    TURRET.spin_simple(0); // lock in place 
-  }
-  if(timer = 1)
-  {
-    TURRET.spin_simple(0);
-  }
-  if(tag.center_x < 280){TURRET.spin_simple(.08); timer++;}
-  if(tag.center_x > 380){TURRET.spin_simple(-.08); timer++;} */
-
-  
-  //LAUNCHER.simple_spin(Jostick.GetY());
 }
 
 void Robot::DisabledInit() { }

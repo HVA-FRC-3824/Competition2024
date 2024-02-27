@@ -25,6 +25,12 @@ void *command_thread(void *parm)
             control->state = C_INACTIVE;
             control->command_being_run = C_NONE;
             return 0;
+
+        case C_LAUNCHER_OB:
+            o_controller->one_button_shoot();
+            control->state = C_INACTIVE;
+            control->command_being_run = C_NONE;
+            return 0;
         case C_NONE:
             break;
     }

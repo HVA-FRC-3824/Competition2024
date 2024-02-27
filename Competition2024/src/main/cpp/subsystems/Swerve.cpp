@@ -54,8 +54,8 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
 	if(field_centric)
 	{
 		/* If field centric take in account the gyro */
-        float temp = (fwd * cosf(gyro * MAGIC_NUMBER)) + (str * sinf(gyro * MAGIC_NUMBER));
-        strafe = -(fwd * sinf(gyro * MAGIC_NUMBER)) + (str * cosf(gyro * MAGIC_NUMBER));
+        float temp = (fwd * cosf(gyro * ANTIMAGIC_NUMBER)) + (str * sinf(gyro * ANTIMAGIC_NUMBER));
+        strafe = -(fwd * sinf(gyro * ANTIMAGIC_NUMBER)) + (str * cosf(gyro * ANTIMAGIC_NUMBER));
 		forward = temp;
 	}
 
@@ -82,11 +82,11 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
 	dest->wheel_speeds[2] = sqrtf((a_sqrd) + (d_sqrd));
 	dest->wheel_speeds[3] = sqrtf((a_sqrd) + (c_sqrd));
 
-	float max = 0;
+	float max = dest->wheel_speeds[0];
 
 	/* Do normalisation on the wheel speeds, so that they are 0.0 <-> +1.0 */
 	int i;
-	for(i = 0; i < 4; i++)
+	for(i = 1; i < 3; i++)
 	{
 		if(dest->wheel_speeds[i] > max) { max = dest->wheel_speeds[i]; }
 	}
@@ -200,6 +200,8 @@ void Swerve::drive(float y, float x, float x2, float gyro)
     /* Generate our math and store in dest struct to be converted / used */
     calculate_wheel_information(&this->math_dest,this->chassis_info,y,x,x2,this->field_centered,gyro);
 
+    //oldhead_correction();
+
     print_swerve_math(this->math_dest);
 
     /* If we are trying to rotate, move the wheels so that it actually spins, may need to adjust */
@@ -207,8 +209,7 @@ void Swerve::drive(float y, float x, float x2, float gyro)
     {
         for(int i = 0; i < 4; i++)
         {
-            if(y < 0){ this->math_dest.wheel_angle[i] = -SWERVE_ROTATION_SPEED; continue;}
-            this->math_dest.wheel_speeds[i] = SWERVE_ROTATION_SPEED;
+            this->math_dest.wheel_speeds[i] = this->math_dest.wheel_speeds[i] * SWERVE_ROTATION_SPEED;
         } 
     }
 
@@ -235,9 +236,7 @@ void Swerve::drive(float y, float x, float x2, float gyro)
 
         /* Clear "sticky" values that are stuck in memory, if the robot is receiving input this doesn't matter anyways. */
         /* Only affects the robot when stopped!! */
-        this->last_speed[i] = this->math_dest.wheel_speeds[i];
         this->math_dest.wheel_speeds[i] = 0;
-        this->true_angles[i] = (this->ANGLE_ENCODERS[i]->GetPosition() * 360)/SWERVE_WHEEL_COUNTS_PER_REVOLUTION;
     }
     this->use_old = false;
 }

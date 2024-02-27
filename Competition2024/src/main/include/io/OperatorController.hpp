@@ -40,6 +40,7 @@ class OperatorController : frc2::SubsystemBase
     public:
         void reset_gyro();
         void one_button_intake();
+        void one_button_shoot();
         void robo_periodic(); /* Links to teleop periodic */
         OperatorController(cmd_share *share, Turret *turret_obj, AHRS *ahrs_obj, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj);
         cmd_share *shared;

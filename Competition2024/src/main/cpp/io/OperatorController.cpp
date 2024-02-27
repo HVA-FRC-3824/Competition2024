@@ -66,6 +66,25 @@ void OperatorController::one_button_intake()
     state = O_ACTIVE; 
 }
 
+void OperatorController::one_button_shoot()
+{
+    state = O_SOFT_LOCK;
+    
+    /* Rev up launcher */
+    m_launcher->simple_spin(-1);
+
+    /* Wait 1.5 seconds */
+    usleep(1500 * 1000);
+
+    m_launcher->index_spin(-1);
+
+    usleep(250 * 1000);
+
+    m_launcher->simple_spin(0);
+    m_launcher->index_spin(0);
+    state = O_ACTIVE;
+}
+
 void OperatorController::robo_periodic()
 {
     //std::cout << "OPERATOR\n";
@@ -90,6 +109,7 @@ void OperatorController::robo_periodic()
             case A_MODE:
                 /*m_launcher->index_spin(OperatorStick.GetRawAxis(5));
                 m_launcher->simple_spin(OperatorStick.GetY()); */
+                m_actuation->linear_actuation(-OperatorStick.GetRawAxis(5));
                 m_intake->suck(OperatorStick.GetRawAxis(2)-OperatorStick.GetRawAxis(3)); 
                 m_launcher->index_spin(OperatorStick.GetRawAxis(5));
                 break;
@@ -125,7 +145,9 @@ void OperatorController::robo_periodic()
             switch(mode)
             {
                 case A_MODE:
-                    m_intake->flip_retraction();
+                    this->shared->command_being_run = C_LAUNCHER_OB;
+                    this->shared->my_wishes = C_RUN;
+                    //m_intake->flip_retraction();
                     //m_actuation->actuate_to_point(0);
                     //this->m_intake->intake_actuate_point(INTAKE_BOTTOM_POINT);
                     break;

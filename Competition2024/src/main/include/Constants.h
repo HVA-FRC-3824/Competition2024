@@ -78,14 +78,14 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define SWERVE_MAX_AMPERAGE 30
 
 /* Swerve Constants */
-#define DEADZONE_THRES .25   /* Raise to counter joystick drift this number is on a controller to controller basis */
+#define DEADZONE_THRES .1   /* Raise to counter joystick drift this number is on a controller to controller basis */
 
 /* The amount of raw sensor units to complete one full rotation */
 #define SWERVE_WHEEL_COUNTS_PER_REVOLUTION 21 /* god neos are weird! */
 
 /* Speed multipliers (rot. speed is a set speed)*/
 #define SWERVE_SPEED_MULTIPLIER .5
-#define SWERVE_ROTATION_SPEED .75
+#define SWERVE_ROTATION_SPEED 1
 
 /* PID Values for the motorcontrollers */
 #define SWERVE_P .7
@@ -94,6 +94,7 @@ PID values for launch motors SUBJECT TO CHANGE*/
 
 /* 180 / Pi */
 #define MAGIC_NUMBER 57.29577f
+#define ANTIMAGIC_NUMBER 0.01745f
 
 /* Global constants */
 #define TALONFX_UFR 2048
@@ -115,6 +116,7 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define C_INACTIVE  0x00
 #define C_DISABLED  0xf1
 #define C_INTAKE_OB 0x01
+#define C_LAUNCHER_OB 0x02
 
 struct CommandMemoryShare
 {
