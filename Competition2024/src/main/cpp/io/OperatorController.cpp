@@ -1,6 +1,7 @@
 #include "../../include/io/OperatorController.hpp"
 #include <iostream>
 #include <unistd.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 void OperatorController::reset_gyro()
 {
@@ -95,8 +96,22 @@ void OperatorController::robo_periodic()
 
     if(state)
     {
-        if(state == O_SOFT_LOCK){ return; /* computer only! */}
+        if(state == O_SOFT_LOCK){frc::SmartDashboard::PutBoolean("Softlocked? ", false); return; /* computer only! */}
+        frc::SmartDashboard::PutBoolean("Softlocked? ", true);
+
         if(OperatorStick.GetRawButtonPressed(5)){if(mode == A_MODE){mode = B_MODE;}else{mode = A_MODE;};}
+
+        switch(mode)
+        {
+            case A_MODE:
+                frc::SmartDashboard::PutString("Operator Mode: ", "A_MODE");
+                break;
+            case B_MODE:
+                frc::SmartDashboard::PutString("Operator Mode: ", "B_MODE");
+                break;
+        }
+
+
 
         /* This is a ridiculously bad way to do this :D */
         /* Return always after a hit condition to save resources */

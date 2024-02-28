@@ -48,12 +48,12 @@ void command_runner()
 
     if(control->state == C_DISABLED){return;}
 
-        /* Run logic */
+    /* Run logic */
     if(control->my_wishes == C_RUN && control->state == C_INACTIVE)
     {
         std::cout << "Command logic ran\n";
-        control->my_wishes == C_NONE;
-        control->state == C_ACTIVE;
+        control->my_wishes = C_NONE;
+        control->state = C_ACTIVE;
         pthread_create(&command_ref,NULL,command_thread,NULL);
     }
 }
@@ -64,6 +64,4 @@ void runner_launcher(cmd_share *control_in, OperatorController *controller)
 {
     control = control_in;
     o_controller = controller;
-    /*pthread_t thread;
-    pthread_create(&thread, NULL, command_runner, NULL);*/
 }

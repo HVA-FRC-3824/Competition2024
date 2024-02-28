@@ -43,5 +43,10 @@
       "/LiveWindow/Ungrouped/navX-Sensor[1]": "Gyro",
       "/SmartDashboard/Auto Modes": "String Chooser"
     }
+  },
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    }
   }
 }

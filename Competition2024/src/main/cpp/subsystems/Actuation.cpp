@@ -1,5 +1,6 @@
 #include "../../include/subsystems/Actuation.hpp"
 #include <iostream>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 Actuation::Actuation()
 {
@@ -31,6 +32,6 @@ void Actuation::linear_actuation(float input)
 
 void Actuation::robo_periodic()
 {
-    std::cout << "ACT_A: " << (this->actuation_motor.GetSelectedSensorPosition()/ACTUATION_UFR)*360 << "\n";
-    //std::cout << "ACT_A: " << this->actuation_motor.GetSelectedSensorPosition() << "\n";
+    frc::SmartDashboard::PutNumber("Actuation Angle: ", (this->actuation_motor.GetSelectedSensorPosition()/ACTUATION_UFR)*360);
+
 }

@@ -51,13 +51,11 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
     float forward = fwd;
 	float strafe = str;
 
-	if(field_centric)
-	{
-		/* If field centric take in account the gyro */
-        float temp = (fwd * cosf(gyro * ANTIMAGIC_NUMBER)) + (str * sinf(gyro * ANTIMAGIC_NUMBER));
-        strafe = -(fwd * sinf(gyro * ANTIMAGIC_NUMBER)) + (str * cosf(gyro * ANTIMAGIC_NUMBER));
-		forward = temp;
-	}
+
+	/* If field centric take in account the gyro */
+    float temp = (fwd * cosf(gyro * ANTIMAGIC_NUMBER)) + (str * sinf(gyro * ANTIMAGIC_NUMBER));
+    strafe = -(fwd * sinf(gyro * ANTIMAGIC_NUMBER)) + (str * cosf(gyro * ANTIMAGIC_NUMBER));
+	forward = temp;
 
 	float R = sqrtf((cons.length * cons.length)+(cons.width * cons.width));
 
@@ -108,12 +106,12 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
         if(dest->wheel_angle[i] == 180){dest->wheel_speeds[i] = dest->wheel_speeds[i] * -1; continue;}
         if(dest->wheel_angle[i] < -90)
         {
-            dest->wheel_angle[i] = dest->wheel_angle[i] += 180;
+            dest->wheel_angle[i] += 180;
             dest->wheel_speeds[i] = dest->wheel_speeds[i] * -1;
         }
         if(dest->wheel_angle[i] > 90)
         {
-            dest->wheel_angle[i] = dest->wheel_angle[i] -= 180;
+            dest->wheel_angle[i] -= 180;
             dest->wheel_speeds[i] = dest->wheel_speeds[i] * -1;
         }
     } 
@@ -200,16 +198,12 @@ void Swerve::drive(float y, float x, float x2, float gyro)
     /* Generate our math and store in dest struct to be converted / used */
     calculate_wheel_information(&this->math_dest,this->chassis_info,y,x,x2,this->field_centered,gyro);
 
-    //oldhead_correction();
-
-    print_swerve_math(this->math_dest);
-
     /* If we are trying to rotate, move the wheels so that it actually spins, may need to adjust */
     if(x2)
     {
         for(int i = 0; i < 4; i++)
         {
-            this->math_dest.wheel_speeds[i] = this->math_dest.wheel_speeds[i] * SWERVE_ROTATION_SPEED;
+            this->math_dest.wheel_speeds[i] = this->math_dest.wheel_speeds[i] * rot_speed;
         } 
     }
 
@@ -218,10 +212,12 @@ void Swerve::drive(float y, float x, float x2, float gyro)
     for(int i = 0; i < 4; i++)
     { this->raw_usable[i] = ((this->math_dest.wheel_angle[i] / 360) * SWERVE_WHEEL_COUNTS_PER_REVOLUTION); }
 
+    print_swerve_math(this->math_dest);
+
     /* Only run our motors once everything is calculated */
     for(int i = 0; i < 4; i++)
     {
-        this->DRIVE_MOTORS[i]->Set(this->math_dest.wheel_speeds[i] * SWERVE_SPEED_MULTIPLIER);
+        this->DRIVE_MOTORS[i]->Set(this->math_dest.wheel_speeds[i] * move_speed);
 
         if(use_old)
         {

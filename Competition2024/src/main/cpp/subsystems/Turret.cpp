@@ -16,10 +16,10 @@ void Turret::robo_periodic()
     /* Update live data to operator view */
     frc::SmartDashboard::PutBoolean("Turret Locked? ", this->locked);
     frc::SmartDashboard::PutNumber("Turret Heading: ", this->current_heading);
+    frc::SmartDashboard::PutBoolean("Turret Soft-locked? ", this->soft_locked);
 
     /* Read values from encoder to find accurate heading, and assign it to current_heading */
     this->current_heading = (this->TURRET_MOTOR.GetSelectedSensorPosition()/TURRET_ROTATIONS_PER_360) *360;
-    std::cout << "T_A: " << this->TURRET_MOTOR.GetSelectedSensorPosition() << "\n";
 }
 
 void Turret::spin_to_angle(float angle)

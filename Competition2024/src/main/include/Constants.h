@@ -84,8 +84,8 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define SWERVE_WHEEL_COUNTS_PER_REVOLUTION 21 /* god neos are weird! */
 
 /* Speed multipliers (rot. speed is a set speed)*/
-#define SWERVE_SPEED_MULTIPLIER .5
-#define SWERVE_ROTATION_SPEED 1
+#define SWERVE_DEFAULT_SPEED_MULTIPLIER 1
+#define SWERVE_DEFAULT_ROTATION_SPEED 1
 
 /* PID Values for the motorcontrollers */
 #define SWERVE_P .7
@@ -109,13 +109,13 @@ PID values for launch motors SUBJECT TO CHANGE*/
    in OperatorController.cpp the flags are set in the memory shared between the two causing the command to run.
 */
 
-#define C_ACTIVE    0xff
-#define C_KILL      0x20
-#define C_NONE      0x10
-#define C_RUN       0xf0
-#define C_INACTIVE  0x00
-#define C_DISABLED  0xf1
-#define C_INTAKE_OB 0x01
+#define C_ACTIVE      0xff
+#define C_KILL        0x20
+#define C_NONE        0x10
+#define C_RUN         0xf0
+#define C_INACTIVE    0x00
+#define C_DISABLED    0xf1
+#define C_INTAKE_OB   0x01
 #define C_LAUNCHER_OB 0x02
 
 struct CommandMemoryShare

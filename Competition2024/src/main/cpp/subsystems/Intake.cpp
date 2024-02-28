@@ -1,4 +1,5 @@
 #include "../../include/subsystems/Intake.hpp"
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <iostream>
 
 Intake::Intake()
@@ -31,7 +32,8 @@ void Intake::suck(float input)
 
 void Intake::robo_periodic()
 {
-    std::cout << "INTAKE POS: " << this->actuation_motor.GetSelectedSensorPosition(0) << "\n";
+    frc::SmartDashboard::PutNumber("Intake Pos: ", (this->actuation_motor.GetSelectedSensorPosition()));
+        frc::SmartDashboard::PutBoolean("Retracted? :", this->retracted);
 }
 
 
