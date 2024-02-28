@@ -47,6 +47,20 @@
   "NetworkTables": {
     "Persistent Values": {
       "open": false
+    },
+    "transitory": {
+      "LiveWindow": {
+        "open": true
+      },
+      "Shuffleboard": {
+        "open": true
+      },
+      "SmartDashboard": {
+        "Auto Modes": {
+          "open": true
+        },
+        "open": true
+      }
     }
   }
 }

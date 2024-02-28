@@ -1,5 +1,6 @@
 #include "../../include/subsystems/Swerve.hpp"
 #include <iostream>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <math.h>
 
 void Swerve::clear_swerve_memory()

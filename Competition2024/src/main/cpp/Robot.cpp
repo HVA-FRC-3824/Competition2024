@@ -7,6 +7,7 @@
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Joystick.h>
+#include <frc/smartdashboard/SendableChooser.h>
 #include <iostream>
 #include "AHRS.h"
 #include "../include/io/OperatorController.hpp"
@@ -23,10 +24,7 @@ cmd_share cmd_control;
 angle_mem_share angles_share;
 Turret TURRET{&angles_share};
 Launcher LAUNCHER{};
-//struct TheEye THE_EYE;
-/* Test */
-Turret *t_hold;
-Launcher *l_hold;
+struct TheEye THE_EYE;
 Intake INTAKE{};
 Actuation ACTUATION{};
 
@@ -36,7 +34,6 @@ Swerve SWERVE{24,24,&navx};
 OperatorController O_CONTROLLER{&cmd_control,&TURRET,&navx,&LAUNCHER,&INTAKE,&ACTUATION}; 
 DriverController D_CONTROLLER{&SWERVE};
 
-
 frc::Joystick Jostick{0};
 uint8_t blocked_tags[8] = {8,9,10,11,12,13,14,15};
 
@@ -45,7 +42,7 @@ void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-  //open_TheEye(THE_EYE,blocked_tags,8);
+  open_TheEye(THE_EYE,blocked_tags,8);
   navx.Reset();
   runner_launcher(&cmd_control,&O_CONTROLLER);
 }
