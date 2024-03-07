@@ -6,6 +6,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
 #include "AHRS.h"
+#include <ctre/phoenix/sensors/CANCoder.h>
 
 struct wheel_information
 {
@@ -33,17 +34,20 @@ class Swerve : frc2::SubsystemBase
         bool field_centered = false;
         float move_speed = SWERVE_DEFAULT_SPEED_MULTIPLIER;
         float rot_speed = SWERVE_DEFAULT_ROTATION_SPEED;
-        Swerve(float length, float width, AHRS *gyro_obj);
-        void drive(float x, float y, float x2, float gyro); // gyro is ignored when field_centered is false
+        Swerve(float length, float width);
+        void drive(float y, float x, float x2, float gyro); // gyro is ignored when field_centered is false
         void print_swerve_math(wheel_info math); // debug
         bool toggle_field_centricity(); // returns changed state
-        void calculate_wheel_information(wheel_info *dest, struct size_constants cons, float fwd, float str, float rotate, uint8_t field_centric, float gyro);
+        void calculate_wheel_information(wheel_info *dest, struct size_constants cons, float fwd, float str, float rotate);
         void clear_swerve_memory(); // call when values are stuckington
-        AHRS *gyro;
+        AHRS navx{frc::SerialPort::SerialPort::Port::kMXP};
+        void snap_wheels_to_abs();
+        void toggle_xwheels();
     private:
         void deadzone_correction(float *x, float *y, float *x2);
         double last_units[4]; 
         bool use_old = false;
+        bool x_wheels = false;
 
         /* Save point for speed and angle values */
         wheel_info math_dest;
@@ -57,7 +61,8 @@ class Swerve : frc2::SubsystemBase
         /* Motor bank. Follows the format in the math_dest 
             0 = front right, 1 = front left 
             2 = rear left,   3 = rear right */
-        
+    
+
         CANSparkMax FR_MOTOR_M{FR_M,CANSparkMaxLowLevel::MotorType::kBrushless};
         CANSparkMax FL_MOTOR_M{FL_M,CANSparkMaxLowLevel::MotorType::kBrushless};
         CANSparkMax RL_MOTOR_M{RL_M,CANSparkMaxLowLevel::MotorType::kBrushless};
@@ -84,8 +89,16 @@ class Swerve : frc2::SubsystemBase
             &RR_MOTOR_A
         };
 
-        SparkMaxRelativeEncoder* ANGLE_ENCODERS[4];
+        SparkRelativeEncoder* ANGLE_ENCODERS[4];
         SparkMaxPIDController* PID_CONTROLLERS[4];
+
+        ctre::phoenix::sensors::CANCoder ABS_ENCODERS[4]
+        {
+            41,
+            43,
+            40,
+            42 // 43
+        };
 };
 
 #endif

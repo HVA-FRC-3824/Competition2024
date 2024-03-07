@@ -5,7 +5,7 @@
 
 void OperatorController::reset_gyro()
 {
-    ahrs->Reset();
+    //ahrs->Reset();
     std::cout << "Gyro Reset\n";
 }
 
@@ -13,56 +13,29 @@ void OperatorController::one_button_intake()
 {
     std::cout << "command start\n";
     state = O_SOFT_LOCK; /* Ignore user input until command executes */
-    
-    /* Make sure angle of launcher is in correct position */
-    m_actuation->actuate_to_point(ACTUATION_INDEX_ANGLE);
-
-    usleep(250*1000);
-
-    m_actuation->locked = true;
-
-    /* Check if turret is zeroed, if not zero it */
-    while(!((m_turret->current_heading >= 0-TURRET_MARGIN_OF_ERROR)&&(m_turret->current_heading <= 0+TURRET_MARGIN_OF_ERROR)))
-    {
-        m_turret->spin_to_angle(0); /* snaps forward */
-    }
-
-    m_turret->lock_turret();
-
-    /* Once turret is zeroed, and launcher in correct position, fold intake in */
-    if(m_intake->retracted == false)
-    {
-        m_intake->flip_retraction();
-        sleep(1);
-    }
 
     /* Transfer of note into index */
-    m_launcher->index_spin(-.5);
-    m_actuation->actuate_to_point(18);
-    m_intake->suck(-.3);
+    m_launcher->index_spin(.5);
+    m_intake->suck(.3);
 
-    usleep(1500 * 1000);
+    usleep(500 * 1000);
     
     /* Return intake */
 
-    m_actuation->actuate_to_point(ACTUATION_INDEX_ANGLE);
     m_intake->suck(0);
     m_launcher->index_spin(0);
 
-    usleep(500 * 1000);
+    //usleep(500 * 1000);
 
     /* Back out note in index */
-    m_launcher->index_spin(.1);
+    m_launcher->index_spin(-.1);
 
     usleep(150 * 1000);
 
     m_launcher->index_spin(0);
 
-    m_intake->flip_retraction();
-
     usleep(200 * 1000);
 
-    m_turret->lock_turret(); // unlocks, toggle
     m_actuation->locked = false;
     state = O_ACTIVE; 
 }
@@ -72,15 +45,26 @@ void OperatorController::one_button_shoot()
     state = O_SOFT_LOCK;
     
     /* Rev up launcher */
-    m_launcher->simple_spin(-1);
+    m_launcher->simple_spin(1);
 
-    /* Wait 1.5 seconds */
-    usleep(1500 * 1000);
+    /* Wait 1 seconds */
+    usleep(1000 * 1000);
 
-    m_launcher->index_spin(-1);
+    m_launcher->index_spin(1);
 
     usleep(250 * 1000);
 
+    m_launcher->simple_spin(0);
+    m_launcher->index_spin(0);
+    state = O_ACTIVE;
+}
+
+void OperatorController::one_button_amp()
+{
+    state = O_SOFT_LOCK;
+    m_launcher->simple_spin(.1);
+    m_launcher->index_spin(.25);
+    usleep(500 * 1000);
     m_launcher->simple_spin(0);
     m_launcher->index_spin(0);
     state = O_ACTIVE;
@@ -96,10 +80,10 @@ void OperatorController::robo_periodic()
 
     if(state)
     {
-        if(state == O_SOFT_LOCK){frc::SmartDashboard::PutBoolean("Softlocked? ", false); return; /* computer only! */}
-        frc::SmartDashboard::PutBoolean("Softlocked? ", true);
+        if(state == O_SOFT_LOCK){frc::SmartDashboard::PutBoolean("Softlocked? ", true); return; /* computer only! */}
+        frc::SmartDashboard::PutBoolean("Softlocked? ", false);
 
-        if(OperatorStick.GetRawButtonPressed(5)){if(mode == A_MODE){mode = B_MODE;}else{mode = A_MODE;};}
+        //if(OperatorStick.GetRawButtonPressed(5)){if(mode == A_MODE){mode = B_MODE;}else{mode = A_MODE;};}
 
         switch(mode)
         {
@@ -122,25 +106,51 @@ void OperatorController::robo_periodic()
         switch(mode)
         {
             case A_MODE:
-                /*m_launcher->index_spin(OperatorStick.GetRawAxis(5));
-                m_launcher->simple_spin(OperatorStick.GetY()); */
-                m_actuation->linear_actuation(-OperatorStick.GetRawAxis(5));
-                m_intake->suck(OperatorStick.GetRawAxis(2)-OperatorStick.GetRawAxis(3)); 
-                m_launcher->index_spin(OperatorStick.GetRawAxis(5));
+                double z; 
+                z = OperatorStick.GetZ();
+                double y; 
+                y = -OperatorStick.GetY();
+                int index; 
+                index = OperatorStick.GetRawAxis(3);
+
+                if(z < .2 && z > -.2){z = 0;}
+                if(y < .75 && y > -.75){y = 0;} 
+
+                m_turret->spin_simple(z * .2);
+                m_actuation->linear_actuation(y);
+                m_launcher->index_spin(index * .25); 
+                //m_launcher->simple_spin(y);
+
+
+                if(OperatorStick.GetPOV(0) == 0)
+                {
+                    m_intake->intake_actuate_simple(-1);
+                } else if(OperatorStick.GetPOV(0) == 180)
+                {
+                    m_intake->intake_actuate_simple(1);
+                } else {
+                    m_intake->intake_actuate_simple(0);
+                }
+
                 break;
             case B_MODE:
-                m_actuation->linear_actuation(OperatorStick.GetY() * .15);
-                m_intake->intake_actuate_simple(OperatorStick.GetRawAxis(5) * .15);
                 break;
         }
 
-        /* A */
-        if(OperatorStick.GetRawButtonPressed(1))
+        /* THUMB */
+        if(OperatorStick.GetRawButtonPressed(2))
+        {
+            this->shared->command_being_run = C_AMP_OB;
+            this->shared->my_wishes = C_RUN; 
+        }
+
+        /* TOP_3 */
+        if(OperatorStick.GetRawButtonPressed(5))
         {
             switch(mode)
             {
                 case A_MODE:
-                    this->m_actuation->actuate_to_point(-20);
+                    this->m_intake->suck(1);
                     break;
                 case B_MODE:
                     std::cout << "Operator Called\n";
@@ -154,17 +164,13 @@ void OperatorController::robo_periodic()
             }        
         }
 
-        /* X */
+        /* TOP_5 */
         if(OperatorStick.GetRawButtonPressed(3))
         {
             switch(mode)
             {
                 case A_MODE:
-                    this->shared->command_being_run = C_LAUNCHER_OB;
-                    this->shared->my_wishes = C_RUN;
-                    //m_intake->flip_retraction();
-                    //m_actuation->actuate_to_point(0);
-                    //this->m_intake->intake_actuate_point(INTAKE_BOTTOM_POINT);
+                    this->m_intake->suck(0);
                     break;
                 case B_MODE:
                     break;
@@ -174,15 +180,44 @@ void OperatorController::robo_periodic()
                     break;
             }
         }
+
+        if(OperatorStick.GetRawButtonPressed(6))
+        {
+            one_button_intake();
+        }
+
+        /* TOP_4 */
+        if(OperatorStick.GetRawButtonPressed(4))
+        {
+            switch(mode)
+            {
+            case A_MODE:
+                this->m_intake->suck(-1);
+                break;
+            case B_MODE:
+                this->m_actuation->actuate_to_point(0);
+                break;
+            case O_TEST:
+                break;      
+            }     
+        }
+
+        /* TRIGGER*/
+        if(OperatorStick.GetRawButtonPressed(1))
+        {
+            this->shared->command_being_run = C_LAUNCHER_OB;
+            this->shared->my_wishes = C_RUN; 
+        }
     }
 }
 
-OperatorController::OperatorController(cmd_share *share, Turret *turret_obj, AHRS *ahrs_obj, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj)
+OperatorController::OperatorController(cmd_share *share, Turret *turret_obj, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj, Climb *climb_obj)
 {
     m_turret = turret_obj;
-    ahrs = ahrs_obj;
+    //ahrs = ahrs_obj;
     m_launcher = launcher_obj;
     m_intake = intake_obj;
     m_actuation = actuation_obj;
+    //+m_climb = climb_obj;
     shared = share;
 }

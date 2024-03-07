@@ -1,6 +1,8 @@
 #include "../../include/subsystems/Swerve.hpp"
 #include <iostream>
 #include <math.h>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include <string>
 
 void Swerve::clear_swerve_memory()
 {
@@ -13,9 +15,8 @@ void Swerve::clear_swerve_memory()
     }
 }
 
-Swerve::Swerve(float length, float width, AHRS *gyro_obj)
+Swerve::Swerve(float length, float width)
 {
-    this->gyro = gyro_obj;
     this->chassis_info.length = length;
     this->chassis_info.width = width;
 
@@ -38,7 +39,8 @@ Swerve::Swerve(float length, float width, AHRS *gyro_obj)
         this->PID_CONTROLLERS[i]->SetD(SWERVE_D);
 
         /* Get real relative encoders */
-        this->ANGLE_ENCODERS[i] = new SparkMaxRelativeEncoder(this->ANGLE_MOTORS[i]->GetEncoder());
+        this->ANGLE_ENCODERS[i] = new SparkRelativeEncoder(this->ANGLE_MOTORS[i]->GetEncoder());
+        this->ABS_ENCODERS[i].ConfigAbsoluteSensorRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
 
         /* Burn flash everytime */
         this->DRIVE_MOTORS[i]->BurnFlash();
@@ -46,11 +48,13 @@ Swerve::Swerve(float length, float width, AHRS *gyro_obj)
     }
 };
 
-void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants cons, float fwd, float str, float rotate, uint8_t field_centric, float gyro)
+void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants cons, float fwd, float str, float rotate)
 {
     float forward = fwd;
 	float strafe = str;
+    float gyro = navx.GetYaw();
 
+    frc::SmartDashboard::PutNumber("Gyro Input: ", gyro);
 
 	/* If field centric take in account the gyro */
     float temp = (fwd * cosf(gyro * ANTIMAGIC_NUMBER)) + (str * sinf(gyro * ANTIMAGIC_NUMBER));
@@ -116,6 +120,16 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
         }
     } 
 	return;
+}
+
+void Swerve::snap_wheels_to_abs()
+{
+    for(int i = 0; i < 4; i++)
+    {
+        /* Snap to abs then set to zero */
+        //this->PID_CONTROLLERS[i]->SetReference(-(this->ABS_ENCODERS[i].GetAbsolutePosition()/360)*SWERVE_WHEEL_COUNTS_PER_REVOLUTION,CANSparkMax::ControlType::kPosition);
+        this->ANGLE_ENCODERS[i]->SetPosition((this->ABS_ENCODERS[i].GetAbsolutePosition()/360)*SWERVE_WHEEL_COUNTS_PER_REVOLUTION);
+    }
 }
 
 void Swerve::deadzone_correction(float *x, float *y, float *x2)
@@ -190,22 +204,34 @@ void Swerve::print_swerve_math(wheel_info math)
 
 /* When field centric mode is disabled 'gyro' is ignored */
 
+void Swerve::toggle_xwheels()
+{
+    this->x_wheels = !this->x_wheels;
+    frc::SmartDashboard::PutBoolean("XWHEELS? ", this->x_wheels);
+}
+
 void Swerve::drive(float y, float x, float x2, float gyro)
 {
+    // lock wheels in x position
+    if(this->x_wheels)
+    {
+        for(int i = 0; i < 4; i++)
+        {
+            this->DRIVE_MOTORS[i]->Set(0);
+        }
+        this->PID_CONTROLLERS[0]->SetReference(-7.875,CANSparkMax::ControlType::kPosition);
+        this->PID_CONTROLLERS[1]->SetReference(7.875,CANSparkMax::ControlType::kPosition);
+        this->PID_CONTROLLERS[2]->SetReference(2.625,CANSparkMax::ControlType::kPosition);
+        this->PID_CONTROLLERS[3]->SetReference(-2.625,CANSparkMax::ControlType::kPosition);
+
+        return;
+    }
+
     /* Correct/Sanitize our inputs */
     deadzone_correction(&x, &y, &x2);
 
     /* Generate our math and store in dest struct to be converted / used */
-    calculate_wheel_information(&this->math_dest,this->chassis_info,y,x,x2,this->field_centered,gyro);
-
-    /* If we are trying to rotate, move the wheels so that it actually spins, may need to adjust */
-    if(x2)
-    {
-        for(int i = 0; i < 4; i++)
-        {
-            this->math_dest.wheel_speeds[i] = this->math_dest.wheel_speeds[i] * rot_speed;
-        } 
-    }
+    calculate_wheel_information(&this->math_dest,this->chassis_info,y,x,x2);
 
     /* Find the percent to max angle (180 or -180) and then multiple by the counts required to get to that required angle.       */
     /* Equivalent to x / SWERVE_WHEEL_COUNTS_PER_REVOLUTION = y / 360 where y is angle and x is raw sensor units for the encoder */
@@ -217,7 +243,9 @@ void Swerve::drive(float y, float x, float x2, float gyro)
     /* Only run our motors once everything is calculated */
     for(int i = 0; i < 4; i++)
     {
-        this->DRIVE_MOTORS[i]->Set(this->math_dest.wheel_speeds[i] * move_speed);
+        frc::SmartDashboard::PutNumber(fmt::v10::format("CANCODER_POS_{}: ", i), this->ABS_ENCODERS[i].GetAbsolutePosition());
+        //frc::SmartDashboard::PutNumber(fmt::v9::format("SPARKMAX_POS_{}: ", i), this->ANGLE_ENCODERS[i]->GetPosition());
+        this->DRIVE_MOTORS[i]->Set(this->math_dest.wheel_speeds[i]);
 
         if(use_old)
         {

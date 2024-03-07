@@ -4,6 +4,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
+#include <ctre/phoenix6/TalonFX.hpp>
 
 class Intake : frc2::SubsystemBase
 {
@@ -17,7 +18,7 @@ class Intake : frc2::SubsystemBase
         bool retracted = true;
     private:
         ctre::phoenix::motorcontrol::can::WPI_TalonSRX intake_motor{INTAKE_MOTOR};
-        ctre::phoenix::motorcontrol::can::WPI_TalonFX actuation_motor{INTAKE_ACTUATION};
+        ctre::phoenix6::hardware::TalonFX actuation_motor{INTAKE_ACTUATION,"rio"};
 
 };
 #endif

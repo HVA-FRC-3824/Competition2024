@@ -4,21 +4,16 @@
 
 Actuation::Actuation()
 {
-    this->actuation_motor.Config_kP(0,ACTUATION_P);
-    this->actuation_motor.Config_kI(0,ACTUATION_I);
-    this->actuation_motor.Config_kD(0,ACTUATION_D);
     this->actuation_motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-    this->actuation_motor.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor,0,0);
-    this->actuation_motor.ConfigIntegratedSensorAbsoluteRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
-    this->actuation_motor.ConfigPeakOutputForward(.2);
-    this->actuation_motor.ConfigPeakOutputReverse(-.2);
+    this->actuation_motor.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::CTRE_MagEncoder_Absolute,0,0);
 }
 
 void Actuation::actuate_to_point(float point)
 {
     if(!locked)
     {
-        this->actuation_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position,(point/360)*ACTUATION_UFR);
+        frc::SmartDashboard::PutNumber("Actuation Desired: ", (point/360)*806400);
+        this->actuation_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position,(point/360)*806400);
     }
 }
 
@@ -26,12 +21,15 @@ void Actuation::linear_actuation(float input)
 {
     if(!locked)
     {
+        /*if((this->actuation_motor.GetSelectedSensorPosition()/2048)*360 < MAX_LOWER_ANGLE)
+        {return;} */
         this->actuation_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,input);
     }
 }
 
 void Actuation::robo_periodic()
 {
-    frc::SmartDashboard::PutNumber("Actuation Angle: ", (this->actuation_motor.GetSelectedSensorPosition()/ACTUATION_UFR)*360);
-
+    frc::SmartDashboard::PutNumber("Actuation Angle: ", (this->actuation_motor.GetSelectedSensorPosition()/806400)*360);
+    frc::SmartDashboard::PutNumber("Actuation Pos: ", this->actuation_motor.GetSelectedSensorPosition());
+    frc::SmartDashboard::PutBoolean("Actuation Locked? ", this->locked);
 }

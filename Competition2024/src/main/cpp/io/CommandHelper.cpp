@@ -1,10 +1,14 @@
+#ifndef COMMAND_HELPER_H
+#define COMMAND_HELPER_H
 /* secretely C not C++... :D */
 #include "../../include/io/CommandHelper.hpp"
 #include <iostream>
 #include "../../include/io/OperatorController.hpp"
+#include "../../include/subsystems/Autos.hpp"
 
 OperatorController *o_controller;
 cmd_share *control;
+Autos *auto_commands;
 pthread_t command_ref;
 
 /* Handles command logic customly because WPILib is for nerds 
@@ -31,6 +35,16 @@ void *command_thread(void *parm)
             control->state = C_INACTIVE;
             control->command_being_run = C_NONE;
             return 0;
+        case C_TEST_ANGLE_A:
+            auto_commands->test_angle();
+            control->state = C_INACTIVE;
+            control->command_being_run = C_NONE;
+            return 0;
+        case C_AMP_OB:
+            o_controller->one_button_amp();
+            control->state = C_INACTIVE;
+            control->command_being_run = C_NONE;
+            return 0;
         case C_NONE:
             break;
     }
@@ -39,7 +53,7 @@ void *command_thread(void *parm)
 void command_runner()
 {
     /* Terminatable, resets to old state */
-    if(control->state == C_KILL)
+    if(control->my_wishes == C_KILL && control->state == C_ACTIVE)
     {
         pthread_cancel(command_ref);
         control->state = C_INACTIVE;
@@ -60,8 +74,10 @@ void command_runner()
 
 
 
-void runner_launcher(cmd_share *control_in, OperatorController *controller)
+void runner_launcher(cmd_share *control_in, OperatorController *controller, Autos *autos)
 {
     control = control_in;
     o_controller = controller;
+    auto_commands = autos;
 }
+#endif

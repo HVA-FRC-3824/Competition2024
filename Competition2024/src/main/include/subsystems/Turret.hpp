@@ -6,6 +6,7 @@
 #include <frc2/command/InstantCommand.h>
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <ctre/phoenix6/TalonFX.hpp>
 #include "../Memory.h"
 
 using namespace ctre::phoenix::motorcontrol::can;
@@ -26,7 +27,7 @@ class Turret : frc2::SubsystemBase
         frc2::InstantCommand turret_test_command{[this] {turret_test();}, {this}};
         int current_heading = 0;
     private:
-        WPI_TalonFX TURRET_MOTOR {TURRET_CAN};
+        ctre::phoenix6::hardware::TalonFX TURRET_MOTOR {TURRET_CAN,"rio"};
         bool locked = false;      /* Turret CANNOT MOVE WHATSOEVER, NO MATTER WHAT! */
         bool soft_locked = false; /* Operator CANNOT MOVE IT, computer TAKES OVER   */
         /* Note on soft locked, it is ONLY CHECK in the operator controller class, soft lock should not need to be

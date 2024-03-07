@@ -47,32 +47,37 @@ PID values for launch motors SUBJECT TO CHANGE*/
 /* Intake variables */
 #define INTAKE_MOTOR 16
 #define INTAKE_ACTUATION 17
-#define INTAKE_ACTUATION_P .05
+#define INTAKE_ACTUATION_P .075
 #define INTAKE_ACTUATION_I 0.0
 #define INTAKE_ACTUATION_D 0.0
 #define INTAKE_ACTUATION_UFR TALONFX_UFR * (24/18)
-#define INTAKE_BOTTOM_POINT 40835
+#define INTAKE_BOTTOM_POINT 40483
 
 /* Actuation variables */
 #define ACTUATION_ID 24
-#define ACTUATION_GR 131.25 /*I believe??*/
-#define ACTUATION_P .035
-#define ACTUATION_I .00
-#define ACTUATION_D .005
+#define ACTUATION_GR 393.75 /*I believe??*/
+#define ACTUATION_P 20
+#define ACTUATION_I 1
+#define ACTUATION_D .000
 #define ACTUATION_INDEX_ANGLE -20
-#define ACTUATION_UFR 268669
+#define ACTUATION_UFR 806400
+#define MAX_LOWER_ANGLE -60
 
 /* Swerve variables */
 /* CAN IDS */
 #define FR_M 7
 #define FL_M 12
-#define RL_M 13
-#define RR_M 10
+#define RL_M 13 //13
+#define RR_M 10 //10
 
 #define FR_A 8
 #define FL_A 4
-#define RL_A 6
-#define RR_A 9
+#define RL_A 6  // 6
+#define RR_A 9  // 9
+
+/* Climber Variable */
+#define CLIMBER_DEPLOY 31
+#define CLIMBER_WINCH  30
 
 /* Hardware Constants */
 #define SWERVE_MAX_AMPERAGE 30
@@ -91,6 +96,11 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define SWERVE_P .7
 #define SWERVE_I 0.0
 #define SWERVE_D 0.001
+
+/* PID Values for angle controller */
+#define ANGLES_SWERVE_P .05
+#define ANGLES_SWERVE_I 0
+#define ANGLES_SWERVE_D 0
 
 /* 180 / Pi */
 #define MAGIC_NUMBER 57.29577f
@@ -117,6 +127,8 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define C_DISABLED    0xf1
 #define C_INTAKE_OB   0x01
 #define C_LAUNCHER_OB 0x02
+#define C_TEST_ANGLE_A 0x03
+#define C_AMP_OB 0x04
 
 struct CommandMemoryShare
 {

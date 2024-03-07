@@ -1,5 +1,6 @@
 #include "../Constants.h"
 #include "OperatorController.hpp"
+#include "../subsystems/Autos.hpp"
 #include <stdint.h>
 #include <pthread.h>
 
@@ -8,6 +9,6 @@
 
 void *command_thread(void *parm);
 void command_runner();
-void runner_launcher(cmd_share *control_in, OperatorController *controller);
+void runner_launcher(cmd_share *control_in, OperatorController *controller, Autos *autos);
 
 #endif
