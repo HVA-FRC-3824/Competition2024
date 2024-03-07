@@ -7,6 +7,7 @@
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/Joystick.h>
+#include <frc/smartdashboard/SendableChooser.h>
 #include <iostream>
 
 #include "../include/io/OperatorController.hpp"
@@ -25,10 +26,7 @@ cmd_share cmd_control;
 angle_mem_share angles_share;
 Turret TURRET{&angles_share};
 Launcher LAUNCHER{};
-//struct TheEye THE_EYE;
-/* Test */
-Turret *t_hold;
-Launcher *l_hold;
+struct TheEye THE_EYE;
 Intake INTAKE{};
 Actuation ACTUATION{};
 Climb CLIMB{};

@@ -1,5 +1,6 @@
 #include "../../include/subsystems/Swerve.hpp"
 #include <iostream>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <math.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <string>

@@ -1,4 +1,5 @@
 #include "../../include/subsystems/TheEye.h"
+#include <unistd.h>
 
 struct TheEye *eye_reference;
 struct aprildata current_tag;
@@ -14,7 +15,7 @@ struct aprildata current_tag;
 void *server_loop(void *parm)
 {
     int sockfd; struct sockaddr_in cliaddr;
-
+    printf("server started\n");
     /* Bind the socket to the port for further questioning */
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if(sockfd < 0){printf("The Eye cannot open socket... AHHHHHHHHHHH!!!!!!!\n");}
@@ -23,10 +24,10 @@ void *server_loop(void *parm)
     cliaddr.sin_addr.s_addr = INADDR_ANY;
 
     bind(sockfd, (struct sockaddr *)&cliaddr, sizeof(cliaddr));
+    /* WARNING: this MAY crash watchdog (I HATE WPILIB!!! WATCHDOGS FOR LOSERS ) */
     while(1)
     {
         recvfrom(sockfd,&current_tag,sizeof(struct aprildata),0,NULL,0);
-        //printf("RECEIVED\n");
         /* If not filtered, save time and make active */
         if(eye_reference->TheEyes_Subjects[current_tag.id-1].tag_status)
         {
@@ -39,10 +40,12 @@ void *server_loop(void *parm)
 /* REMINDER: check camera for ID bound checking!!! BIG DEAL!! */
 void *processor(void *parm)
 {
-    register int i;
+    printf("processor started\n");
+    int i;
     clock_t current_time = clock(); /* Avoid recalling clock() every loop, delay between if statements neglible */
     while(1)
     {
+        usleep(20 * 1000); /* stupid watchdog restrictions */
         for(i = 0; i < MAX_TAGS; i++)
         {
             /* Check for ignore status, 0x00 */
