@@ -116,7 +116,6 @@ void OperatorController::robo_periodic()
                 if(z < .2 && z > -.2){z = 0;}
                 if(y < .75 && y > -.75){y = 0;} 
 
-                m_turret->spin_simple(z * .2);
                 m_actuation->linear_actuation(y);
                 m_launcher->index_spin(index * .25); 
                 //m_launcher->simple_spin(y);
@@ -158,7 +157,6 @@ void OperatorController::robo_periodic()
                     this->shared->my_wishes = C_RUN; 
                     break;
                 case O_TEST:
-                    this->m_turret->spin_to_angle(90);
                     return;
                     break;
             }        
@@ -175,7 +173,6 @@ void OperatorController::robo_periodic()
                 case B_MODE:
                     break;
                 case O_TEST:
-                    this->m_turret->spin_to_angle(0);
                     reset_gyro();
                     break;
             }
@@ -211,9 +208,8 @@ void OperatorController::robo_periodic()
     }
 }
 
-OperatorController::OperatorController(cmd_share *share, Turret *turret_obj, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj, Climb *climb_obj)
+OperatorController::OperatorController(cmd_share *share, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj, Climb *climb_obj)
 {
-    m_turret = turret_obj;
     //ahrs = ahrs_obj;
     m_launcher = launcher_obj;
     m_intake = intake_obj;

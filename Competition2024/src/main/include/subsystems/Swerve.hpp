@@ -8,6 +8,8 @@
 #include "AHRS.h"
 #include <ctre/phoenix/sensors/CANCoder.h>
 
+#define SWERVE_MODULES 4
+
 struct wheel_information
 {
 	/* Order of wheels as in the real world: */
