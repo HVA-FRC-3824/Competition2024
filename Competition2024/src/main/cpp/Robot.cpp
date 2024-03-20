@@ -13,7 +13,6 @@
 #include "../include/io/OperatorController.hpp"
 #include "../include/io/CommandHelper.hpp"
 #include "../include/io/DriverController.hpp"
-#include "../include/subsystems/TheEye.h"
 #include "../include/subsystems/Launcher.hpp"
 #include "../include/subsystems/Swerve.hpp"
 #include "../include/subsystems/Autos.hpp"
@@ -24,7 +23,6 @@
 cmd_share       cmd_control;
 angle_mem_share angles_share;
 Launcher        LAUNCHER{};
-struct TheEye   THE_EYE;
 Intake          INTAKE{};
 Actuation       ACTUATION{};
 Climb           CLIMB{};

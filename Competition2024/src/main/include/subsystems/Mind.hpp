@@ -3,7 +3,6 @@
 #include <frc2/command/SubsystemBase.h>
 #include "../Constants.h"
 #include "Launcher.hpp"
-#include "TheEye.h"
 
 #define HEAD_LOCKED_TO_TAG 0xff
 #define HEAD_TRACKING      0x0a
