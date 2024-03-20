@@ -1,7 +1,6 @@
 #ifndef OPERATOR_CONTROLLER_H
 #define OPERATOR_CONTROLLER_H
 #include "../Constants.h"
-#include "../subsystems/Turret.hpp"
 #include "../subsystems/Launcher.hpp"
 #include "../subsystems/Intake.hpp"
 #include "../subsystems/Actuation.hpp"
@@ -44,13 +43,12 @@ class OperatorController : frc2::SubsystemBase
         void one_button_shoot();
         void one_button_amp();
         void robo_periodic(); /* Links to teleop periodic */
-        OperatorController(cmd_share *share, Turret *turret_obj, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj
+        OperatorController(cmd_share *share, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj
         , Climb *climb_obj);
         cmd_share *shared;
     private:
         frc::Joystick OperatorStick {OPERATOR_CONTROLLER};
         Intake* m_intake;
-        Turret* m_turret;
         AHRS* ahrs;
         Launcher* m_launcher;
         Actuation *m_actuation;

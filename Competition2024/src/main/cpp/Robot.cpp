@@ -13,7 +13,6 @@
 #include "../include/io/OperatorController.hpp"
 #include "../include/io/CommandHelper.hpp"
 #include "../include/io/DriverController.hpp"
-#include "../include/subsystems/Turret.hpp"
 #include "../include/subsystems/TheEye.h"
 #include "../include/subsystems/Launcher.hpp"
 #include "../include/subsystems/Swerve.hpp"
@@ -22,19 +21,18 @@
 #include "../include/Memory.h"
 
 /* Object and struct declaration */
-cmd_share cmd_control;
+cmd_share       cmd_control;
 angle_mem_share angles_share;
-Turret TURRET{&angles_share};
-Launcher LAUNCHER{};
-struct TheEye THE_EYE;
-Intake INTAKE{};
-Actuation ACTUATION{};
-Climb CLIMB{};
+Launcher        LAUNCHER{};
+struct TheEye   THE_EYE;
+Intake          INTAKE{};
+Actuation       ACTUATION{};
+Climb           CLIMB{};
 
 Swerve SWERVE{24,24};
 
-OperatorController O_CONTROLLER{&cmd_control,&TURRET,&LAUNCHER,&INTAKE,&ACTUATION, &CLIMB}; 
-DriverController D_CONTROLLER{&SWERVE};
+OperatorController O_CONTROLLER{&cmd_control,&LAUNCHER,&INTAKE,&ACTUATION, &CLIMB}; 
+DriverController   D_CONTROLLER{&SWERVE};
 
 Autos AUTOS{&SWERVE,&cmd_control,&ACTUATION};
 
@@ -119,7 +117,6 @@ void Robot::TeleopPeriodic() {
 
   command_runner();
   INTAKE.robo_periodic();
-  TURRET.robo_periodic();
   ACTUATION.robo_periodic();
   //angles_share.swerve_heading = navx.GetAngle();
   //std::cout << navx.GetAngle() << "\n";

@@ -1,9 +1,8 @@
 #include "../../include/subsystems/Mind.hpp"
 
-Mind::Mind(Turret *orb, Launcher *head, struct TheEye *eye)
+Mind::Mind(Launcher *head, struct TheEye *eye)
 {
     /* Load internal references */
-    Orb = orb;
     Head = head;
     Eye = eye;
 
@@ -37,35 +36,7 @@ void Mind::adaptive_x(float x)
 
     /* Warning! This MAY need to be changed in the future! Turret SHOULD only go 0-360... FUTURE ZANE: FIX THIS!! */
     /* Or, better idea, just keep it negatives, say fuck it, live life! */
-    switch(tier)
-    {
-        case 1:
-            if(direction == 1)
-            {
-                Orb->spin_to_angle(Orb->current_heading-T1_CORRECTION_HOR);
-            } else {
-                Orb->spin_to_angle(Orb->current_heading+T1_CORRECTION_HOR);
-            }
-            break;
-        case 2:
-            if(direction == 1)
-            {
-                Orb->spin_to_angle(Orb->current_heading-T2_CORRECTION_HOR);
-            } else {
-                Orb->spin_to_angle(Orb->current_heading+T2_CORRECTION_HOR);
-            }
-            break;
-        case 3:
-            if(direction == 1)
-            {
-                Orb->spin_to_angle(Orb->current_heading-T3_CORRECTION_HOR);
-            } else {
-                Orb->spin_to_angle(Orb->current_heading+T3_CORRECTION_HOR);
-            }
-            break;
-        default:
-            return;
-    }
+    
 }
 
 

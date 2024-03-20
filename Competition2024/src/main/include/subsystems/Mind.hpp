@@ -2,7 +2,6 @@
 #define THE_MIND_H
 #include <frc2/command/SubsystemBase.h>
 #include "../Constants.h"
-#include "Turret.hpp"
 #include "Launcher.hpp"
 #include "TheEye.h"
 
@@ -18,7 +17,7 @@
 class Mind : frc2::SubsystemBase
 {
     public:
-        Mind(Turret *orb, Launcher *head, struct TheEye *eye);
+        Mind(Launcher *head, struct TheEye *eye);
         //void Periodic() override;
         void track_to_tag(int id); /* Tracks then stops, mainly used for testing */
         void lock_to_tag(int id);  /* Keeps tag completely locked, including adaptive tracking */
@@ -34,7 +33,6 @@ class Mind : frc2::SubsystemBase
         //void adaptive_y(float y);  /* Moves turret basde on y coordinates */
         bool brain_freeze = false;
         bool thinking_direction = 0; /* 1 = left ... 2 = right ... 0 = init / invalid */
-        Turret *Orb;
         Launcher *Head;
         struct TheEye *Eye;
         /* Height values from tag + up - down, in inches */

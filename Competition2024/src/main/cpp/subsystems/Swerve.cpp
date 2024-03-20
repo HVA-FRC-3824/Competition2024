@@ -7,12 +7,12 @@
 
 void Swerve::clear_swerve_memory()
 {
-    for(int i = 0; i < 4; i++)
+    for(int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
     {
-        this->math_dest.wheel_angle[i] = 0;
-        this->math_dest.wheel_speeds[i] = 0;
-        this->raw_usable[i] = 0;
-        this->last_units[i] = 0; 
+        this->math_dest.wheel_angle[swerve_module] = 0;
+        this->math_dest.wheel_speeds[swerve_module] = 0;
+        this->raw_usable[swerve_module] = 0;
+        this->last_units[swerve_module] = 0; 
     }
 }
 
@@ -23,29 +23,29 @@ Swerve::Swerve(float length, float width)
 
     clear_swerve_memory();
 
-    for(int i = 0; i < 4; i++)
+    for(int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
     {
         /* Set current limit */
-        this->DRIVE_MOTORS[i]->SetSmartCurrentLimit(SWERVE_MAX_AMPERAGE);
-        this->ANGLE_MOTORS[i]->SetSmartCurrentLimit(SWERVE_MAX_AMPERAGE);
+        this->DRIVE_MOTORS[swerve_module]->SetSmartCurrentLimit(SWERVE_MAX_AMPERAGE);
+        this->ANGLE_MOTORS[swerve_module]->SetSmartCurrentLimit(SWERVE_MAX_AMPERAGE);
 
         /* Turn on brake coast mode, snappier */
-        this->DRIVE_MOTORS[i]->SetIdleMode(CANSparkMax::IdleMode::kBrake);
-        this->ANGLE_MOTORS[i]->SetIdleMode(CANSparkMax::IdleMode::kBrake);
+        this->DRIVE_MOTORS[swerve_module]->SetIdleMode(CANSparkMax::IdleMode::kBrake);
+        this->ANGLE_MOTORS[swerve_module]->SetIdleMode(CANSparkMax::IdleMode::kBrake);
 
         /* PIDs */
-        this->PID_CONTROLLERS[i] = new SparkMaxPIDController(this->ANGLE_MOTORS[i]->GetPIDController());
-        this->PID_CONTROLLERS[i]->SetP(SWERVE_P);
-        this->PID_CONTROLLERS[i]->SetI(SWERVE_I);
-        this->PID_CONTROLLERS[i]->SetD(SWERVE_D);
+        this->PID_CONTROLLERS[swerve_module] = new SparkMaxPIDController(this->ANGLE_MOTORS[swerve_module]->GetPIDController());
+        this->PID_CONTROLLERS[swerve_module]->SetP(SWERVE_P);
+        this->PID_CONTROLLERS[swerve_module]->SetI(SWERVE_I);
+        this->PID_CONTROLLERS[swerve_module]->SetD(SWERVE_D);
 
         /* Get real relative encoders */
-        this->ANGLE_ENCODERS[i] = new SparkRelativeEncoder(this->ANGLE_MOTORS[i]->GetEncoder());
-        this->ABS_ENCODERS[i].ConfigAbsoluteSensorRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
+        this->ANGLE_ENCODERS[swerve_module] = new SparkRelativeEncoder(this->ANGLE_MOTORS[swerve_module]->GetEncoder());
+        this->ABS_ENCODERS[swerve_module].ConfigAbsoluteSensorRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
 
         /* Burn flash everytime */
-        this->DRIVE_MOTORS[i]->BurnFlash();
-        this->ANGLE_MOTORS[i]->BurnFlash();
+        this->DRIVE_MOTORS[swerve_module]->BurnFlash();
+        this->ANGLE_MOTORS[swerve_module]->BurnFlash();
     }
 };
 
