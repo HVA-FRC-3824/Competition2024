@@ -9,14 +9,14 @@ Intake::Intake()
     this->actuation_motor.Config_kD(0,INTAKE_ACTUATION_D);
     this->actuation_motor.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor,0,0);
     this->actuation_motor.ConfigIntegratedSensorAbsoluteRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180); */
-    this->actuation_motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
+    this->intake_angle_motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
     /*this->actuation_motor.ConfigPeakOutputForward(.2);
     this->actuation_motor.ConfigPeakOutputReverse(-.18); */
 }
 
 void Intake::intake_actuate_simple(float input)
 {
-    this->actuation_motor.Set(input * .1);
+    this->intake_angle_motor.Set(input * .1);
 }
 
 void Intake::intake_actuate_point(float angle)
@@ -27,7 +27,7 @@ void Intake::intake_actuate_point(float angle)
 
 void Intake::suck(float input)
 {
-    this->intake_motor.Set(input);
+    this->intake_roller_motor.Set(input);
 };
 
 void Intake::robo_periodic()
