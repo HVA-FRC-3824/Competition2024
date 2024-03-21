@@ -12,10 +12,9 @@ class Climb
     public:
         Climb();
         void climb(float input);
-        void winch(float input);
     private:
-        WPI_TalonSRX DEPLOY_MOTOR{CLIMBER_DEPLOY};
-        ctre::phoenix6::hardware::TalonFX WINCH_MOTOR{CLIMBER_WINCH,"rio"};
+        WPI_TalonSRX DEPLOY_MOTOR_RIGHT{CLIMBER_DEPLOY_RIGHT};
+        WPI_TalonSRX DEPLOY_MOTOR_LEFT{CLIMBER_DEPLOY_LEFT};
 };
 
 

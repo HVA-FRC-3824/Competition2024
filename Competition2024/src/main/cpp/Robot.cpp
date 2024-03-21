@@ -14,7 +14,6 @@
 #include "../include/io/CommandHelper.hpp"
 #include "../include/io/DriverController.hpp"
 
-#include "../include/subsystems/Launcher.hpp"
 #include "../include/subsystems/Swerve.hpp"
 #include "../include/subsystems/Autos.hpp"
 #include "../include/subsystems/Climb.hpp"
@@ -23,13 +22,12 @@
 
 /* Object and struct declaration */
 cmd_share          cmd_control;
-Launcher           LAUNCHER{};
 Intake             INTAKE{};
 Actuation          ACTUATION{};
 Climb              CLIMB{};
 Swerve             SWERVE{24, 24};
 
-OperatorController O_CONTROLLER{&cmd_control, &LAUNCHER, &INTAKE, &ACTUATION, &CLIMB};
+OperatorController O_CONTROLLER{&cmd_control, &INTAKE, &ACTUATION, &CLIMB};
 DriverController   D_CONTROLLER{&SWERVE};
 
 Autos              AUTOS{&SWERVE, &cmd_control, &ACTUATION};

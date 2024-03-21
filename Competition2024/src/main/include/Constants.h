@@ -76,8 +76,10 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define RR_A 9  // 9
 
 /* Climber Variable */
-#define CLIMBER_DEPLOY 31
-#define CLIMBER_WINCH  30
+#define CLIMBER_DEPLOY_RIGHT 31
+#define CLIMBER_DEPLOY_LEFT  30
+#define CLIMBER_UP_POWER     0.5
+#define CLIMBER_DOWN_POWER   -0.5
 
 /* Hardware Constants */
 #define SWERVE_MAX_AMPERAGE 30
@@ -107,9 +109,9 @@ PID values for launch motors SUBJECT TO CHANGE*/
 #define ANTIMAGIC_NUMBER 0.01745f
 
 /* Global constants */
-#define TALONFX_UFR 2048
+#define TALONFX_UFR         2048
 #define OPERATOR_CONTROLLER 0
-#define DRIVER_CONTROLLER 1
+#define DRIVER_CONTROLLER   1
 
 /* Command constants */
 

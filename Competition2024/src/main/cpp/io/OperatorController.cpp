@@ -3,71 +3,12 @@
 #include <unistd.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-void OperatorController::reset_gyro()
+OperatorController::OperatorController(cmd_share *share, Intake *intake, Actuation *actuation, Climb *climb)
 {
-    //ahrs->Reset();
-    std::cout << "Gyro Reset\n";
-}
-
-void OperatorController::one_button_intake()
-{
-    std::cout << "command start\n";
-    state = O_SOFT_LOCK; /* Ignore user input until command executes */
-
-    /* Transfer of note into index */
-    m_launcher->index_spin(.5);
-    m_intake->suck(.3);
-
-    usleep(500 * 1000);
-    
-    /* Return intake */
-
-    m_intake->suck(0);
-    m_launcher->index_spin(0);
-
-    //usleep(500 * 1000);
-
-    /* Back out note in index */
-    m_launcher->index_spin(-.1);
-
-    usleep(150 * 1000);
-
-    m_launcher->index_spin(0);
-
-    usleep(200 * 1000);
-
-    m_actuation->locked = false;
-    state = O_ACTIVE; 
-}
-
-void OperatorController::one_button_shoot()
-{
-    state = O_SOFT_LOCK;
-    
-    /* Rev up launcher */
-    m_launcher->simple_spin(1);
-
-    /* Wait 1 seconds */
-    usleep(1000 * 1000);
-
-    m_launcher->index_spin(1);
-
-    usleep(250 * 1000);
-
-    m_launcher->simple_spin(0);
-    m_launcher->index_spin(0);
-    state = O_ACTIVE;
-}
-
-void OperatorController::one_button_amp()
-{
-    state = O_SOFT_LOCK;
-    m_launcher->simple_spin(.1);
-    m_launcher->index_spin(.25);
-    usleep(500 * 1000);
-    m_launcher->simple_spin(0);
-    m_launcher->index_spin(0);
-    state = O_ACTIVE;
+    shared      = share;
+    m_intake    = intake;
+    m_actuation = actuation;
+    m_climb     = climb;
 }
 
 void OperatorController::robo_periodic()
@@ -77,6 +18,16 @@ void OperatorController::robo_periodic()
     //if(OperatorStick.GetRawButton(1)){std::cout << "BUTTON!!\n";}
 
     /* TODO: add driverstation updates for controller mode */
+
+    // Climb control:
+    if (OperatorStick.GetPOV() == 0) 
+    {
+        m_climb->climb(CLIMBER_UP_POWER);
+    } 
+    else if (OperatorStick.GetPOV() == 180)
+    {
+        m_climb->climb(CLIMBER_DOWN_POWER);
+    }
 
     if(state)
     {
@@ -117,7 +68,6 @@ void OperatorController::robo_periodic()
                 if(y < .75 && y > -.75){y = 0;} 
 
                 m_actuation->linear_actuation(y);
-                m_launcher->index_spin(index * .25); 
                 //m_launcher->simple_spin(y);
 
 
@@ -208,12 +158,42 @@ void OperatorController::robo_periodic()
     }
 }
 
-OperatorController::OperatorController(cmd_share *share, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj, Climb *climb_obj)
+void OperatorController::reset_gyro()
 {
-    //ahrs = ahrs_obj;
-    m_launcher = launcher_obj;
-    m_intake = intake_obj;
-    m_actuation = actuation_obj;
-    //+m_climb = climb_obj;
-    shared = share;
+    //ahrs->Reset();
+    std::cout << "Gyro Reset\n";
+}
+
+void OperatorController::one_button_intake()
+{
+    std::cout << "command start\n";
+    state = O_SOFT_LOCK; /* Ignore user input until command executes */
+
+    /* Transfer of note into index */
+    m_intake->suck(.3);
+
+    usleep(500 * 1000);
+    
+    /* Return intake */
+
+    m_intake->suck(0);
+
+    //usleep(500 * 1000);
+
+    /* Back out note in index */
+
+    usleep(150 * 1000);
+
+
+    usleep(200 * 1000);
+
+    m_actuation->locked = false;
+    state = O_ACTIVE; 
+}
+
+void OperatorController::one_button_amp()
+{
+    state = O_SOFT_LOCK;
+    usleep(500 * 1000);
+    state = O_ACTIVE;
 }

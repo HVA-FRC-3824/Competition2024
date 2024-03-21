@@ -25,28 +25,33 @@ void *command_thread(void *parm)
     switch(control->command_being_run)
     {
         case C_INTAKE_OB:
+        {
             o_controller->one_button_intake();
             control->state = C_INACTIVE;
             control->command_being_run = C_NONE;
             return 0;
+        }
 
-        case C_LAUNCHER_OB:
-            o_controller->one_button_shoot();
-            control->state = C_INACTIVE;
-            control->command_being_run = C_NONE;
-            return 0;
         case C_TEST_ANGLE_A:
+        {
             auto_commands->test_angle();
             control->state = C_INACTIVE;
             control->command_being_run = C_NONE;
             return 0;
+        }
+
         case C_AMP_OB:
+        {
             o_controller->one_button_amp();
             control->state = C_INACTIVE;
             control->command_being_run = C_NONE;
             return 0;
-        case C_NONE:
+        }
+
+        default:
+        {
             break;
+        }
     }
 }
 

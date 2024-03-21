@@ -4,18 +4,13 @@
 // and the climber motor
 Climb::Climb()
 {
-    DEPLOY_MOTOR.SetNeutralMode(motorcontrol::Coast);
-    WINCH_MOTOR.SetNeutralMode(motorcontrol::Brake);
+    DEPLOY_MOTOR_RIGHT.SetNeutralMode(motorcontrol::Coast);
+    DEPLOY_MOTOR_LEFT.SetNeutralMode(motorcontrol::Brake);
 }
 
 // Set the climb motor power (-1.0 to 1.0)
 void Climb::climb(float input)
 {
     
-    DEPLOY_MOTOR.Set(input);
-}
-
-void Climb::winch(float input)
-{
-    WINCH_MOTOR.Set(input);
+    DEPLOY_MOTOR_RIGHT.Set(input);
 }

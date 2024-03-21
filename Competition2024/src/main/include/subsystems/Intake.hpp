@@ -18,6 +18,7 @@ class Intake : frc2::SubsystemBase
         void flip_retraction();
         bool retracted = true;
     private:
+        /* Making motor objects: */
         //ctre::phoenix::motorcontrol::can::WPI_TalonSRX intake_motor{INTAKE_MOTOR};
         ctre::phoenix6::hardware::TalonFX intake_angle_motor{INTAKE_ACTUATION,"rio"};
 
