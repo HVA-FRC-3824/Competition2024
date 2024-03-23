@@ -113,7 +113,7 @@ class Swerve : frc2::SubsystemBase
         ctre::phoenix6::hardware::TalonFX RL_MOTOR_M{RL_M_CAN_ID, CANBUS_NAME};
         ctre::phoenix6::hardware::TalonFX RR_MOTOR_M{RR_M_CAN_ID, CANBUS_NAME};
 
-        ctre::phoenix6::hardware::TalonFX* DRIVE_MOTORS[4] = {
+        ctre::phoenix6::hardware::TalonFX *DRIVE_MOTORS[4] = {
             &FR_MOTOR_M,
             &FL_MOTOR_M,
             &RL_MOTOR_M,
@@ -125,7 +125,7 @@ class Swerve : frc2::SubsystemBase
         CANSparkMax RL_MOTOR_A{RL_A_CAN_ID, CANSparkLowLevel::MotorType::kBrushless};
         CANSparkMax RR_MOTOR_A{RR_A_CAN_ID, CANSparkLowLevel::MotorType::kBrushless};
 
-        CANSparkMax* ANGLE_MOTORS[4] = 
+        CANSparkMax *ANGLE_MOTORS[4] = 
         {
             &FR_MOTOR_A,
             &FL_MOTOR_A,
