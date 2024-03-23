@@ -1,11 +1,12 @@
-#ifndef OPERATOR_CONTROLLER_H
-#define OPERATOR_CONTROLLER_H
-#include "../Constants.h"
-#include "../subsystems/Launcher.hpp"
+#pragma once 
+
+#include "../Constants.hpp"
 #include "../subsystems/Intake.hpp"
 #include "../subsystems/Actuation.hpp"
 #include "../subsystems/Climb.hpp"
+
 #include "AHRS.h"
+
 #include <frc2/command/SubsystemBase.h>
 #include <frc/Joystick.h>
 #include <frc2/command/button/JoystickButton.h>
@@ -13,49 +14,45 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/PrintCommand.h>
 
-/* As of 1/29/24 operator only needs to control: Launcher, Turret, Intake, NAVX */
-/* Each said subsystem will have a "soft lock" that prevents operator input (controlled by operator ofc) 
-   that stops all movement (prevents accidental inputs) and allows computer to run it's magic
-   However, this lock usually works independent from a full hard lock within the subsystems (ie. Turret) that
-   prevents ALL changes */
+// Each said subsystem will have a "soft lock" that prevents operator input (controlled by operator ofc) 
+// that stops all movement (prevents accidental inputs) and allows computer to run it's magic
+// However, this lock usually works independent from a full hard lock within the subsystems (ie. Turret) that
+// prevents ALL changes
 
-/* Hexadecimal bc i'm a little autistic */
-/* These are the states the controller can be, A_MODE and B_MODE are two types of modes on the controller
-   O_TEST is the test mode for resetting navx or testing set actuation points
-
-   ALL Buttons declared should be designed in the cpp file TODO: move these to constants
-
-
-   ALL CONTROLS ARE LISTED AND DEFINED AS IN THE README, ANY BUTTON CHANGES MUST BE REPLICATED TO THE README
-*/
-#define O_LOCKED    0x00
-#define O_SOFT_LOCK 0xff
+#define O_SOFT_LOCK 0xFF
 #define O_ACTIVE    0xf0
-#define A_MODE      0x0a
-#define B_MODE      0x0b
-#define O_TEST      0x01
 
 class OperatorController : frc2::SubsystemBase
 {
     public:
-        void reset_gyro();
-        void one_button_intake();
-        void one_button_shoot();
-        void one_button_amp();
-        void robo_periodic(); /* Links to teleop periodic */
-        OperatorController(cmd_share *share, Launcher *launcher_obj, Intake *intake_obj, Actuation *actuation_obj
-        , Climb *climb_obj);
-        cmd_share *shared;
-    private:
-        frc::Joystick OperatorStick {OPERATOR_CONTROLLER};
-        Intake* m_intake;
-        AHRS* ahrs;
-        Launcher* m_launcher;
-        Actuation *m_actuation;
-        Climb *m_climb;
-        uint8_t state = 0xf0;
-        uint8_t mode = 0x0a;
+        /// @brief Constructor for the OperatorController class.
+        /// @param intake - Pointer to the intake class to allow calling intake methods.
+        /// @param actuation - Pointer to the actuation class to allow calling actuation methods.
+        /// @param climb - Pointer to the climb class to allow calling climb methods.
+        OperatorController(Intake *intake, Actuation *actuation, Climb *climb);
 
-        bool command_active = false;
+        /// @brief Method called periodically every dirver/operator control packet.
+        void Robot_Periodic(); 
+
+        /// @brief Method to run the intake.
+        void One_Button_Intake();
+
+        /// @brief Method to place in the amp.
+        void One_Button_Amp();
+
+    private:
+        /// @brief The state of reading the operator joystick inputs (either active or locked out)
+        uint8_t m_state = O_ACTIVE;
+
+        /// @brief Pointer to the intake class to allow calling intake methods.
+        Intake *m_intake;
+
+        /// @brief Pointer to the actuation class to allow calling actuation methods.
+        Actuation *m_actuation;
+
+        /// @brief Pointer to the climb class to allow calling climb methods.
+        Climb *m_climb;
+
+        /// @brief The operator controller (joystick).
+        frc::Joystick m_operator_joystick {OPERATOR_CONTROLLER};
 };
-#endif
