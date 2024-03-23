@@ -3,6 +3,7 @@
 #include <string>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <ctre/phoenix6/configs/Configs.hpp>
 #include "../../include/subsystems/Swerve.hpp"
 
 /// @brief Constructor for the Swerve class.
@@ -20,12 +21,12 @@ Swerve::Swerve(float length, float width)
     // Initialize the swerve motors
     for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
     {
+        //### ANGLE MOTORS ###
+
         // Set current limit
-        this->DRIVE_MOTORS[swerve_module]->SetSmartCurrentLimit(SWERVE_MAX_AMPERAGE);
         this->ANGLE_MOTORS[swerve_module]->SetSmartCurrentLimit(SWERVE_MAX_AMPERAGE);
 
         // Turn on brake coast mode, snappier
-        this->DRIVE_MOTORS[swerve_module]->SetIdleMode(CANSparkMax::IdleMode::kBrake);
         this->ANGLE_MOTORS[swerve_module]->SetIdleMode(CANSparkMax::IdleMode::kBrake);
 
         // Swerve wheel PID contrllers
@@ -39,8 +40,15 @@ Swerve::Swerve(float length, float width)
         this->ABS_ENCODERS[swerve_module].ConfigAbsoluteSensorRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
 
         // Burn flash everytime
-        this->DRIVE_MOTORS[swerve_module]->BurnFlash();
         this->ANGLE_MOTORS[swerve_module]->BurnFlash();
+
+        //### DRIVE MOTORS ###
+        ctre::phoenix6::configs::Slot0Configs slot0Configs{};
+        slot0Configs.kP = SWERVE_P; // An error of 0.5 rotations results in 12 V output
+        slot0Configs.kI = SWERVE_I; // no output for integrated error
+        slot0Configs.kD = SWERVE_D; // A velocity of 1 rps results in 0.1 V output
+
+        this->DRIVE_MOTORS[swerve_module].GetConfigurator().Apply(slot0Configs);
     }
 };
 

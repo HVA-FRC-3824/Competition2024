@@ -6,6 +6,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
 #include <ctre/phoenix/sensors/CANCoder.h>
+#include <ctre/phoenix6/TalonFX.hpp>
 
 #define SWERVE_MODULES 4
 
@@ -28,6 +29,7 @@ struct size_constants
 };
 
 using namespace rev;
+using namespace ctre::phoenix6::hardware;
 
 class Swerve : frc2::SubsystemBase
 {
@@ -99,24 +101,29 @@ class Swerve : frc2::SubsystemBase
         // Motor bank. Follows the format in the math_dest 
         //    0 = front right, 1 = front left 
         //    2 = rear left,   3 = rear right
-    
-        CANSparkMax FR_MOTOR_M{FR_M_CAN_ID, CANSparkMaxLowLevel::MotorType::kBrushless};
-        CANSparkMax FL_MOTOR_M{FL_M_CAN_ID, CANSparkMaxLowLevel::MotorType::kBrushless};
-        CANSparkMax RL_MOTOR_M{RL_M_CAN_ID, CANSparkMaxLowLevel::MotorType::kBrushless};
-        CANSparkMax RR_MOTOR_M{RR_M_CAN_ID, CANSparkMaxLowLevel::MotorType::kBrushless};
 
-        CANSparkMax* DRIVE_MOTORS[4] = 
-        {
+        //delcration of drive motors under namespace ctre::phoenix6::hardware
+        //TalonFX FR_MOTOR_M(int deviceId = FR_M_CAN_ID, std::string canbus = "rio");
+        //TalonFX FL_MOTOR_M(int deviceId = FL_M_CAN_ID, std::string canbus = "rio");
+        //TalonFX RL_MOTOR_M(int deviceId = RL_M_CAN_ID, std::string canbus = "rio");
+        //TalonFX RR_MOTOR_M(int deviceId = RR_M_CAN_ID, std::string canbus = "rio");
+
+        ctre::phoenix6::hardware::TalonFX FR_MOTOR_M{FR_M_CAN_ID, CANBUS_NAME};
+        ctre::phoenix6::hardware::TalonFX FL_MOTOR_M{FL_M_CAN_ID, CANBUS_NAME};
+        ctre::phoenix6::hardware::TalonFX RL_MOTOR_M{RL_M_CAN_ID, CANBUS_NAME};
+        ctre::phoenix6::hardware::TalonFX RR_MOTOR_M{RR_M_CAN_ID, CANBUS_NAME};
+
+        ctre::phoenix6::hardware::TalonFX* DRIVE_MOTORS[4] = {
             &FR_MOTOR_M,
             &FL_MOTOR_M,
             &RL_MOTOR_M,
             &RR_MOTOR_M
         };
 
-        CANSparkMax FR_MOTOR_A{FR_A_CAN_ID, CANSparkMaxLowLevel::MotorType::kBrushless};
-        CANSparkMax FL_MOTOR_A{FL_A_CAN_ID, CANSparkMaxLowLevel::MotorType::kBrushless};
-        CANSparkMax RL_MOTOR_A{RL_A_CAN_ID, CANSparkMaxLowLevel::MotorType::kBrushless};
-        CANSparkMax RR_MOTOR_A{RR_A_CAN_ID, CANSparkMaxLowLevel::MotorType::kBrushless};
+        CANSparkMax FR_MOTOR_A{FR_A_CAN_ID, CANSparkLowLevel::MotorType::kBrushless};
+        CANSparkMax FL_MOTOR_A{FL_A_CAN_ID, CANSparkLowLevel::MotorType::kBrushless};
+        CANSparkMax RL_MOTOR_A{RL_A_CAN_ID, CANSparkLowLevel::MotorType::kBrushless};
+        CANSparkMax RR_MOTOR_A{RR_A_CAN_ID, CANSparkLowLevel::MotorType::kBrushless};
 
         CANSparkMax* ANGLE_MOTORS[4] = 
         {
