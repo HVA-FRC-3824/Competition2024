@@ -4,6 +4,9 @@
 // IDs should be numbered starting from the turret up, incrementing each time
 // Anything below should be 1# or 0#
 
+//CAN bus name (specifically for TalonFX)
+#define CANBUS_NAME                     "rio"
+
 // Intake variables
 #define INTAKE_MOTOR_CAN_ID                16
 #define INTAKE_ACTUATION_CAN_ID            17
@@ -21,23 +24,18 @@
 #define ACTUATION_UFR                  806400
 #define MAX_LOWER_ANGLE                   -60
 
-// Swerve variables
+// #### Swerve variables ####
 // CAN IDS
+//drive CAN IDs
 #define FR_M_CAN_ID                         7
 #define FL_M_CAN_ID                        12
-#define RL_M_CAN_ID                        13
-#define RR_M_CAN_ID                        10
+#define RL_M_CAN_ID                         13
+#define RR_M_CAN_ID                         10
 
 #define FR_A_CAN_ID                         8
 #define FL_A_CAN_ID                         4
 #define RL_A_CAN_ID                         6
 #define RR_A_CAN_ID                         9
-
-// Climber Variable
-#define CLIMBER_DEPLOY_RIGHT_CAN_ID        31
-#define CLIMBER_DEPLOY_LEFT_CAN_ID         30
-#define CLIMBER_UP_POWER                  0.5
-#define CLIMBER_DOWN_POWER               -0.5
 
 // Hardware Constants
 #define SWERVE_MAX_AMPERAGE                30
@@ -58,13 +56,19 @@
 #define ANGLES_SWERVE_I                  0.00
 #define ANGLES_SWERVE_D                  0.00
 
+// ### Climber Variable ###
+#define CLIMBER_DEPLOY_RIGHT_CAN_ID        31
+#define CLIMBER_DEPLOY_LEFT_CAN_ID         30
+#define CLIMBER_UP_POWER                  0.5
+#define CLIMBER_DOWN_POWER               -0.5
+
+// ### Global constants ###
+#define OPERATOR_CONTROLLER                 0
+#define DRIVER_CONTROLLER                   1
+
 // 180 / Pi
 #define MAGIC_NUMBER                 57.29577f
 #define ANTIMAGIC_NUMBER              0.01745f
-
-// Global constants
-#define OPERATOR_CONTROLLER                 0
-#define DRIVER_CONTROLLER                   1
 
 // Command constants
 
