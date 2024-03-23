@@ -2,21 +2,44 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "../../include/subsystems/Actuation.hpp"
 
+using namespace ctre::phoenix::motorcontrol;
+
 /// @brief Constructor for the Actuation class.
 Actuation::Actuation()
 {
     // Configure the actuate motors
-    this->m_actuation_motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
-    this->m_actuation_motor.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::CTRE_MagEncoder_Absolute,0,0);
+    this->m_actuation_motor.SetNeutralMode(NeutralMode::Brake);
+    //this->m_actuation_encoder.ConfigSelectedFeedbackSensor(FeedbackDevice::, 0, 0);
 }
+
 
 /// @brief Method called periodically every operator control packet.
 void Actuation::Robot_Periodic()
 {
+
+    // Reaad encoder
+    int encoder_position = this->m_actuation_encoder.GetSelectedSensorPosition(0);
+
+    // Converting encoder position to angle to angle
+    double angle = encoder_position * (90 / (A_VERTICAL - A_HORIZONTAL)) + A_HORIZONTAL;
+
+    // Run PID Controller
+    double pid_calculation = this->actuation_PID_controller.Calculate(ACTUATION_SETPOINT, ACTUATION_PRESENT);
+
+    // Set motor out put.
+    m_actuation_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Velocity, pid_calculation);
+    
     // Show the acturate state
-    frc::SmartDashboard::PutNumber("Actuation Angle: ",  (this->m_actuation_motor.GetSelectedSensorPosition() / 806400) * 360);
-    frc::SmartDashboard::PutNumber("Actuation Pos: ",     this->m_actuation_motor.GetSelectedSensorPosition());
-    frc::SmartDashboard::PutBoolean("Actuation Locked? ", this->actuation_locked);
+    frc::SmartDashboard::PutNumber("Actuation Angle: ",  angle);
+    frc::SmartDashboard::PutNumber("Actuation Encoder Position: ", encoder_position);
+    //frc::SmartDashboard::PutBoolean("Actuation Locked? ", this->actuation_locked);
+}
+
+/// @brief The Method to set the desired angle for the actuation subsystem.
+/// @param angle - The angle to set the actuation to.
+void Actuation::Set_Angle(double angle) 
+{
+    m_angle = angle;
 }
 
 /// @brief Method to move the actuate sybsystem to the specified angle.

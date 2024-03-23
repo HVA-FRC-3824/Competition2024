@@ -13,13 +13,18 @@
 #define INTAKE_BOTTOM_POINT             40483
 
 // Actuation variables
-#define ACTUATION_CAN_ID                   24
+#define ACTUATION_MOTOR_CAN_ID             24
+#define ACTUATION_ENCODER_CAN_ID            0
 #define ACTUATION_P                      20.0
 #define ACTUATION_I                       1.0
 #define ACTUATION_D                       0.0
-#define ACTUATION_INDEX_ANGLE            -20
+#define ACTUATION_INDEX_ANGLE             -20
 #define ACTUATION_UFR                  806400
 #define MAX_LOWER_ANGLE                   -60
+#define A_VERTICAL                       1000
+#define A_HORIZONTAL                     2000
+#define ACTUATION_SETPOINT                  0
+#define ACTUATION_PRESENT                   0
 
 // Swerve variables
 // CAN IDS

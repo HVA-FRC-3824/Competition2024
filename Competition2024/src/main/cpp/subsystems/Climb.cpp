@@ -14,7 +14,7 @@ void Climb::Robot_Periodic()
 
 }
 
-/// @brief Cliber motor controller
+/// @brief Climber motor controller
 /// @param motor_set_value - The motor set value (-1.0 to 1.0).
 void Climb::Climber_Control(float motor_set_value)
 {
