@@ -48,7 +48,7 @@ Swerve::Swerve(float length, float width)
         slot0Configs.kI = SWERVE_I; // no output for integrated error
         slot0Configs.kD = SWERVE_D; // A velocity of 1 rps results in 0.1 V output
 
-        this->DRIVE_MOTORS[swerve_module].GetConfigurator().Apply(slot0Configs);
+        this->DRIVE_MOTORS[swerve_module]->GetConfigurator().Apply(slot0Configs);
     }
 };
 
