@@ -1,22 +1,24 @@
 #include "../../include/io/DriverController.hpp"
 
-DriverController::DriverController(Swerve *swerve_obj)
+ /// @brief Constructor for the DriverController class.
+ /// @param swerve - Pointer to the swerve drive class.
+DriverController::DriverController(Swerve *swerve)
 {
-    this->m_swerve = swerve_obj;
+    // Remember the swerve pointer
+    this->m_swerve = swerve;
 }
 
-void DriverController::robo_periodic()
+// @brief Method called periodically every dirver/operator control packet.
+void DriverController::Robot_Periodic()
 {
-    if(DriverStick.GetRawButtonPressed(1)){m_swerve->navx.Reset();}
-    if(DriverStick.GetRawButtonPressed(6)){m_swerve->toggle_xwheels();}
+    // Determine if the reset gyro joystick button was pressed
+    if (m_driver_joystick.GetRawButtonPressed(1))
+        m_swerve->navx.Reset();
 
-    /* Right trigger */
-    /*if(DriverStick.GetRawAxis(4) < -.5)
-    {
-        this->m_swerve->move_speed = .5;
-    } else {
-        this->m_swerve->move_speed = SWERVE_DEFAULT_SPEED_MULTIPLIER;
-    }  */
+    // Determine if the toggle X wheels button was pressed.
+    if (m_driver_joystick.GetRawButtonPressed(6))
+        m_swerve->Toggle_X_Wheels();
 
-    this->m_swerve->drive(DriverStick.GetRawAxis(1),-DriverStick.GetRawAxis(0),DriverStick.GetRawAxis(2),this->m_swerve->navx.GetYaw());
+    // Get the joystick axis for the robot swerve drive control
+    this->m_swerve->Drive(m_driver_joystick.GetRawAxis(1), -m_driver_joystick.GetRawAxis(0), m_driver_joystick.GetRawAxis(2), this->m_swerve->navx.GetYaw());
 }

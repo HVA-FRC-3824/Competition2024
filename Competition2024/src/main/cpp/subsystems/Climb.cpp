@@ -1,16 +1,24 @@
 #include "../../include/subsystems/Climb.hpp"
 
-// Conctructor for the Climb Subassembly, which instantiates the tape winch motor
-// and the climber motor
+/// @brief Constructor for the Climb class.
 Climb::Climb()
 {
-    DEPLOY_MOTOR_RIGHT.SetNeutralMode(motorcontrol::Coast);
-    DEPLOY_MOTOR_LEFT.SetNeutralMode(motorcontrol::Brake);
+    // Configure the climber motors
+    m_deploy_motor_right.SetNeutralMode(motorcontrol::Coast);
+    m_deploy_motor_left.SetNeutralMode(motorcontrol::Brake);
 }
 
-// Set the climb motor power (-1.0 to 1.0)
-void Climb::climb(float input)
+/// @brief Method called periodically every operator control packet.
+void Climb::Robot_Periodic()
 {
-    
-    DEPLOY_MOTOR_RIGHT.Set(input);
+
+}
+
+/// @brief Cliber motor controller
+/// @param motor_set_value - The motor set value (-1.0 to 1.0).
+void Climb::Climber_Control(float motor_set_value)
+{
+    // Set the climber motor outputs
+    m_deploy_motor_right.Set(motor_set_value);
+    m_deploy_motor_left.Set(motor_set_value);
 }

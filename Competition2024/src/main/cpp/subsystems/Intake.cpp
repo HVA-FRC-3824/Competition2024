@@ -1,54 +1,67 @@
-#include "../../include/subsystems/Intake.hpp"
-#include <frc/smartdashboard/SmartDashboard.h>
 #include <iostream>
+#include <frc/smartdashboard/SmartDashboard.h>
+#include "../../include/subsystems/Intake.hpp"
 
+/// @brief Constructor for the Intake class.
 Intake::Intake()
 {
-    /*this->actuation_motor.Config_kP(0,INTAKE_ACTUATION_P);
-    this->actuation_motor.Config_kI(0,INTAKE_ACTUATION_I);
-    this->actuation_motor.Config_kD(0,INTAKE_ACTUATION_D);
-    this->actuation_motor.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor,0,0);
-    this->actuation_motor.ConfigIntegratedSensorAbsoluteRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180); */
-    this->intake_angle_motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
-    /*this->actuation_motor.ConfigPeakOutputForward(.2);
-    this->actuation_motor.ConfigPeakOutputReverse(-.18); */
+    //this->m_actuation_motor.Config_kP(0,INTAKE_ACTUATION_P);
+    //this->m_actuation_motor.Config_kI(0,INTAKE_ACTUATION_I);
+    //this->m_actuation_motor.Config_kD(0,INTAKE_ACTUATION_D);
+    //this->m_actuation_motor.ConfigSelectedFeedbackSensor(ctre::phoenix::motorcontrol::FeedbackDevice::IntegratedSensor,0,0);
+    //this->m_actuation_motor.ConfigIntegratedSensorAbsoluteRange(ctre::phoenix::sensors::AbsoluteSensorRange::Signed_PlusMinus180);
+    //this->m_actuation_motor.ConfigPeakOutputForward(.2);
+    //this->m_actuation_motor.ConfigPeakOutputReverse(-.18);
+
+    // configure the intake motors
+    this->m_intake_angle_motor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Coast);
 }
 
-void Intake::intake_actuate_simple(float input)
+/// @brief Method called periodically every operator control packet.
+void Intake::Robot_Periodic()
 {
-    this->intake_angle_motor.Set(input * .1);
+    //frc::SmartDashboard::PutNumber("Intake Pos: ", (this->m_actuation_motor.GetSelectedSensorPosition()));
+    frc::SmartDashboard::PutBoolean("Retracted? :", this->retracted);
 }
 
-void Intake::intake_actuate_point(float angle)
+/// @brief Method to run the actuate motors.
+/// @param motor_set_value - The actuate motor set value.
+void Intake::Intake_Actuate_Simple(float motor_set_value)
 {
-    //this->actuation_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, (angle/360)*INTAKE_ACTUATION_UFR);
-    //this->actuation_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, angle);
+    // Set the intake angle motor to the specified value
+    this->m_intake_angle_motor.Set(motor_set_value);
 }
 
-void Intake::suck(float input)
+/// @brief Method to set the actuate subassembly to the specified angle.
+/// @param angle - The angle to set the acturate subassembly.
+void Intake::Intake_Actuate_Point(float angle)
 {
-    this->intake_roller_motor.Set(input);
-};
-
-void Intake::robo_periodic()
-{
-    //frc::SmartDashboard::PutNumber("Intake Pos: ", (this->actuation_motor.GetSelectedSensorPosition()));
-        frc::SmartDashboard::PutBoolean("Retracted? :", this->retracted);
+    //this->m_actuation_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, (angle / 360) * INTAKE_ACTUATION_UFR);
+    //this->m_actuation_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, angle);
 }
 
-
-/* This works with the correct position for it being at 0 */
-void Intake::flip_retraction()
+/// @brief Method to flip the intake subassembly from extend to retracted.
+void Intake::Flip_Retraction()
 {
-    if(retracted)
+    // Determine if the intake is retracted
+    if (retracted)
     {
         std::cout << "non retracted\n";
+
+        // Intake should now be extended
         retracted = false;
-        intake_actuate_point(INTAKE_BOTTOM_POINT);
-    } else 
+
+        // Set the intake angle to extended
+        Intake_Actuate_Point(INTAKE_BOTTOM_POINT);
+    } 
+    else 
     {
         std::cout << "retracted\n";
+
+        // Intake should now be retracted
         retracted = true;
-        intake_actuate_point(0);
+
+        // Set the intake angle to retracted
+        Intake_Actuate_Point(0);
     }
 }

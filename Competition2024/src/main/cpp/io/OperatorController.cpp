@@ -1,199 +1,103 @@
-#include "../../include/io/OperatorController.hpp"
 #include <iostream>
 #include <unistd.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include "../../include/io/OperatorController.hpp"
 
-OperatorController::OperatorController(cmd_share *share, Intake *intake, Actuation *actuation, Climb *climb)
+/// @brief Constructor for the OperatorController class.
+/// @param intake - Pointer to the intake class to allow calling intake methods.
+/// @param actuation - Pointer to the actuation class to allow calling actuation methods.
+/// @param climb - Pointer to the climb class to allow calling climb methods.
+OperatorController::OperatorController(Intake *intake, Actuation *actuation, Climb *climb)
 {
-    shared      = share;
+    // Remember the method parameters
     m_intake    = intake;
     m_actuation = actuation;
     m_climb     = climb;
 }
 
-void OperatorController::robo_periodic()
+/// @brief Method called periodically every dirver/operator control packet.
+void OperatorController::Robot_Periodic()
 {
-    //std::cout << "OPERATOR\n";
-    //m_intake->suck(OperatorStick.GetRawAxis(3));
-    //if(OperatorStick.GetRawButton(1)){std::cout << "BUTTON!!\n";}
+    std::cout << "OPERATOR\n";
 
-    /* TODO: add driverstation updates for controller mode */
+    // Check for operator joystick button to ensure joystick is connected
+    if (m_operator_joystick.GetRawButton(1))
+       std::cout << "BUTTON!!\n";
 
-    // Climb control:
-    if (OperatorStick.GetPOV() == 0) 
-    {
-        m_climb->climb(CLIMBER_UP_POWER);
-    } 
-    else if (OperatorStick.GetPOV() == 180)
-    {
-        m_climb->climb(CLIMBER_DOWN_POWER);
-    }
 
-    if(state)
+    if (m_state)
     {
-        if(state == O_SOFT_LOCK){frc::SmartDashboard::PutBoolean("Softlocked? ", true); return; /* computer only! */}
         frc::SmartDashboard::PutBoolean("Softlocked? ", false);
 
-        //if(OperatorStick.GetRawButtonPressed(5)){if(mode == A_MODE){mode = B_MODE;}else{mode = A_MODE;};}
+        // Return always after a hit condition to save resources
+        if (m_state == O_SOFT_LOCK)
+            return;
+    
+        // This is done below to prevent sticky values, since GetRawButtonPressed gets the value since it was last called
+        // not firing the method since (ie. until a new mode is selected) will cause the old value to be used
+        // better solution is to poll ALL buttons at once and then do actions based on the mode instead of vice versa
 
-        switch(mode)
+        double z  =  m_operator_joystick.GetZ();
+        double y  = -m_operator_joystick.GetY();
+        int index =  m_operator_joystick.GetRawAxis(3);
+
+        if (z < .2 && z > -.2)   { z = 0; }
+        if (y < .75 && y > -.75) { y = 0; } 
+
+        m_actuation->Linear_Actuation(y);
+
+        if (m_operator_joystick.GetPOV(0) == 0)
+            m_intake->Intake_Actuate_Simple(-1);
+        else if (m_operator_joystick.GetPOV(0) == 180)
+            m_intake->Intake_Actuate_Simple(1);
+        else 
+            m_intake->Intake_Actuate_Simple(0);
+
+        if (m_operator_joystick.GetRawButtonPressed(6))
+            One_Button_Intake();
+
+        // TOP_4
+        if (m_operator_joystick.GetRawButtonPressed(4))
+            this->m_actuation->Actuate_To_Point(0);
+
+        // Climb control
+        if (m_operator_joystick.GetPOV() == 0) 
         {
-            case A_MODE:
-                frc::SmartDashboard::PutString("Operator Mode: ", "A_MODE");
-                break;
-            case B_MODE:
-                frc::SmartDashboard::PutString("Operator Mode: ", "B_MODE");
-                break;
+            m_climb->Climber_Control(CLIMBER_UP_POWER);
         }
-
-
-
-        /* This is a ridiculously bad way to do this :D */
-        /* Return always after a hit condition to save resources */
-        /* This is done below to prevent sticky values, since GetRawButtonPressed gets the value since it was last called
-           not firing the method since (ie. until a new mode is selected) will cause the old value to be used
-           better solution is to poll ALL buttons at once and then do actions based on the mode instead of vice versa */
-
-        switch(mode)
+        else if (m_operator_joystick.GetPOV() == 180)
         {
-            case A_MODE:
-                double z; 
-                z = OperatorStick.GetZ();
-                double y; 
-                y = -OperatorStick.GetY();
-                int index; 
-                index = OperatorStick.GetRawAxis(3);
-
-                if(z < .2 && z > -.2){z = 0;}
-                if(y < .75 && y > -.75){y = 0;} 
-
-                m_actuation->linear_actuation(y);
-                //m_launcher->simple_spin(y);
-
-
-                if(OperatorStick.GetPOV(0) == 0)
-                {
-                    m_intake->intake_actuate_simple(-1);
-                } else if(OperatorStick.GetPOV(0) == 180)
-                {
-                    m_intake->intake_actuate_simple(1);
-                } else {
-                    m_intake->intake_actuate_simple(0);
-                }
-
-                break;
-            case B_MODE:
-                break;
-        }
-
-        /* THUMB */
-        if(OperatorStick.GetRawButtonPressed(2))
-        {
-            this->shared->command_being_run = C_AMP_OB;
-            this->shared->my_wishes = C_RUN; 
-        }
-
-        /* TOP_3 */
-        if(OperatorStick.GetRawButtonPressed(5))
-        {
-            switch(mode)
-            {
-                case A_MODE:
-                    this->m_intake->suck(1);
-                    break;
-                case B_MODE:
-                    std::cout << "Operator Called\n";
-                    this->shared->command_being_run = C_INTAKE_OB;
-                    this->shared->my_wishes = C_RUN; 
-                    break;
-                case O_TEST:
-                    return;
-                    break;
-            }        
-        }
-
-        /* TOP_5 */
-        if(OperatorStick.GetRawButtonPressed(3))
-        {
-            switch(mode)
-            {
-                case A_MODE:
-                    this->m_intake->suck(0);
-                    break;
-                case B_MODE:
-                    break;
-                case O_TEST:
-                    reset_gyro();
-                    break;
-            }
-        }
-
-        if(OperatorStick.GetRawButtonPressed(6))
-        {
-            one_button_intake();
-        }
-
-        /* TOP_4 */
-        if(OperatorStick.GetRawButtonPressed(4))
-        {
-            switch(mode)
-            {
-            case A_MODE:
-                this->m_intake->suck(-1);
-                break;
-            case B_MODE:
-                this->m_actuation->actuate_to_point(0);
-                break;
-            case O_TEST:
-                break;      
-            }     
-        }
-
-        /* TRIGGER*/
-        if(OperatorStick.GetRawButtonPressed(1))
-        {
-            this->shared->command_being_run = C_LAUNCHER_OB;
-            this->shared->my_wishes = C_RUN; 
+            m_climb->Climber_Control(CLIMBER_DOWN_POWER);
         }
     }
 }
 
-void OperatorController::reset_gyro()
+/// @brief Method to run the intake.
+void OperatorController::One_Button_Intake()
 {
-    //ahrs->Reset();
-    std::cout << "Gyro Reset\n";
-}
+    std::cout << "One_Button_Intake command start\n";
 
-void OperatorController::one_button_intake()
-{
-    std::cout << "command start\n";
-    state = O_SOFT_LOCK; /* Ignore user input until command executes */
+    // Ignore user input until command executes
+    m_state = O_SOFT_LOCK; 
 
-    /* Transfer of note into index */
-    m_intake->suck(.3);
+    // Transfer of note into index 
+    m_intake->Intake_Actuate_Simple(.3);
 
     usleep(500 * 1000);
     
-    /* Return intake */
+    // Return intake
+    m_intake->Intake_Actuate_Simple(0);
 
-    m_intake->suck(0);
-
-    //usleep(500 * 1000);
-
-    /* Back out note in index */
-
-    usleep(150 * 1000);
-
-
-    usleep(200 * 1000);
-
-    m_actuation->locked = false;
-    state = O_ACTIVE; 
+    m_actuation->actuation_locked = false;
+    m_state                       = O_ACTIVE; 
 }
 
-void OperatorController::one_button_amp()
+/// @brief Method to place in the amp.
+void OperatorController::One_Button_Amp()
 {
-    state = O_SOFT_LOCK;
+    m_state = O_SOFT_LOCK;
+
     usleep(500 * 1000);
-    state = O_ACTIVE;
+
+    m_state = O_ACTIVE;
 }
