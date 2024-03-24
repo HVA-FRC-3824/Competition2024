@@ -53,7 +53,7 @@ class Robot : public frc::TimedRobot
         DriverController   D_CONTROLLER{&SWERVE};
 
         // Method to run autonomous commands
-        AutoCommands Autonomous{&SWERVE, &INTAKE};
+        AutoCommands       Autonomous{&SWERVE, &INTAKE};
 
         const std::string kAutoNameDefault = "Default";
         const std::string kAutoNameCustom  = "Do Nothing Auto";

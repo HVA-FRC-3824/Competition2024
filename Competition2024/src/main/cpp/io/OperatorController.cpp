@@ -9,8 +9,8 @@
 OperatorController::OperatorController(Intake *intake, Climb *climb)
 {
     // Remember the method parameters
-    m_intake    = intake;
-    m_climb     = climb;
+    m_intake = intake;
+    m_climb  = climb;
 }
 
 /// @brief Method called periodically every dirver/operator control packet.
@@ -28,17 +28,23 @@ void OperatorController::Robot_Periodic()
         double y  = -m_operator_joystick.GetY();
         if (y < 0.75 && y > -0.75)
              y = 0; 
-        m_intake->Drive_Rollers(y);
+        m_intake->Set_Roller_Motors(y);
 
         // Extend/retract the intake
         if (m_operator_joystick.GetPOV(0) == 0)
-            m_intake->ExtendIntake();
+            m_intake->Extend_Intake();
         else if (m_operator_joystick.GetPOV(0) == 180)
-            m_intake->RetractIntake();
+            m_intake->Retract_Intake();
 
         // Flip the intake
         if (m_operator_joystick.GetRawButtonPressed(1))
             m_intake->Flip_Retraction();
+
+        // One button amplifier
+        if (m_operator_joystick.GetRawButtonPressed(2))
+        {
+
+        }
 
         // Climb control
         if (m_operator_joystick.GetRawButtonPressed(3))
@@ -48,28 +54,8 @@ void OperatorController::Robot_Periodic()
     }
 }
 
-/// @brief Method to run the intake.
-void OperatorController::One_Button_Intake()
-{
-    std::cout << "One_Button_Intake command start\n";
-
-    // Ignore user input until command executes
-    m_state = O_SOFT_LOCK; 
-
-    // Transfer of note into index 
-    m_intake->Drive_Rollers(0.3);
-
-    usleep(500 * 1000);
-    
-    // Return intake
-    m_intake->Drive_Rollers(0);
-
-    m_intake->intake_locked = false;
-    m_state                 = O_ACTIVE; 
-}
-
 /// @brief Method to place in the amp.
-void OperatorController::One_Button_Amp()
+void OperatorController::One_Button_Amplifier()
 {
     m_state = O_SOFT_LOCK;
 

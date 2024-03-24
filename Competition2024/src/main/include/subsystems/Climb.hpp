@@ -23,8 +23,10 @@ class Climb
     private:
 
         /// @brief The climber right side motor.
-        WPI_TalonSRX m_deploy_motor_right{CLIMBER_DEPLOY_RIGHT_CAN_ID};
+        //WPI_TalonSRX m_deploy_motor_right{CLIMBER_DEPLOY_RIGHT_CAN_ID};
+        ctre::phoenix6::hardware::TalonFX m_deploy_motor_right{CLIMBER_DEPLOY_RIGHT_CAN_ID, "rio"};
 
         /// @brief The climber left side motor.
-        WPI_TalonSRX m_deploy_motor_left{CLIMBER_DEPLOY_LEFT_CAN_ID};
+        //WPI_TalonSRX m_deploy_motor_left{CLIMBER_DEPLOY_LEFT_CAN_ID};
+        ctre::phoenix6::hardware::TalonFX m_deploy_motor_left{CLIMBER_DEPLOY_LEFT_CAN_ID, "rio"};
 };

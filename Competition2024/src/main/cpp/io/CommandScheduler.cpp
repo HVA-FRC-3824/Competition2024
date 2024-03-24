@@ -59,17 +59,15 @@ void *Command_Thread(void *parmeter)
     // Determine the command to run
     switch (m_command_parameters->command)
     {
-        case C_INTAKE_OB:
-        {
-            // Run the one button intake command
-            m_controller->One_Button_Intake();
-            break;
-        }
-
         case C_AMP_OB:
         {
             // Run the one button load amp
-            m_controller->One_Button_Amp();
+            m_controller->One_Button_Amplifier();
+            break;
+        }
+
+        default:
+        {
             break;
         }
     }

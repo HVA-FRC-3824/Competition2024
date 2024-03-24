@@ -7,30 +7,34 @@ using namespace ctre::phoenix6;
 /// @brief Constructor for the Intake class.
 Intake::Intake()
 {
-    configs::TalonFXConfiguration configuration{};
+    configs::TalonFXConfiguration angle_motor_configuration{};
 
-    /* Configure current limits */
-    configs::MotionMagicConfigs &magic_motion = configuration.MotionMagic;
+    // Configure current limits
+    configs::MotionMagicConfigs &magic_motion = angle_motor_configuration.MotionMagic;
     magic_motion.MotionMagicCruiseVelocity = INTAKE_ACTUATION_VELOCITY;  // Rotations per second cruise
     magic_motion.MotionMagicAcceleration   = INTAKE_ACTUATION_ACCELERATION;
     magic_motion.MotionMagicJerk           = INTAKE_ACTUATION_JERK;
 
-    // set slot 0 gains
-    configs::Slot0Configs &slot0Configs = configuration.Slot0;
+    // Set slot 0 gains
+    configs::Slot0Configs &slot0Configs = angle_motor_configuration.Slot0;
     slot0Configs.kP = INTAKE_ACTUATION_P;
     slot0Configs.kI = INTAKE_ACTUATION_I;
     slot0Configs.kD = INTAKE_ACTUATION_D;
     slot0Configs.kV = INTAKE_ACTUATION_V;
-    slot0Configs.kS = INTAKE_ACTUATION_S;  // Approximately 0.1V to get the mechanism moving
+    slot0Configs.kS = INTAKE_ACTUATION_S;
 
-    configs::FeedbackConfigs &feedback_Configuration = configuration.Feedback;
-    feedback_Configuration.SensorToMechanismRatio = 1;
+    configs::FeedbackConfigs &feedback_Configuration = angle_motor_configuration.Feedback;
+    feedback_Configuration.SensorToMechanismRatio = INTAKE_ACTUATION_SENSOR_RATIO;
 
     // Apply the configuratoin
-    this->m_intake_angle_motor.GetConfigurator().Apply(configuration);
+    this->m_intake_angle_motor.GetConfigurator().Apply(angle_motor_configuration);
 
-    // configure the intake motors
+    // Configure the intake angle motor
     this->m_intake_angle_motor.SetPosition((units::angle::turn_t) INTAKE_RETRACTED_POSITION);
+
+    // Configure the follower motor
+    controls::Follower follower{INTAKE_ACTUATION_CAN_ID, false};
+    this->m_intake_angle_motor.SetControl(follower);
 }
 
 /// @brief Method called periodically every operator control packet.
@@ -65,14 +69,14 @@ void Intake::Robot_Periodic()
 
 /// @brief Method to set the intake motors to the specified set value (-1.0 to 1.0)
 /// @param motor_set_value - The value to the motor output.
-void Intake::Drive_Rollers(float motor_set_value)
+void Intake::Set_Roller_Motors(float motor_set_value)
 {
     // Set the roller motor to the specified value
     m_intake_roller_motor.Set(motor_set_value);
 }
 
 /// @brief Method to extend the intake.
-void Intake::ExtendIntake()
+void Intake::Extend_Intake()
 {
     // Determine if the intake is retracted
     if (m_intake_state == Retracted)
@@ -83,12 +87,12 @@ void Intake::ExtendIntake()
         m_intake_state = Extending;
 
         // Set the intake angle to extended
-        Intake_Actuate_Point(INTAKE_EXTENDED_POSITION);
+        Set_Actuate_Position(INTAKE_EXTENDED_POSITION);
     }
 }
 
 /// @brief Method to retract the intake.
-void Intake::RetractIntake()
+void Intake::Retract_Intake()
 {
     if ((m_intake_state == Extended))
     {
@@ -98,7 +102,7 @@ void Intake::RetractIntake()
         m_intake_state = Retracting;
 
         // Set the intake angle to retracted
-        Intake_Actuate_Point(INTAKE_RETRACTED_POSITION);
+        Set_Actuate_Position(INTAKE_RETRACTED_POSITION);
     }
 }
 
@@ -114,7 +118,7 @@ void Intake::Flip_Retraction()
         m_intake_state = Extending;
 
         // Set the intake angle to extended
-        Intake_Actuate_Point(INTAKE_EXTENDED_POSITION);
+        Set_Actuate_Position(INTAKE_EXTENDED_POSITION);
     } 
     else if ((m_intake_state == Extended))
     {
@@ -124,17 +128,18 @@ void Intake::Flip_Retraction()
         m_intake_state = Retracting;
 
         // Set the intake angle to retracted
-        Intake_Actuate_Point(INTAKE_RETRACTED_POSITION);
+        Set_Actuate_Position(INTAKE_RETRACTED_POSITION);
     }
 }
 
 /// @brief Method to set the intake subassembly to the specified position.
 /// @param position - The position to set the intake subassembly.
-void Intake::Intake_Actuate_Point(float position)
+void Intake::Set_Actuate_Position(float position)
 {
     std::cout << "*** SetControl:  " << position << "\n";
 
     // Set the move motion position setpoint 
-    controls::MotionMagicVoltage m_mmReq{1_tr};
-    this->m_intake_angle_motor.SetControl(m_mmReq.WithPosition(position * 1_tr).WithSlot(0));
+    // Note: The position 0_tr in the control is overwritten using WithPosition
+    controls::MotionMagicVoltage motionMagicVoltate{0_tr};
+    this->m_intake_angle_motor.SetControl(motionMagicVoltate.WithPosition(position * 1_tr).WithSlot(0));
 }

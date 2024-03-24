@@ -37,7 +37,7 @@ class OperatorController : frc2::SubsystemBase
         void One_Button_Intake();
 
         /// @brief Method to place in the amp.
-        void One_Button_Amp();
+        void One_Button_Amplifier();
 
     private:
         /// @brief The state of reading the operator joystick inputs (either active or locked out)

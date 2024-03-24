@@ -21,13 +21,13 @@ class Intake : frc2::SubsystemBase
 
         /// @brief Method to set the intake motors to the specified set value (-1.0 to 1.0)
         /// @param motor_set_value - The value to the motor output.
-        void Drive_Rollers(float motor_set_value);
+        void Set_Roller_Motors(float motor_set_value);
 
         /// @brief Method to extend the intake.
-        void ExtendIntake();
+        void Extend_Intake();
 
         /// @brief Method to retract the intake.
-        void RetractIntake();
+        void Retract_Intake();
 
         /// @brief Method to flip the intake subassembly from extend to retracted.
         void Flip_Retraction();
@@ -44,13 +44,16 @@ class Intake : frc2::SubsystemBase
         /// @brief The intake state.
         Intake_State m_intake_state = Retracted;
 
-        /// @brief The intake angle motor.
-        ctre::phoenix6::hardware::TalonFX m_intake_angle_motor{INTAKE_ACTUATION_CAN_ID, "rio"};
-
         /// @brief The intake roller motor.
         rev::CANSparkMax m_intake_roller_motor{INTAKE_MOTOR_CAN_ID, rev::CANSparkLowLevel::MotorType::kBrushless};
 
+        /// @brief The intake angle motor.
+        ctre::phoenix6::hardware::TalonFX m_intake_angle_motor{INTAKE_ACTUATION_CAN_ID, "rio"};
+
+        /// @brief The intake angle motor follower.
+        ctre::phoenix6::hardware::TalonFX m_intake_angle_follower_motor{INTAKE_ACTUATION_FOLLOWER_CAN_ID, "rio"};
+
         /// @brief Method to set the intake subassembly to the specified position.
         /// @param position - The position to set the intake subassembly.
-        void Intake_Actuate_Point(float position);
+        void Set_Actuate_Position(float position);
 };
