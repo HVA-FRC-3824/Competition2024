@@ -152,8 +152,8 @@ void Swerve::print_swerve_math(wheel_info wheel_information)
     std::cout << "\n";
     for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
     {
-        std::cout << wheel_information.wheel_speeds[swerve_module] << " SPEED " << swerve_module << "\n";
-        std::cout << wheel_information.wheel_angle[swerve_module]  << " ANGLE " << swerve_module << "\n";
+        //std::cout << wheel_information.wheel_speeds[swerve_module] << " SPEED " << swerve_module << "\n";
+        //std::cout << wheel_information.wheel_angle[swerve_module]  << " ANGLE " << swerve_module << "\n";
     }
 }
 

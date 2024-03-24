@@ -44,17 +44,16 @@ class Robot : public frc::TimedRobot
         CommandParameters  m_command_parameters;
 
         // Robot subassemblies
-        Intake             INTAKE{};
-        Actuation          ACTUATION{};
-        Climb              CLIMB{};
         Swerve             SWERVE{24, 24};
+        Intake             INTAKE{};
+        Climb              CLIMB{};
 
         // Robot controllers (operator and controller)
-        OperatorController O_CONTROLLER{&INTAKE, &ACTUATION, &CLIMB};
+        OperatorController O_CONTROLLER{&INTAKE, &CLIMB};
         DriverController   D_CONTROLLER{&SWERVE};
 
         // Method to run autonomous commands
-        AutoCommands Autonomous{&SWERVE, &ACTUATION};
+        AutoCommands Autonomous{&SWERVE, &INTAKE};
 
         const std::string kAutoNameDefault = "Default";
         const std::string kAutoNameCustom  = "Do Nothing Auto";

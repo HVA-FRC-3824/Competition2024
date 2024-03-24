@@ -83,7 +83,6 @@ void Robot::TeleopPeriodic()
 
     // Run the subassembly periodic methods
     INTAKE.Robot_Periodic();
-    ACTUATION.Robot_Periodic();
     CLIMB.Robot_Periodic();
 
     //std::cout << navx.GetAngle() << "\n";

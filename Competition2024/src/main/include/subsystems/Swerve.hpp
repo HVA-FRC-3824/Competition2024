@@ -8,14 +8,11 @@
 #include <ctre/phoenix/sensors/CANCoder.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#define SWERVE_MODULES 4
-
 struct wheel_information
 {
-	/* Order of wheels as in the real world: */
-	/* 0 = front right, 1 = front left       */
-	/* 2 = rear left,   3 = rear right       */
-
+	// Order of wheels as in the real world:
+	//    0 = front right, 1 = front left
+	//    2 = rear left,   3 = rear right
 	float wheel_speeds[4]; 
 	float wheel_angle[4];
 };
@@ -97,16 +94,6 @@ class Swerve : frc2::SubsystemBase
 
         // Stores the raw usable units for the motor controllers
         double raw_usable[4];
-
-        // Motor bank. Follows the format in the math_dest 
-        //    0 = front right, 1 = front left 
-        //    2 = rear left,   3 = rear right
-
-        //delcration of drive motors under namespace ctre::phoenix6::hardware
-        //TalonFX FR_MOTOR_M(int deviceId = FR_M_CAN_ID, std::string canbus = "rio");
-        //TalonFX FL_MOTOR_M(int deviceId = FL_M_CAN_ID, std::string canbus = "rio");
-        //TalonFX RL_MOTOR_M(int deviceId = RL_M_CAN_ID, std::string canbus = "rio");
-        //TalonFX RR_MOTOR_M(int deviceId = RR_M_CAN_ID, std::string canbus = "rio");
 
         ctre::phoenix6::hardware::TalonFX FR_MOTOR_M{FR_M_CAN_ID, CANBUS_NAME};
         ctre::phoenix6::hardware::TalonFX FL_MOTOR_M{FL_M_CAN_ID, CANBUS_NAME};

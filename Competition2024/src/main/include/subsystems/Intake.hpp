@@ -9,33 +9,48 @@
 
 class Intake : frc2::SubsystemBase
 {
-    public:
-        bool retracted = true;
-        
+    public: 
+        /// @brief Bolean to indicate if the operator is locked out of the intake angle.
+        bool intake_locked = false;
+
         /// @brief Constructor for the Intake class.
         Intake();
 
         /// @brief Method called periodically every operator control packet.
         void Robot_Periodic();
 
-        /// @brief Method to run the actuate motors.
-        /// @param motor_set_value - The actuate motor set value.
-        void Intake_Actuate_Simple(float motor_set_value);
+        /// @brief Method to set the intake motors to the specified set value (-1.0 to 1.0)
+        /// @param motor_set_value - The value to the motor output.
+        void Drive_Rollers(float motor_set_value);
 
-        /// @brief Method to set the actuate subassembly to the specified angle.
-        /// @param angle - The angle to set the acturate subassembly.
-        void Intake_Actuate_Point(float angle);
+        /// @brief Method to extend the intake.
+        void ExtendIntake();
+
+        /// @brief Method to retract the intake.
+        void RetractIntake();
 
         /// @brief Method to flip the intake subassembly from extend to retracted.
         void Flip_Retraction();
- 
+
     private:
-        //ctre::phoenix::motorcontrol::can::WPI_TalonSRX intake_motor{INTAKE_MOTOR_CAN_ID};
-        //rev::CANSparkMax m_actuation_motor{INTAKE_ACTUATION_CAN_ID, rev::CANSparkLowLevel::MotorType::kBrushless};
-        
+        enum Intake_State
+        {
+            Retracted,
+            Extending,
+            Extended,
+            Retracting
+        };
+
+        /// @brief The intake state.
+        Intake_State m_intake_state = Retracted;
+
         /// @brief The intake angle motor.
         ctre::phoenix6::hardware::TalonFX m_intake_angle_motor{INTAKE_ACTUATION_CAN_ID, "rio"};
 
-        /// @brief The intake toller motor.
+        /// @brief The intake roller motor.
         rev::CANSparkMax m_intake_roller_motor{INTAKE_MOTOR_CAN_ID, rev::CANSparkLowLevel::MotorType::kBrushless};
+
+        /// @brief Method to set the intake subassembly to the specified position.
+        /// @param position - The position to set the intake subassembly.
+        void Intake_Actuate_Point(float position);
 };

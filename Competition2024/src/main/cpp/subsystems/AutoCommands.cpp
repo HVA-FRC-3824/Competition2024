@@ -1,7 +1,6 @@
 #include <iostream>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include "../../include/subsystems/AutoCommands.hpp"
-#include "../../include/subsystems/Actuation.hpp"
 
 // Note on commands in general: each command runs in a thread independant of this current thread
 //so if you NEED to wait for a command to complete then you must wait in this thread
@@ -10,12 +9,12 @@
 
 /// @brief Constructor for the AutoCommands class.
 /// @param swerve - Pointer to the robot swerve subsystem.
-/// @param actuation - Pointer to the robot actuation subsystem.
-AutoCommands::AutoCommands(Swerve *swerve, Actuation *actuation)
+/// @param intake - Pointer to the robot intake subsystem.
+AutoCommands::AutoCommands(Swerve *swerve, Intake *intake)
 {
-    // Remember the swerve and actuation subsystem pointers
-    m_swerve    = swerve;
-    m_actuation = actuation;
+    // Remember the swerve and intake subsystem pointers
+    m_swerve = swerve;
+    m_intake = intake;
 }
 
 /// @brief Autonomous command to do nothing.

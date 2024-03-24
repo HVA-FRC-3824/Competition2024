@@ -1,5 +1,9 @@
 #pragma once
 
+// ### Global constants ###
+#define OPERATOR_CONTROLLER                 0
+#define DRIVER_CONTROLLER                   1
+
 // Not on CAN Ids and naming, anything above or on the turret should be prefixed 2#, such as 20 for the physical turret
 // IDs should be numbered starting from the turret up, incrementing each time
 // Anything below should be 1# or 0#
@@ -9,34 +13,31 @@
 
 // Intake variables
 #define INTAKE_MOTOR_CAN_ID                16
-#define INTAKE_ACTUATION_CAN_ID            17
-#define INTAKE_ACTUATION_P              0.075
-#define INTAKE_ACTUATION_I              0.000
-#define INTAKE_ACTUATION_D              0.000
-#define INTAKE_BOTTOM_POINT             40483
 
-// Actuation variables
-#define ACTUATION_MOTOR_CAN_ID             24
-#define ACTUATION_ENCODER_CAN_ID            0
-#define ACTUATION_P                      20.0
-#define ACTUATION_I                       1.0
-#define ACTUATION_D                       0.0
-#define ACTUATION_INDEX_ANGLE             -20
-#define ACTUATION_UFR                  806400
-#define MAX_LOWER_ANGLE                   -60
-#define A_VERTICAL                       1000
-#define A_HORIZONTAL                     2000
-#define ACTUATION_SETPOINT                  0
-#define ACTUATION_PRESENT                   0
+#define INTAKE_ACTUATION_CAN_ID            17
+#define INTAKE_ACTUATION_P              5.000
+#define INTAKE_ACTUATION_I              0.500
+#define INTAKE_ACTUATION_D              0.000
+#define INTAKE_ACTUATION_V              0.000
+#define INTAKE_ACTUATION_S              0.000
+#define INTAKE_ACTUATION_VELOCITY          30
+#define INTAKE_ACTUATION_ACCELERATION      20
+#define INTAKE_ACTUATION_JERK               5
+
+#define INTAKE_RETRACTED_POSITION        1000
+#define INTAKE_EXTENDED_POSITION         1100
+#define INTAKE_OFFSET_POSITION_COUNT       50
 
 // #### Swerve variables ####
-// CAN IDS
-//drive CAN IDs
+#define SWERVE_MODULES                      4
+
+// CAN IDs Driver Motors
 #define FR_M_CAN_ID                         7
 #define FL_M_CAN_ID                        12
-#define RL_M_CAN_ID                         13
-#define RR_M_CAN_ID                         10
+#define RL_M_CAN_ID                        13
+#define RR_M_CAN_ID                        10
 
+// CAN IDs Angle Motors
 #define FR_A_CAN_ID                         8
 #define FL_A_CAN_ID                         4
 #define RL_A_CAN_ID                         6
@@ -66,10 +67,6 @@
 #define CLIMBER_DEPLOY_LEFT_CAN_ID         30
 #define CLIMBER_UP_POWER                  0.5
 #define CLIMBER_DOWN_POWER               -0.5
-
-// ### Global constants ###
-#define OPERATOR_CONTROLLER                 0
-#define DRIVER_CONTROLLER                   1
 
 // 180 / Pi
 #define MAGIC_NUMBER                 57.29577f

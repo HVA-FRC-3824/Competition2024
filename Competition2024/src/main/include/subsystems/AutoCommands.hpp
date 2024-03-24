@@ -2,7 +2,7 @@
 
 #include "../Constants.hpp"
 #include "Swerve.hpp"
-#include "Actuation.hpp"
+#include "Intake.hpp"
 #include <frc/controller/PIDController.h>
 
 #include <unistd.h>
@@ -13,8 +13,8 @@ class AutoCommands
     public:
         /// @brief Constructor for the AutoCommands class.
         /// @param swerve - Pointer to the robot swerve subsystem.
-        /// @param actuation - Pointer to the robot actuation subsystem.
-        AutoCommands(Swerve *swerve, Actuation *actuation);
+        /// @param inteak - Pointer to the robot intake subsystem.
+        AutoCommands(Swerve *swerve, Intake *intake);
 
         /// @brief Autonomous command to do nothing.
         void Auto_Do_Nothing();
@@ -28,6 +28,6 @@ class AutoCommands
         /// @brief Pointer to the robot swerve subsystem.
         Swerve *m_swerve;
 
-        /// @brief Pointer to the robot actuation subsystem.
-        Actuation *m_actuation;
+        /// @brief Pointer to the robot intake subsystem.
+        Intake *m_intake;
 };
