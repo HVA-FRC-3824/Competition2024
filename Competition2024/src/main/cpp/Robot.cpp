@@ -14,9 +14,7 @@ void Robot::RobotInit()
     m_chooser.AddOption(kAuto_MoveAuto, kAuto_MoveAuto);
 
     frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-    // navx.Reset();
-
-    Command_Configure(&m_command_parameters, &O_CONTROLLER);
+    //navx.Reset();
 }
 
 // This function is called every 20 ms, no matter the mode. Use
@@ -25,7 +23,6 @@ void Robot::RobotInit()
 // 
 //  <p> This runs after the mode specific periodic functions, but before
 //  LiveWindow and SmartDashboard integrated updating.
- 
 void Robot::RobotPeriodic()
 { 
 
@@ -67,25 +64,17 @@ void Robot::TeleopInit()
 {
     // Set the wheels to absolute position
     SWERVE.Snap_Wheels_To_Absolute_Position();
-
-    // Kill existing auto command if hung
-    m_command_parameters.action = C_KILL;
 }
 
 void Robot::TeleopPeriodic()
 {
     // Get the operator and driver inputs
-    O_CONTROLLER.Robot_Periodic();  /* Operator Periodic */
-    D_CONTROLLER.Robot_Periodic();  /* Driver Periodic   */
-
-    // Run the command scheduler
-    Command_Runner();
+    O_CONTROLLER.Robot_Periodic();
+    D_CONTROLLER.Robot_Periodic();
 
     // Run the subassembly periodic methods
     INTAKE.Robot_Periodic();
     CLIMB.Robot_Periodic();
-
-    //std::cout << navx.GetAngle() << "\n";
 }
 
 void Robot::DisabledInit()

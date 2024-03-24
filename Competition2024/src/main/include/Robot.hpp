@@ -16,7 +16,6 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 #include "../include/io/OperatorController.hpp"
-#include "../include/io/CommandScheduler.hpp"
 #include "../include/io/DriverController.hpp"
 
 #include "../include/subsystems/Swerve.hpp"
@@ -40,9 +39,6 @@ class Robot : public frc::TimedRobot
         void SimulationPeriodic() override;
 
     private:
-        // Command scheduler parameters
-        CommandParameters  m_command_parameters;
-
         // Robot subassemblies
         Swerve             SWERVE{24, 24};
         Intake             INTAKE{};

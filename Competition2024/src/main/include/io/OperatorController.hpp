@@ -40,9 +40,6 @@ class OperatorController : frc2::SubsystemBase
         void One_Button_Amplifier();
 
     private:
-        /// @brief The state of reading the operator joystick inputs (either active or locked out)
-        uint8_t m_state = O_ACTIVE;
-
         /// @brief Pointer to the intake class to allow calling intake methods.
         Intake *m_intake;
 
@@ -50,5 +47,5 @@ class OperatorController : frc2::SubsystemBase
         Climb *m_climb;
 
         /// @brief The operator controller (joystick).
-        frc::Joystick m_operator_joystick {OPERATOR_CONTROLLER};
+        frc::Joystick m_operator_joystick{OPERATOR_CONTROLLER};
 };

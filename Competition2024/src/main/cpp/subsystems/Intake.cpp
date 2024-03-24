@@ -71,6 +71,13 @@ void Intake::Robot_Periodic()
 /// @param motor_set_value - The value to the motor output.
 void Intake::Set_Roller_Motors(float motor_set_value)
 {
+    // *** LIMIT MOTOR FOR BENCH TESTING ***
+    // TODO: Remove
+    if (motor_set_value > 0.2)
+        motor_set_value = 0.2;
+    if (motor_set_value < -0.2)
+        motor_set_value = -0.2;
+
     // Set the roller motor to the specified value
     m_intake_roller_motor.Set(motor_set_value);
 }
@@ -81,7 +88,7 @@ void Intake::Extend_Intake()
     // Determine if the intake is retracted
     if (m_intake_state == Retracted)
     {
-        std::cout << "*** Intake Extending\n";
+        std::cout << "Intake Extending\n";
 
         // Intake should now be extending
         m_intake_state = Extending;
@@ -96,7 +103,7 @@ void Intake::Retract_Intake()
 {
     if ((m_intake_state == Extended))
     {
-        std::cout << "*** Intake Retracting\n";
+        std::cout << "Intake Retracting\n";
 
         // Intake should now be retracting
         m_intake_state = Retracting;
@@ -112,7 +119,7 @@ void Intake::Flip_Retraction()
     // Determine if the intake is retracted
     if (m_intake_state == Retracted)
     {
-        std::cout << "*** Intake Extending\n";
+        std::cout << "Intake Extending\n";
 
         // Intake should now be extending
         m_intake_state = Extending;
@@ -122,7 +129,7 @@ void Intake::Flip_Retraction()
     } 
     else if ((m_intake_state == Extended))
     {
-        std::cout << "*** Intake Retracting\n";
+        std::cout << "*ntake Retracting\n";
 
         // Intake should now be retracting
         m_intake_state = Retracting;
@@ -136,7 +143,7 @@ void Intake::Flip_Retraction()
 /// @param position - The position to set the intake subassembly.
 void Intake::Set_Actuate_Position(float position)
 {
-    std::cout << "*** SetControl:  " << position << "\n";
+    std::cout << "SetControl:  " << position << "\n";
 
     // Set the move motion position setpoint 
     // Note: The position 0_tr in the control is overwritten using WithPosition
