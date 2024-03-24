@@ -3,6 +3,10 @@
 // CAN bus name (specifically for TalonFX)
 #define CANBUS_NAME                        "rio"
 
+// 180 / Pi
+#define MAGIC_NUMBER                    57.29577f
+#define ANTIMAGIC_NUMBER                 0.01745f
+
 // ### Controller constants ###
 #define OPERATOR_CONTROLLER                    0
 #define DRIVER_CONTROLLER                      1
@@ -67,27 +71,6 @@
 #define CLIMBER_UP_POWER                     0.5
 #define CLIMBER_DOWN_POWER                  -0.5
 
-// 180 / Pi
-#define MAGIC_NUMBER                    57.29577f
-#define ANTIMAGIC_NUMBER                 0.01745f
-
-// ### Command constants ###
-// Explanation on commands: 
-// Commands are created in OperatorController.cpp as standard methods, written as if they will be popped into another thread
-// those commands are then given an ID as below (see C_INTAKE_OB) and in CommandScheduler.cpp it is added in the switch statement
-// in OperatorController.cpp the flags are set in the memory shared between the two causing the command to run
-#define C_ACTIVE                            0xFF
-#define C_KILL                              0x20
-#define C_NONE                              0x10
-#define C_RUN                               0xF0
-#define C_INACTIVE                          0x00
-
-#define C_AMP_OB                            0x01
-
-/// @brief Command scheduler parameter structure
-struct CommandParameters
-{
-    unsigned char command = C_NONE;
-    unsigned char state   = C_INACTIVE;
-    unsigned char action  = C_NONE;
-};
+// ### Autonomous Variables ###
+#define AUTO_DRIVE_FORWARD_SPEED            -0.4
+#define AUTO_DRIVE_FORWARD_TIME      2000 * 1000  // Two seconds
