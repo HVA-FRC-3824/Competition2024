@@ -14,7 +14,6 @@ void Robot::RobotInit()
     m_chooser.AddOption(kAuto_MoveAuto, kAuto_MoveAuto);
 
     frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-    //navx.Reset();
 }
 
 // This function is called every 20 ms, no matter the mode. Use

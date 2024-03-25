@@ -6,6 +6,8 @@
 #include <ctre/phoenix6/configs/Configs.hpp>
 #include "../../include/subsystems/Swerve.hpp"
 
+using namespace ctre::phoenix6;
+
 /// @brief Constructor for the Swerve class.
 /// @param length - The length of the robot.
 /// @param width - The width of the robot.
@@ -42,8 +44,8 @@ Swerve::Swerve(float length, float width)
         // Burn flash everytime
         this->ANGLE_MOTORS[swerve_module]->BurnFlash();
 
-        //### DRIVE MOTORS ###
-        ctre::phoenix6::configs::Slot0Configs slot0Configs{};
+        //### DRIVE MOTORS ###  TODO: Add SWERVE_MAX_AMPERACE and brake mode
+        configs::Slot0Configs slot0Configs{};
         slot0Configs.kP = SWERVE_P; // An error of 0.5 rotations results in 12 V output
         slot0Configs.kI = SWERVE_I; // no output for integrated error
         slot0Configs.kD = SWERVE_D; // A velocity of 1 rps results in 0.1 V output

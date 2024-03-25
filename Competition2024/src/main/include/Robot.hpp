@@ -22,7 +22,7 @@
 #include "../include/subsystems/AutoCommands.hpp"
 #include "../include/subsystems/Climb.hpp"
 
-class Robot : public frc::TimedRobot 
+class Robot : public frc::TimedRobot
 {
     public:
         void RobotInit()          override;

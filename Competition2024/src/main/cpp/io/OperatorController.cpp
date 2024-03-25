@@ -11,33 +11,30 @@ OperatorController::OperatorController(Intake *intake, Climb *climb)
     // Remember the method parameters
     m_intake = intake;
     m_climb  = climb;
-
 }
 
 /// @brief Method called periodically every dirver/operator control packet.
 void OperatorController::Robot_Periodic()
 {
-    frc::SmartDashboard::PutBoolean("Softlocked? ", false);
-
     // Intake rollers
     double y  = -m_operator_joystick.GetY();
-    if (y < 0.75 && y > -0.75)
+    if (y < INTAKE_MOTOR_JOYSTICK_DEADBAND && y > -INTAKE_MOTOR_JOYSTICK_DEADBAND)
         y = 0; 
     m_intake->Set_Roller_Motors(y);
 
     // Extend/retract the intake
-    if (m_operator_joystick.GetPOV(0) == 0)
-        m_intake->Extend_Intake();
-    else if (m_operator_joystick.GetPOV(0) == 180)
-        m_intake->Retract_Intake();
+    if (m_operator_joystick.GetPOV() == JOYSTICK_POV_0)
+        m_intake->Extend();
+    else if (m_operator_joystick.GetPOV() == JOYSTICK_POV_180)
+        m_intake->Retract();
 
     // Flip the intake
-    if (m_operator_joystick.GetRawButtonPressed(1))
+    if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_A))
         m_intake->Flip_Retraction();
 
     // Climb control
-    if (m_operator_joystick.GetRawButtonPressed(3))
-        m_climb->Climber_Control(CLIMBER_UP_POWER);
-    else if (m_operator_joystick.GetRawButtonPressed(4))
-        m_climb->Climber_Control(CLIMBER_DOWN_POWER);
+    if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_X))
+        m_climb->Extend();
+    if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_Y))
+        m_climb->Retract();
 }

@@ -1,8 +1,9 @@
 #pragma once
 
+#include <frc/Joystick.h>
 #include "../Constants.hpp"
 #include "../subsystems/Swerve.hpp"
-#include <frc/Joystick.h>
+
 
 class DriverController
 {

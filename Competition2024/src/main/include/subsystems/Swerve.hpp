@@ -95,12 +95,12 @@ class Swerve : frc2::SubsystemBase
         // Stores the raw usable units for the motor controllers
         double raw_usable[4];
 
-        ctre::phoenix6::hardware::TalonFX FR_MOTOR_M{FR_M_CAN_ID, CANBUS_NAME};
-        ctre::phoenix6::hardware::TalonFX FL_MOTOR_M{FL_M_CAN_ID, CANBUS_NAME};
-        ctre::phoenix6::hardware::TalonFX RL_MOTOR_M{RL_M_CAN_ID, CANBUS_NAME};
-        ctre::phoenix6::hardware::TalonFX RR_MOTOR_M{RR_M_CAN_ID, CANBUS_NAME};
+        TalonFX FR_MOTOR_M{FR_M_CAN_ID, CANBUS_NAME};
+        TalonFX FL_MOTOR_M{FL_M_CAN_ID, CANBUS_NAME};
+        TalonFX RL_MOTOR_M{RL_M_CAN_ID, CANBUS_NAME};
+        TalonFX RR_MOTOR_M{RR_M_CAN_ID, CANBUS_NAME};
 
-        ctre::phoenix6::hardware::TalonFX *DRIVE_MOTORS[4] = {
+        TalonFX *DRIVE_MOTORS[4] = {
             &FR_MOTOR_M,
             &FL_MOTOR_M,
             &RL_MOTOR_M,
