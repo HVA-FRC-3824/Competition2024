@@ -3,7 +3,9 @@
 #include "../Constants.hpp"
 
 #include "AHRS.h"
+
 #include <frc2/command/SubsystemBase.h>
+
 #include <rev/CANSparkMax.h>
 #include <ctre/phoenix/sensors/CANCoder.h>
 #include <ctre/phoenix6/TalonFX.hpp>
@@ -25,8 +27,8 @@ struct size_constants
 	float width;
 };
 
-using namespace rev;
 using namespace ctre::phoenix6::hardware;
+using namespace rev;
 
 class Swerve : frc2::SubsystemBase
 {

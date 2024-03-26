@@ -2,10 +2,8 @@
 
 #include <unistd.h>
 
-#include "../Constants.hpp"
 #include "Swerve.hpp"
 #include "Intake.hpp"
-
 
 /// @brief Class to support autonomous commands.
 class AutoCommands
@@ -21,8 +19,6 @@ class AutoCommands
 
         /// @brief Autonomous command to drive forward.
         void Auto_Move();
-
-        //frc::PIDController ANGLE_CONTROLLER{ANGLES_SWERVE_P, ANGLES_SWERVE_I, ANGLES_SWERVE_D};
 
     private:
         /// @brief Pointer to the robot swerve subsystem.

@@ -1,13 +1,17 @@
 #pragma once
 
 #include "../Constants.hpp"
+
 #include <frc2/command/SubsystemBase.h>
+
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 #include <ctre/phoenix6/TalonFX.hpp>
+
 #include "rev/CANSparkMax.h"
 
 using namespace ctre::phoenix6::hardware;
+using namespace rev;
 
 class Intake : frc2::SubsystemBase
 {
@@ -44,7 +48,7 @@ class Intake : frc2::SubsystemBase
         Intake_State m_state = Retracted;
 
         /// @brief The intake roller motor.
-        rev::CANSparkMax m_intake_roller_motor{INTAKE_MOTOR_CAN_ID, rev::CANSparkLowLevel::MotorType::kBrushless};
+        CANSparkMax m_intake_roller_motor{INTAKE_ROLLER_MOTOR_CAN_ID, CANSparkLowLevel::MotorType::kBrushless};
 
         /// @brief The intake angle motor.
         TalonFX m_intake_angle_motor{INTAKE_ACTUATION_CAN_ID, CANBUS_NAME};

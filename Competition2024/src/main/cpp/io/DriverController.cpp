@@ -1,3 +1,7 @@
+#include <iostream>
+
+#include <frc/smartdashboard/SmartDashboard.h>
+
 #include "../../include/io/DriverController.hpp"
 
  /// @brief Constructor for the DriverController class.

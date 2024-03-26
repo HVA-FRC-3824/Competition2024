@@ -1,6 +1,7 @@
 #include <iostream>
-#include <unistd.h>
+
 #include <frc/smartdashboard/SmartDashboard.h>
+
 #include "../../include/io/OperatorController.hpp"
 
 /// @brief Constructor for the OperatorController class.
@@ -18,7 +19,7 @@ void OperatorController::Robot_Periodic()
 {
     // Intake rollers
     double y  = -m_operator_joystick.GetY();
-    if (y < INTAKE_MOTOR_JOYSTICK_DEADBAND && y > -INTAKE_MOTOR_JOYSTICK_DEADBAND)
+    if (y < INTAKE_ROLLER_MOTOR_JOYSTICK_DEADBAND && y > -INTAKE_ROLLER_MOTOR_JOYSTICK_DEADBAND)
         y = 0; 
     m_intake->Set_Roller_Motors(y);
 

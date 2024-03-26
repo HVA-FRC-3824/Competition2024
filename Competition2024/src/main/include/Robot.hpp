@@ -6,11 +6,10 @@
 
 #include <string>
 
-#include <frc/TimedRobot.h>
-#include <frc/smartdashboard/SendableChooser.h>
-
 #include <fmt/core.h>
 
+#include <frc/TimedRobot.h>
+#include <frc/smartdashboard/SendableChooser.h>
 #include <frc/Joystick.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -18,9 +17,7 @@
 #include "../include/io/OperatorController.hpp"
 #include "../include/io/DriverController.hpp"
 
-#include "../include/subsystems/Swerve.hpp"
 #include "../include/subsystems/AutoCommands.hpp"
-#include "../include/subsystems/Climb.hpp"
 
 class Robot : public frc::TimedRobot
 {
@@ -40,7 +37,7 @@ class Robot : public frc::TimedRobot
 
     private:
         // Robot subassemblies
-        Swerve             SWERVE{24, 24};
+        Swerve             SWERVE{CHASSIS_LENGTH, CHASSIS_WIDTH};
         Intake             INTAKE{};
         Climb              CLIMB{};
 

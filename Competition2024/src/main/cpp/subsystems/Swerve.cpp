@@ -1,9 +1,10 @@
 #include <iostream>
-#include <math.h>
-#include <string>
+
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+
 #include <ctre/phoenix6/configs/Configs.hpp>
+
 #include "../../include/subsystems/Swerve.hpp"
 
 using namespace ctre::phoenix6;

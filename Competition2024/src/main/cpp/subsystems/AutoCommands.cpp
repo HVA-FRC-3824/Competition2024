@@ -1,11 +1,8 @@
 #include <iostream>
+
 #include <frc/smartdashboard/SmartDashboard.h>
+
 #include "../../include/subsystems/AutoCommands.hpp"
-
-// Note on commands in general: each command runs in a thread independant of this current thread
-// so if you NEED to wait for a command to complete then you must wait in this thread
-
-// IMPORTANT! Make sure ALL sleeps and delays do not total over 15 seconds for one auto
 
 /// @brief Constructor for the AutoCommands class.
 /// @param swerve - Pointer to the robot swerve subsystem.
