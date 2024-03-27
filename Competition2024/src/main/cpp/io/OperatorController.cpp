@@ -17,6 +17,11 @@ OperatorController::OperatorController(Intake *intake, Climb *climb)
 /// @brief Method called periodically every dirver/operator control packet.
 void OperatorController::Robot_Periodic()
 {
+    double intake_angle;
+    frc::SmartDashboard::GetNumber("Intake angle", intake_angle);
+    m_intake->Set_Angle(intake_angle);
+    return;
+
     // Intake rollers
     double y  = -m_operator_joystick.GetY();
     if (y < INTAKE_ROLLER_MOTOR_JOYSTICK_DEADBAND && y > -INTAKE_ROLLER_MOTOR_JOYSTICK_DEADBAND)

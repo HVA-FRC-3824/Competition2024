@@ -45,13 +45,21 @@ Swerve::Swerve(float length, float width)
         // Burn flash everytime
         this->ANGLE_MOTORS[swerve_module]->BurnFlash();
 
+        configs::TalonFXConfiguration swerve_motor_configuration{};
+
         //### DRIVE MOTORS ###  TODO: Add SWERVE_MAX_AMPERACE and brake mode
-        configs::Slot0Configs slot0Configs{};
+        configs::Slot0Configs slot0Configs = swerve_motor_configuration.Slot0;
         slot0Configs.kP = SWERVE_P; // An error of 0.5 rotations results in 12 V output
         slot0Configs.kI = SWERVE_I; // no output for integrated error
         slot0Configs.kD = SWERVE_D; // A velocity of 1 rps results in 0.1 V output
 
-        this->DRIVE_MOTORS[swerve_module]->GetConfigurator().Apply(slot0Configs);
+        this->DRIVE_MOTORS[swerve_module]->GetConfigurator().Apply(swerve_motor_configuration);
+        
+        // Set the current limit
+        configs::CurrentLimitsConfigs currentLimitsConfigs{};
+        currentLimitsConfigs.StatorCurrentLimit       = SWERVE_MAX_AMPERAGE;
+        currentLimitsConfigs.StatorCurrentLimitEnable = true;
+        this->DRIVE_MOTORS[swerve_module]->GetConfigurator().Apply(currentLimitsConfigs);
     }
 };
 

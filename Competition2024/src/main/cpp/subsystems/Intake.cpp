@@ -26,18 +26,21 @@ Intake::Intake()
     slot0Configs.kV = INTAKE_ACTUATION_V;
     slot0Configs.kS = INTAKE_ACTUATION_S;
 
+    // Set the motor feedback
     configs::FeedbackConfigs &feedback_Configuration = angle_motor_configuration.Feedback;
     feedback_Configuration.SensorToMechanismRatio = INTAKE_ACTUATION_SENSOR_RATIO;
 
-    // Apply the configuratoin
+    // Apply the configuratoin 
     this->m_intake_angle_motor.GetConfigurator().Apply(angle_motor_configuration);
+
+    // Set the current limit
+    configs::CurrentLimitsConfigs currentLimitsConfigs{};
+    currentLimitsConfigs.StatorCurrentLimit       = SWERVE_MAX_AMPERAGE;
+    currentLimitsConfigs.StatorCurrentLimitEnable = true;
+    this->m_intake_angle_motor.GetConfigurator().Apply(currentLimitsConfigs);
 
     // Configure the intake angle motor
     this->m_intake_angle_motor.SetPosition((units::angle::turn_t) INTAKE_RETRACTED_POSITION);
-
-    // Configure the follower motor
-    controls::Follower follower{INTAKE_ACTUATION_CAN_ID, false};
-    this->m_intake_angle_motor.SetControl(follower);
 }
 
 /// @brief Method called periodically every operator control packet.
@@ -109,6 +112,19 @@ void Intake::Retract()
     }
 }
 
+/// @brief Method to set the intake angle.
+/// @param angle - The angle to set the intake.
+void Intake::Set_Angle(float angle) 
+{
+    // Convert angle to encoder position.
+    int encoder_position = Angle_To_Encoder(angle);
+
+    std::cout << "angle: " << angle << ", encoder_position: " << encoder_position << ".\n";
+
+    // Set the magic motion position to encoder position.
+    Set_Position(encoder_position);
+}
+
 /// @brief Method to flip the intake subassembly from extend to retracted.
 void Intake::Flip_Retraction()
 {
@@ -137,7 +153,7 @@ void Intake::Flip_Retraction()
 
 /// @brief Method to set the intake subassembly to the specified position.
 /// @param position - The position to set the intake subassembly.
-void Intake::Set_Position(float position)
+void Intake::Set_Position(int position)
 {
     std::cout << "SetControl:  " << position - INTAKE_RETRACTED_POSITION << "\n";
 
@@ -145,4 +161,13 @@ void Intake::Set_Position(float position)
     // Note: The position 0_tr in the control is overwritten using WithPosition
     controls::MotionMagicVoltage motionMagicVoltate{0_tr};
     this->m_intake_angle_motor.SetControl(motionMagicVoltate.WithPosition(position * 1_tr).WithSlot(0));
+}
+
+
+/// @brief Method to convert intake angle to encoder value.
+/// @param angle - The angle to convert.
+int Intake::Angle_To_Encoder(float angle)
+{
+    // Converting the intake angle to encoder value.
+    return angle * ((INTAKE_ENCODER_90_DEGREES - INTAKE_ENCODER_0_DEGREES) / 90) + INTAKE_ENCODER_0_DEGREES;
 }

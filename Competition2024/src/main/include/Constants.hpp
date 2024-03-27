@@ -15,10 +15,8 @@
 #define RL_A_CAN_ID                              6
 #define RR_A_CAN_ID                              9
 
-#define INTAKE_ROLLER_MOTOR_CAN_ID              20
-
-#define INTAKE_ACTUATION_CAN_ID                 21
-#define INTAKE_ACTUATION_FOLLOWER_CAN_ID        22
+#define INTAKE_ACTUATION_CAN_ID                 20
+#define INTAKE_ROLLER_MOTOR_CAN_ID              21
 
 #define CLIMBER_RIGHT_CAN_ID                    30
 #define CLIMBER_LEFT_CAN_ID                     31
@@ -42,8 +40,8 @@
 #define JOYSTICK_POV_270                       270
 
 // #### Swerve ####
-#define CHASSIS_LENGTH                          24
-#define CHASSIS_WIDTH                           24
+#define CHASSIS_LENGTH                          30
+#define CHASSIS_WIDTH                           30
 
 #define SWERVE_MODULES                           4
 
@@ -83,10 +81,13 @@
 
 #define INTAKE_RETRACTED_POSITION             1000
 #define INTAKE_EXTENDED_POSITION              1100
-#define INTAKE_OFFSET_POSITION_COUNT           50
+#define INTAKE_OFFSET_POSITION_COUNT             0
+
+#define INTAKE_ENCODER_90_DEGREES              150
+#define INTAKE_ENCODER_0_DEGREES               250
 
 // ### Climber Variable ###
-#define CLIMBER_MOTORS                           2
+#define CLIMBER_MOTORS                           1
 
 #define CLIMBER_ACTUATION_SENSOR_RATIO           1  // Adjust per robot (could set to 1 and just use encoder counts)
 #define CLIMBER_ACTUATION_P                  5.000

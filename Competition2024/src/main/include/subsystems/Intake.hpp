@@ -8,6 +8,7 @@
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 
+#include <rev/SparkmaxAbsoluteEncoder.h>
 #include "rev/CANSparkMax.h"
 
 using namespace ctre::phoenix6::hardware;
@@ -32,6 +33,10 @@ class Intake : frc2::SubsystemBase
         /// @brief Method to retract the intake.
         void Retract();
 
+        /// @brief Method to set the intake angle.
+        /// @param angle - The angle to set the intake.
+        void Set_Angle(float angle);
+
         /// @brief Method to flip the intake subassembly from extend to retracted.
         void Flip_Retraction();
 
@@ -47,16 +52,20 @@ class Intake : frc2::SubsystemBase
         /// @brief The intake state.
         Intake_State m_state = Retracted;
 
+        ///@brief The absolute encoder.
+        //SparkAbsoluteEncoder AbsoluteEncoder(const SparkAbsoluteEncoder & rhs);
+
         /// @brief The intake roller motor.
         CANSparkMax m_intake_roller_motor{INTAKE_ROLLER_MOTOR_CAN_ID, CANSparkLowLevel::MotorType::kBrushless};
 
         /// @brief The intake angle motor.
         TalonFX m_intake_angle_motor{INTAKE_ACTUATION_CAN_ID, CANBUS_NAME};
 
-        /// @brief The intake angle motor follower.
-        TalonFX m_intake_angle_follower_motor{INTAKE_ACTUATION_FOLLOWER_CAN_ID, CANBUS_NAME};
-
         /// @brief Method to set the intake subassembly to the specified position.
         /// @param position - The position to set the intake subassembly.
-        void Set_Position(float position);
+        void Set_Position(int position);
+
+        /// @brief Method to convert intake angle to encoder value.
+        /// @param angle - The angle to convert.
+        int Angle_To_Encoder(float angle);
 };
