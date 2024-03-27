@@ -1,3 +1,4 @@
-3824 Crescendo code
+3824's Robot Code for the 2023-2024 First Robotics Competition Season "Crescendo"
 
-Repository in eterenal turmoil
+Developed by:
+Luke Smith, Jackson Case, and Mr.Young
