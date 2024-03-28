@@ -15,8 +15,6 @@ void Robot::RobotInit()
 
     frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
-    frc::SmartDashboard::PutNumber("Intake Angle: ", 225);
-
     // We need to run our vision program in a separate thread. If not, our robot
     // program will not run.
     std::thread visionThread(VisionThread);
@@ -46,7 +44,7 @@ void Robot::RobotPeriodic()
 void Robot::AutonomousInit()
 {
     // Set the wheels to absolute position
-    //SWERVE.Snap_Wheels_To_Absolute_Position();
+    SWERVE.Snap_Wheels_To_Absolute_Position();
 
     // Choose the autonomous command
     m_AutoCommandselected = m_chooser.GetSelected();
@@ -55,10 +53,10 @@ void Robot::AutonomousInit()
     fmt::print("Auto selected: {}\n", m_AutoCommandselected);
 
     // Set the autonomous command
-    //if (m_AutoCommandselected == kAutoNameCustom)
-    //    Autonomous.Auto_Do_Nothing();
-    //else if (m_AutoCommandselected == kAuto_MoveAuto)
-    //    Autonomous.Auto_Move();
+    if (m_AutoCommandselected == kAutoNameCustom)
+        Autonomous.Auto_Do_Nothing();
+    else if (m_AutoCommandselected == kAuto_MoveAuto)
+        Autonomous.Auto_Move();
 }
 
 void Robot::AutonomousPeriodic()
@@ -69,14 +67,14 @@ void Robot::AutonomousPeriodic()
 void Robot::TeleopInit()
 {
     // Set the wheels to absolute position
-    //SWERVE.Snap_Wheels_To_Absolute_Position();
+    SWERVE.Snap_Wheels_To_Absolute_Position();
 }
 
 void Robot::TeleopPeriodic()
 {
     // Get the operator and driver inputs
     O_CONTROLLER.Robot_Periodic();
-    //D_CONTROLLER.Robot_Periodic();
+    D_CONTROLLER.Robot_Periodic();
 
     // Run the subassembly periodic methods
     INTAKE.Robot_Periodic();

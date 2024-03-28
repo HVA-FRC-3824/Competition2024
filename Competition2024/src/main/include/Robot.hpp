@@ -43,16 +43,16 @@ class Robot : public frc::TimedRobot
 
     private:
         // Robot subassemblies
-        //Swerve             SWERVE{CHASSIS_LENGTH, CHASSIS_WIDTH};
+        Swerve             SWERVE{CHASSIS_LENGTH, CHASSIS_WIDTH};
         Intake             INTAKE{};
         Climb              CLIMB{};
 
         // Robot controllers (operator and controller)
         OperatorController O_CONTROLLER{&INTAKE, &CLIMB};
-        //DriverController   D_CONTROLLER{&SWERVE};
+        DriverController   D_CONTROLLER{&SWERVE};
 
         // Method to run autonomous commands
-        //AutoCommands       Autonomous{&SWERVE, &INTAKE};
+        AutoCommands       Autonomous{&SWERVE, &INTAKE};
 
         const std::string kAutoNameDefault = "Default";
         const std::string kAutoNameCustom  = "Do Nothing Auto";

@@ -52,9 +52,6 @@ class Intake : frc2::SubsystemBase
         /// @brief The intake state.
         Intake_State m_state = Retracted;
 
-        ///@brief The absolute encoder.
-        //SparkAbsoluteEncoder AbsoluteEncoder(const SparkAbsoluteEncoder & rhs);
-
         /// @brief The intake roller motor.
         CANSparkMax m_intake_roller_motor{INTAKE_ROLLER_MOTOR_CAN_ID, CANSparkLowLevel::MotorType::kBrushless};
 
