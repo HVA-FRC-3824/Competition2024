@@ -15,6 +15,12 @@
 #define RL_A_CAN_ID                              6
 #define RR_A_CAN_ID                              9
 
+// Swerve CAN IDs Encoders
+#define FR_E_CAN_ID                             41
+#define FL_E_CAN_ID                             43
+#define RL_E_CAN_ID                             40
+#define RR_E_CAN_ID                             42
+
 #define INTAKE_ACTUATION_CAN_ID                 20
 #define INTAKE_ROLLER_MOTOR_CAN_ID              21
 
@@ -25,6 +31,13 @@
 #define MAGIC_NUMBER                      57.29577f
 #define ANTIMAGIC_NUMBER                   0.01745f
 
+// -68.115234375 - Rear left
+// 105.029296875 - Rear right
+
+// -102.12890625 - Front Right
+// 8.965 - Rear Left
+// 21.709 - Rear right
+ 
 // ### Controller constants ###
 #define OPERATOR_CONTROLLER                      0
 #define DRIVER_CONTROLLER                        1
@@ -67,21 +80,24 @@
 // ### Intake variables ###
 #define INTAKE_ROLLER_MOTOR_JOYSTICK_DEADBAND  0.1
 
-#define INTAKE_ACTUATION_SENSOR_RATIO            1  // Adjust per robot (could set to 1 and just use encoder counts)
+#define INTAKE_ACTUATION_SENSOR_RATIO        0.001  // Adjust per robot (could set to 1 and just use encoder counts)
 
-#define INTAKE_ACTUATION_P                   5.000
-#define INTAKE_ACTUATION_I                   0.500
+#define INTAKE_MAX_AMPERAGE                     30
+
+#define INTAKE_ACTUATION_P                   0.100
+#define INTAKE_ACTUATION_I                   0.000
 #define INTAKE_ACTUATION_D                   0.000
 #define INTAKE_ACTUATION_V                   0.000
 #define INTAKE_ACTUATION_S                   0.000  // Approximately 0.1V to get the mechanism moving
 
-#define INTAKE_ACTUATION_VELOCITY               30
-#define INTAKE_ACTUATION_ACCELERATION           20
-#define INTAKE_ACTUATION_JERK                    5
+#define INTAKE_ACTUATION_VELOCITY              0.3
+#define INTAKE_ACTUATION_ACCELERATION          0.2
+#define INTAKE_ACTUATION_JERK                 0.01
 
-#define INTAKE_RETRACTED_POSITION             1000
-#define INTAKE_EXTENDED_POSITION              1100
-#define INTAKE_OFFSET_POSITION_COUNT             0
+#define INTAKE_START_POSITION                    0
+#define INTAKE_AMP_POSITION                    -10
+#define INTAKE_FEED_POSITION                   -20
+#define INTAKE_POSITION_OFFSET                   5
 
 #define INTAKE_ENCODER_90_DEGREES              150
 #define INTAKE_ENCODER_0_DEGREES               250
@@ -90,8 +106,8 @@
 #define CLIMBER_MOTORS                           1
 
 #define CLIMBER_ACTUATION_SENSOR_RATIO           1  // Adjust per robot (could set to 1 and just use encoder counts)
-#define CLIMBER_ACTUATION_P                  5.000
-#define CLIMBER_ACTUATION_I                  0.500
+#define CLIMBER_ACTUATION_P                  1.000
+#define CLIMBER_ACTUATION_I                  0.000
 #define CLIMBER_ACTUATION_D                  0.000
 #define CLIMBER_ACTUATION_V                  0.000
 #define CLIMBER_ACTUATION_S                  0.000  // Approximately 0.1V to get the mechanism moving
@@ -100,13 +116,28 @@
 #define CLIMBER_ACTUATION_ACCELERATION          20
 #define CLIMBER_ACTUATION_JERK                   5
 
-#define CLIMBER_RETRACTED_POSITION            1000
-#define CLIMBER_EXTENDED_POSITION             1100
+#define CLIMBER_RETRACTED_POSITION             100
+#define CLIMBER_EXTENDED_POSITION                0
 #define CLIMBER_OFFSET_POSITION_COUNT           50
 
 #define CLIMBER_UP_POWER                       0.5
 #define CLIMBER_DOWN_POWER                    -0.5
 
 // ### Autonomous Variables ###
+// Autonomous Move
 #define AUTO_DRIVE_FORWARD_SPEED              -0.4
 #define AUTO_DRIVE_FORWARD_TIME        2000 * 1000  // Two seconds
+
+// Autonomous place AMP and move
+#define AUTO_SCOOT_TO_AMP_SPEED               -0.2
+#define AUTO_SCOOT_TO_AMP_TIME         1000 * 1000
+
+#define AUTO_DRIVE_TO_AMP_SPEED                0.2
+#define AUTO_DRIVE_TO_AMP_TIME         1000 * 1000
+
+#define AUTO_PLACE_NOTE                        0.5
+#define AUTO_PLACE_NOTE_TIME           2000 * 1000
+
+#define AUTO_DRIVE_ACROSS_LINE_SPEED           0.2
+#define AUTO_DRIVE_ACROSS_LINE_TIME    1000 * 1000
+

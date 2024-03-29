@@ -35,12 +35,13 @@ Intake::Intake()
 
     // Set the current limit
     configs::CurrentLimitsConfigs currentLimitsConfigs{};
-    currentLimitsConfigs.StatorCurrentLimit       = SWERVE_MAX_AMPERAGE;
+    currentLimitsConfigs.StatorCurrentLimit       = INTAKE_MAX_AMPERAGE;
     currentLimitsConfigs.StatorCurrentLimitEnable = true;
     this->m_intake_angle_motor.GetConfigurator().Apply(currentLimitsConfigs);
 
     // Configure the intake angle motor
-    this->m_intake_angle_motor.SetPosition((units::angle::turn_t) INTAKE_RETRACTED_POSITION);
+    this->m_intake_angle_motor.SetPosition((units::angle::turn_t) INTAKE_START_POSITION);
+    Set_Position(INTAKE_START_POSITION);
 }
 
 /// @brief Method called periodically every operator control packet.
@@ -57,19 +58,19 @@ void Intake::Robot_Periodic()
     frc::SmartDashboard::PutNumber("Intake Velocity: ", (int) velocity);
 
     // Determine the intake is extending
-    if (m_state == Extending)
+    if (m_state == GoingToFeed)
     {
         // If close to the extend position, then set the intake state to extended
-        if ((uint) position > INTAKE_EXTENDED_POSITION - INTAKE_OFFSET_POSITION_COUNT)
-            m_state = Extended;
+        if ((uint) position > INTAKE_FEED_POSITION - INTAKE_POSITION_OFFSET)
+            m_state = Feed;
     }
 
     // Determine the intake is retracting
-    if (m_state == Retracting)
+    if (m_state == GoingToAmp)
     {
         // If close to the retract position, then set the intake state to retracted
-        if ((uint) position < INTAKE_RETRACTED_POSITION + INTAKE_OFFSET_POSITION_COUNT)
-            m_state = Retracted;
+        if ((uint) position < INTAKE_AMP_POSITION + INTAKE_POSITION_OFFSET)
+            m_state = Amp;
     }
 }
 
@@ -82,33 +83,33 @@ void Intake::Set_Roller_Motors(float motor_set_value)
 }
 
 /// @brief Method to extend the intake.
-void Intake::Extend()
+void Intake::MoveToFeed()
 {
     // Determine if the intake is retracted
-    if (m_state == Retracted)
+    if (m_state == Amp || m_state == Start)
     {
         std::cout << "Intake Extending\n";
 
         // Intake should now be extending
-        m_state = Extending;
+        m_state = GoingToFeed;
 
         // Set the intake angle to extended
-        Set_Position(INTAKE_EXTENDED_POSITION);
+        Set_Position(INTAKE_FEED_POSITION);
     }
 }
 
 /// @brief Method to retract the intake.
-void Intake::Retract()
+void Intake::MoveToAmp()
 {
-    if ((m_state == Extended))
+    if ((m_state == Feed))
     {
         std::cout << "Intake Retracting\n";
 
         // Intake should now be retracting
-        m_state = Retracting;
+        m_state = GoingToAmp;
 
         // Set the intake angle to retracted
-        Set_Position(INTAKE_RETRACTED_POSITION);
+        Set_Position(INTAKE_AMP_POSITION);
     }
 }
 
@@ -129,25 +130,25 @@ void Intake::Set_Angle(float angle)
 void Intake::Flip_Retraction()
 {
     // Determine if the intake is retracted
-    if (m_state == Retracted)
+    if (m_state == Amp || m_state == Start)
     {
         std::cout << "Intake Extending\n";
 
         // Intake should now be extending
-        m_state = Extending;
+        m_state = GoingToFeed;
 
         // Set the intake angle to extended
-        Set_Position(INTAKE_EXTENDED_POSITION);
+        Set_Position(INTAKE_FEED_POSITION);
     } 
-    else if ((m_state == Extended))
+    else if ((m_state == Feed))
     {
         std::cout << "*ntake Retracting\n";
 
         // Intake should now be retracting
-        m_state = Retracting;
+        m_state = GoingToAmp;
 
         // Set the intake angle to retracted
-        Set_Position(INTAKE_RETRACTED_POSITION);
+        Set_Position(INTAKE_AMP_POSITION);
     }
 }
 
@@ -155,7 +156,7 @@ void Intake::Flip_Retraction()
 /// @param position - The position to set the intake subassembly.
 void Intake::Set_Position(int position)
 {
-    std::cout << "SetControl:  " << position - INTAKE_RETRACTED_POSITION << "\n";
+    std::cout << "SetControl:  " << position << "\n";
 
     // Set the move motion position setpoint 
     // Note: The position 0_tr in the control is overwritten using WithPosition

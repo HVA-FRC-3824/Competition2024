@@ -35,7 +35,7 @@ class Climb : frc2::SubsystemBase
         };
 
         /// @brief The intake state.
-        Climb_State m_state = Retracted;
+        Climb_State m_state = Extended;
 
         /// @brief The climber right side motor.
         TalonFX m_climb_motor_right{CLIMBER_RIGHT_CAN_ID, CANBUS_NAME};

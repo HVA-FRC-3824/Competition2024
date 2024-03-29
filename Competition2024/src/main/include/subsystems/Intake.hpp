@@ -28,10 +28,10 @@ class Intake : frc2::SubsystemBase
         void Set_Roller_Motors(float motor_set_value);
 
         /// @brief Method to extend the intake.
-        void Extend();
+        void MoveToFeed();
 
         /// @brief Method to retract the intake.
-        void Retract();
+        void MoveToAmp();
 
         /// @brief Method to set the intake angle.
         /// @param angle - The angle to set the intake.
@@ -43,14 +43,15 @@ class Intake : frc2::SubsystemBase
     private:
         enum Intake_State
         {
-            Retracted,
-            Extending,
-            Extended,
-            Retracting
+            Start,
+            Amp,
+            GoingToFeed,
+            Feed,
+            GoingToAmp
         };
 
         /// @brief The intake state.
-        Intake_State m_state = Retracted;
+        Intake_State m_state = Start;
 
         /// @brief The intake roller motor.
         CANSparkMax m_intake_roller_motor{INTAKE_ROLLER_MOTOR_CAN_ID, CANSparkLowLevel::MotorType::kBrushless};

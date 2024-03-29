@@ -9,9 +9,10 @@
 /// @brief Called when the robot is started.
 void Robot::RobotInit()
 {
-    m_chooser.SetDefaultOption(kAutoNameCustom, kAutoNameCustom);
-    m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
-    m_chooser.AddOption(kAuto_MoveAuto, kAuto_MoveAuto);
+    m_chooser.SetDefaultOption(kAuto_Do_Nothing,  kAuto_Do_Nothing);
+    m_chooser.AddOption(kAuto_Move,               kAuto_Move);
+    m_chooser.AddOption(kAuto_Place_Amp_Red,      kAuto_Place_Amp_Red);
+    m_chooser.AddOption(kAuto_Place_Amp_Blue,     kAuto_Place_Amp_Blue);
 
     frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
@@ -53,10 +54,14 @@ void Robot::AutonomousInit()
     fmt::print("Auto selected: {}\n", m_AutoCommandselected);
 
     // Set the autonomous command
-    if (m_AutoCommandselected == kAutoNameCustom)
+    if (m_AutoCommandselected == kAuto_Do_Nothing)
         Autonomous.Auto_Do_Nothing();
-    else if (m_AutoCommandselected == kAuto_MoveAuto)
+    else if (m_AutoCommandselected == kAuto_Move)
         Autonomous.Auto_Move();
+    else if (m_AutoCommandselected == kAuto_Place_Amp_Red)
+        Autonomous.Auto_Place_Amp_And_Move(false);
+    else if (m_AutoCommandselected == kAuto_Place_Amp_Blue)
+        Autonomous.Auto_Place_Amp_And_Move(true);
 }
 
 void Robot::AutonomousPeriodic()
@@ -78,7 +83,7 @@ void Robot::TeleopPeriodic()
 
     // Run the subassembly periodic methods
     INTAKE.Robot_Periodic();
-    CLIMB.Robot_Periodic();
+    //CLIMB.Robot_Periodic();
 }
 
 void Robot::DisabledInit()

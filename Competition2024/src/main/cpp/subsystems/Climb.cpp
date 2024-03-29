@@ -36,7 +36,7 @@ Climb::Climb()
        this->m_climb_motors[motor]->GetConfigurator().Apply(climb_motor_configuration);
 
        // Configure the CLIMBER angle motor
-       this->m_climb_motors[motor]->SetPosition((units::angle::turn_t) CLIMBER_RETRACTED_POSITION);
+       this->m_climb_motors[motor]->SetPosition((units::angle::turn_t) CLIMBER_EXTENDED_POSITION);
     }
 }
 
