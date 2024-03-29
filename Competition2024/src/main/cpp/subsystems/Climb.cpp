@@ -43,7 +43,7 @@ Climb::Climb()
     for (int motor = 0; motor < CLIMBER_MOTORS; motor++)
     {
         // Factory default hardware to prevent unexpected behavior
-        //this->m_climb_motors[motor]->ConfigFactoryDefault();
+        this->m_climb_motors[motor]->ConfigFactoryDefault();
 
         // Set the climb motor to brake
         this->m_climb_motors[motor]->SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
@@ -145,6 +145,39 @@ void Climb::Retract()
         // Set the climber to retracted
         Set_Position(CLIMBER_RETRACTED_POSITION);
     }
+}
+
+/// @brief Method to set the motor output.
+/// @param output - The motor output percentage (-1.0 to 1.0)
+void Climb::Set_Motor_Output(double output)
+{
+    // Set the motor output 
+    for (int motor = 0; motor < CLIMBER_MOTORS; motor++)
+    {
+        // Ensure the motor is enabled
+        if (climber_motor_enable[motor] == true)
+           this->m_climb_motors[motor]->Set(ControlMode::PercentOutput, output);
+        else
+           this->m_climb_motors[motor]->Set(ControlMode::PercentOutput, 0.0);
+
+        // Get the motor current
+        double current = this->m_climb_motors[motor]->GetOutputCurrent();
+
+        // Disable the motor is climb motor current is exceeded (i.e., reached end of climb)
+        if (current > CLIMB_MAXIMUM_OUTPUT_CURRENT)
+            climber_motor_enable[motor] = false;
+    }
+}
+
+/// @brief Methos to enable the climber motors.
+void Climb::Enable_Climber_Motors(bool state)
+{
+    std::cout << "Climber motors " << state << "\n";
+    frc::SmartDashboard::PutBoolean("Climb Enable: ", state);
+
+    // Enable the motors 
+    for (int motor = 0; motor < CLIMBER_MOTORS; motor++)
+        climber_motor_enable[motor] = state;    
 }
 
 /// @brief Method to set the climber hooks to the specified position.

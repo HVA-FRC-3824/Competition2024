@@ -95,7 +95,7 @@
 #define INTAKE_START_POSITION                0.000
 #define INTAKE_AMP_POSITION                  5.000
 #define INTAKE_FEED_POSITION                10.000
-#define INTAKE_POSITION_REACHED_POSITION     1.000
+#define INTAKE_POSITION_REACHED_POSITION     0.500
 
 #define INTAKE_POSITION_STEP_VALUE           0.100
 
@@ -105,7 +105,9 @@
 #define INTAKE_ENCODER_0_DEGREES               250
 
 // ### Climber Variable ###
-#define CLIMBER_MOTORS                           1
+#define CLIMBER_MOTORS                           2
+
+#define CLIMB_MAXIMUM_OUTPUT_CURRENT            30
 
 #define CLIMBER_ACTUATION_SENSOR_RATIO           1  // Adjust per robot (could set to 1 and just use encoder counts)
 #define CLIMBER_ACTUATION_P                  1.000
@@ -122,8 +124,8 @@
 #define CLIMBER_EXTENDED_POSITION                0
 #define CLIMBER_OFFSET_POSITION_COUNT           50
 
-#define CLIMBER_UP_POWER                       0.5
-#define CLIMBER_DOWN_POWER                    -0.5
+#define CLIMBER_UP_POWER                       1.0
+#define CLIMBER_DOWN_POWER                    -1.0
 
 // ### Autonomous Variables ###
 // Autonomous Move

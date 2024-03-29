@@ -21,15 +21,6 @@ class OperatorController : frc2::SubsystemBase
         void Robot_Periodic(); 
 
     private:
-        /// @brief Variable to keep track of the periodic calls
-        long periodic_counter            = 0;
-
-        /// @brief Variable to debounce the intake lower button 
-        long intake_lower_debounce_count = 0;
-
-        /// @brief Variable to debounce the intake raise button   
-        long intake_raise_debounce_count = 0;
-
         /// @brief Pointer to the intake class to allow calling intake methods.
         Intake *m_intake;
 

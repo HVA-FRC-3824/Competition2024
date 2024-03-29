@@ -15,6 +15,20 @@ OperatorController::OperatorController(Intake *intake, Climb *climb)
 }
 
 /// @brief Method called periodically every dirver/operator control packet.
+///
+/// Operator:
+///    Button POV_0:   Intake move to Feed.
+///    Button POV_180: Intake move to amp.
+///
+///    Button A:       Step intake negative.
+///    Button Y:       Step intake positive.
+///    Button X:       Flib intake to opposite position.
+///
+///    Button Bumper   Right: Climb retract (Climb).
+///    Button Bumper   Right: Climb extend.
+///
+///    Button POV_90:  Enable cliber motors.
+///    Button POV_270: Disable cliber motors.
 void OperatorController::Robot_Periodic()
 {
     // Intake rollers
@@ -33,50 +47,35 @@ void OperatorController::Robot_Periodic()
     if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_X))
         m_intake->Flip_Retraction();
 
-    frc::SmartDashboard::PutNumber("periodic_counter: ", periodic_counter);
-
     // Check for intake angle lower offset (in case belt slips)
     if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_A))
-    {
-        // Determine if the button is being debounced
-        // (i.e., the button will not be processed if it's debounce count is greater than the present decounce_counter)
-        if (intake_lower_debounce_count < periodic_counter)
-        {
-           // Remember when the button was pressed
-           intake_lower_debounce_count = periodic_counter + BUTTON_DEBOUNCE_COUNTS;
-
-           frc::SmartDashboard::PutNumber("Button A: ", intake_lower_debounce_count);
-
-           // Precess the button press
-           m_intake->AddIntakeOffset(-INTAKE_POSITION_STEP_VALUE);
-        }
-    }
-
+       m_intake->AddIntakeOffset(-INTAKE_POSITION_STEP_VALUE);
+        
     // Check for intake angle raise offset (in case belt slips)
     else if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_Y))
-    {
-        // Determine if the button is being debounced
-        // (i.e., the button will not be processed if it's debounce count is greater than the present decounce_counter)
-        if (intake_raise_debounce_count < periodic_counter)
-        {
-           // Remember when the button was pressed
-           intake_raise_debounce_count = periodic_counter + BUTTON_DEBOUNCE_COUNTS;
-
-           frc::SmartDashboard::PutNumber("Button Y: ", intake_raise_debounce_count);
-
-           // Precess the button press
-           m_intake->AddIntakeOffset(INTAKE_POSITION_STEP_VALUE);
-        }
-    }
-
+        m_intake->AddIntakeOffset(INTAKE_POSITION_STEP_VALUE);
+        
     // Climb control extend
-    if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUMPER_LEFT))
-        m_climb->Extend();
+    //if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUMPER_LEFT))
+    //    m_climb->Extend();
 
     // Climb control retract
-    if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUMPER_RIGHT))
-        m_climb->Retract();
+    //if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUMPER_RIGHT))
+    //    m_climb->Retract();
 
-    // increment the debounce couner
-    periodic_counter++;
+    // Climb control 
+    if (m_operator_joystick.GetRawButton(JOYSTICK_BUMPER_LEFT))
+        m_climb->Set_Motor_Output(CLIMBER_UP_POWER);  // Extend
+    else if (m_operator_joystick.GetRawButton(JOYSTICK_BUMPER_RIGHT))
+       m_climb->Set_Motor_Output(CLIMBER_DOWN_POWER);  // Retract
+    else
+        m_climb->Set_Motor_Output(0.0);  // Stop
+ 
+    // Enable the climber motors
+    if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_POV_90))
+        m_climb->Enable_Climber_Motors(true);
+
+    // Disable the climber motors
+    if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_POV_270))
+        m_climb->Enable_Climber_Motors(false);
 }

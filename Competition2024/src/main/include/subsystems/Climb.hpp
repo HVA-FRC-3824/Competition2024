@@ -26,6 +26,14 @@ class Climb : frc2::SubsystemBase
         /// @brief Method to retract the climb hooks.
         void Retract();
 
+        /// @brief Method to set the motor output.
+        /// @param output - The motor output percentage (-1.0 to 1.0)
+        void Set_Motor_Output(double output);
+
+        /// @brief Methos to enable the climber motors.
+        /// @param state - The state of the motor enable 
+        void Enable_Climber_Motors(bool state);
+
     private:
         enum Climb_State
         {
@@ -37,6 +45,9 @@ class Climb : frc2::SubsystemBase
 
         /// @brief The intake state.
         Climb_State m_state = Extended;
+
+        /// @brief Intdicates if the climber motor is enabled.
+        bool climber_motor_enable[2] = { true, true };
 
         /// @brief The climber right side motor.
         TalonSRX m_climb_motor_right{CLIMBER_RIGHT_CAN_ID};

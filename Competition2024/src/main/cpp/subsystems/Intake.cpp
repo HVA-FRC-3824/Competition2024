@@ -43,7 +43,8 @@ Intake::Intake()
 
     // Set the motor direction
     configs::MotorOutputConfigs motorOutputConfigs{};
-    motorOutputConfigs.Inverted = true;
+    motorOutputConfigs.Inverted    = true;
+    motorOutputConfigs.NeutralMode = signals::NeutralModeValue::Brake;
     this->m_intake_angle_motor.GetConfigurator().Apply(motorOutputConfigs);
 
     // Configure the intake angle motor to start at the specified encover value
