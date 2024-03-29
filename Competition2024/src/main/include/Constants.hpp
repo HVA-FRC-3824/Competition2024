@@ -30,13 +30,6 @@
 // 180 / Pi
 #define MAGIC_NUMBER                      57.29577f
 #define ANTIMAGIC_NUMBER                   0.01745f
-
-// -68.115234375 - Rear left
-// 105.029296875 - Rear right
-
-// -102.12890625 - Front Right
-// 8.965 - Rear Left
-// 21.709 - Rear right
  
 // ### Controller constants ###
 #define OPERATOR_CONTROLLER                      0
@@ -47,10 +40,15 @@
 #define JOYSTICK_BUTTON_X                        3
 #define JOYSTICK_BUTTON_Y                        4
 
+#define JOYSTICK_BUMPER_LEFT                     5
+#define JOYSTICK_BUMPER_RIGHT                    6
+
 #define JOYSTICK_POV_0                           0
 #define JOYSTICK_POV_90                         90
 #define JOYSTICK_POV_180                       180
 #define JOYSTICK_POV_270                       270
+
+#define BUTTON_DEBOUNCE_COUNTS                  10
 
 // #### Swerve ####
 #define CHASSIS_LENGTH                          30
@@ -80,24 +78,28 @@
 // ### Intake variables ###
 #define INTAKE_ROLLER_MOTOR_JOYSTICK_DEADBAND  0.1
 
-#define INTAKE_ACTUATION_SENSOR_RATIO        0.001  // Adjust per robot (could set to 1 and just use encoder counts)
+#define INTAKE_ACTUATION_SENSOR_RATIO          1.0  // Adjust per robot (could set to 1 and just use encoder counts)
+
+#define INTAKE_ACTUATION_A                   0.000  // Adceleration FeedForward
+#define INTAKE_ACTUATION_D                   0.000  // Derivative Gain
+#define INTAKE_ACTUATION_G                   0.000  // Gravity FeedForward Gain
+#define INTAKE_ACTUATION_I                   1.000  // Integra Gain
+#define INTAKE_ACTUATION_P                  25.000  // Proportional Gain
+#define INTAKE_ACTUATION_S                   0.000  // Static FeedForward Gain
+#define INTAKE_ACTUATION_V                   1.000  // Velocity FeedFroward Gain
+
+#define INTAKE_ACTUATION_ACCELERATION      150.000  // Move Acceleration       - INCREASE FOR FASTER ACCELERATION
+#define INTAKE_ACTUATION_VELOCITY          100.000  // Maximum Move Velocity   - SETS MAXIMUM SPEED
+#define INTAKE_ACTUATION_JERK              200.000  // Acceleration Derivative - INCREASE FOR MORE SPEED (200 - 500)
+
+#define INTAKE_START_POSITION                0.000
+#define INTAKE_AMP_POSITION                  5.000
+#define INTAKE_FEED_POSITION                10.000
+#define INTAKE_POSITION_REACHED_POSITION     1.000
+
+#define INTAKE_POSITION_STEP_VALUE           0.100
 
 #define INTAKE_MAX_AMPERAGE                     30
-
-#define INTAKE_ACTUATION_P                   0.100
-#define INTAKE_ACTUATION_I                   0.000
-#define INTAKE_ACTUATION_D                   0.000
-#define INTAKE_ACTUATION_V                   0.000
-#define INTAKE_ACTUATION_S                   0.000  // Approximately 0.1V to get the mechanism moving
-
-#define INTAKE_ACTUATION_VELOCITY              0.3
-#define INTAKE_ACTUATION_ACCELERATION          0.2
-#define INTAKE_ACTUATION_JERK                 0.01
-
-#define INTAKE_START_POSITION                    0
-#define INTAKE_AMP_POSITION                    -10
-#define INTAKE_FEED_POSITION                   -20
-#define INTAKE_POSITION_OFFSET                   5
 
 #define INTAKE_ENCODER_90_DEGREES              150
 #define INTAKE_ENCODER_0_DEGREES               250

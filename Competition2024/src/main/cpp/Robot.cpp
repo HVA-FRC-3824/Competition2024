@@ -83,7 +83,7 @@ void Robot::TeleopPeriodic()
 
     // Run the subassembly periodic methods
     INTAKE.Robot_Periodic();
-    //CLIMB.Robot_Periodic();
+    CLIMB.Robot_Periodic();
 }
 
 void Robot::DisabledInit()

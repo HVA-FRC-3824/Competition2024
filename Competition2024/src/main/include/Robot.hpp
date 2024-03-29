@@ -45,19 +45,19 @@ class Robot : public frc::TimedRobot
         // Robot subassemblies
         Swerve             SWERVE{CHASSIS_LENGTH, CHASSIS_WIDTH};
         Intake             INTAKE{};
-        //Climb              CLIMB{};
+        Climb              CLIMB{};
 
         // Robot controllers (operator and controller)
-        OperatorController O_CONTROLLER{&INTAKE};//, &CLIMB};
+        OperatorController O_CONTROLLER{&INTAKE, &CLIMB};
         DriverController   D_CONTROLLER{&SWERVE};
 
         // Method to run autonomous commands
         AutoCommands       Autonomous{&SWERVE, &INTAKE};
 
-        const std::string kAuto_Do_Nothing         = "Do Nothing";
-        const std::string kAuto_Move               = "Auto Move";
-        const std::string kAuto_Place_Amp_Red      = "Place Amp - Red";
-        const std::string kAuto_Place_Amp_Blue     = "Place Amp - Blue";
+        const std::string kAuto_Do_Nothing     = "Do Nothing";
+        const std::string kAuto_Move           = "Auto Move";
+        const std::string kAuto_Place_Amp_Red  = "Place Amp - Red";
+        const std::string kAuto_Place_Amp_Blue = "Place Amp - Blue";
 
         // Sender for choosing the autonomous command.        
         frc::SendableChooser<std::string> m_chooser;

@@ -25,14 +25,9 @@ void AutoCommands::Auto_Move()
 {
     // Drive forward
     m_swerve->Drive(AUTO_DRIVE_FORWARD_SPEED, 0, 0, 0);
-
-    // Timed drive
-    usleep(AUTO_DRIVE_FORWARD_TIME);
-
-    // Stop
-    m_swerve->Drive(0, 0, 0, 0);
+    usleep(AUTO_DRIVE_FORWARD_TIME);   // Timed drive
+    m_swerve->Drive(0, 0, 0, 0);       // Stop
 }
-
 
 /// @brief  Autonomous comand to place a note in the Amp, and move out of the tape.
 /// @param move_after_amp - Bool to indacate if it should move after AMP.

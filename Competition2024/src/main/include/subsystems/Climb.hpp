@@ -7,6 +7,7 @@
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 #include <ctre/phoenix6/TalonFX.hpp>
+#include "ctre/Phoenix.h"
 
 using namespace ctre::phoenix6::hardware;
 
@@ -38,13 +39,13 @@ class Climb : frc2::SubsystemBase
         Climb_State m_state = Extended;
 
         /// @brief The climber right side motor.
-        TalonFX m_climb_motor_right{CLIMBER_RIGHT_CAN_ID, CANBUS_NAME};
+        TalonSRX m_climb_motor_right{CLIMBER_RIGHT_CAN_ID};
 
         /// @brief The climber left side motor.
-        TalonFX m_climb_motor_left{CLIMBER_LEFT_CAN_ID, CANBUS_NAME};
+        TalonSRX m_climb_motor_left{CLIMBER_LEFT_CAN_ID};
 
         /// @brief Array to hold pointers to the climber motors
-        TalonFX *m_climb_motors[2] = 
+        TalonSRX *m_climb_motors[2] = 
         {
             &m_climb_motor_right,
             &m_climb_motor_left
@@ -52,5 +53,5 @@ class Climb : frc2::SubsystemBase
 
         /// @brief Method to set the climb hooks to the specified position.
         /// @param position - The position to set the climb hooks.
-        void Set_Position(float position);
+        void Set_Position(double position);
 };
