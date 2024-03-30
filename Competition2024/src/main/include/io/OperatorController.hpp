@@ -4,7 +4,6 @@
 
 #include <frc/Joystick.h>
 #include <frc2/command/SubsystemBase.h>
-#include <frc2/command/button/JoystickButton.h>
 
 #include "../subsystems/Intake.hpp"
 #include "../subsystems/Climb.hpp"
@@ -25,7 +24,7 @@ class OperatorController : frc2::SubsystemBase
         Intake *m_intake;
 
         /// @brief Pointer to the climb class to allow calling climb methods.
-        Climb *m_climb;
+        Climb  *m_climb;
 
         /// @brief The operator controller (joystick).
         frc::Joystick m_operator_joystick{OPERATOR_CONTROLLER};

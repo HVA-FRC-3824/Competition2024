@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <frc/smartdashboard/SmartDashboard.h>
 
 #include "../../include/io/DriverController.hpp"

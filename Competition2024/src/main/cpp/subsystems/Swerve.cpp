@@ -6,6 +6,7 @@
 
 #include "../../include/subsystems/Swerve.hpp"
 
+using namespace frc;
 using namespace ctre::phoenix6;
 
 /// @brief Constructor for the Swerve class.
@@ -101,8 +102,8 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
     // Only run our motors once everything is calculated
     for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
     {
-        frc::SmartDashboard::PutNumber(fmt::v10::format("CANCODER_POS_{}: ", swerve_module), this->ABS_ENCODERS[swerve_module].GetAbsolutePosition());
-        //frc::SmartDashboard::PutNumber(fmt::v9::format("SPARKMAX_POS_{}: ", i), this->ANGLE_ENCODERS[i]->GetPosition());
+        SmartDashboard::PutNumber(fmt::v10::format("CANCODER_POS_{}: ", swerve_module), this->ABS_ENCODERS[swerve_module].GetAbsolutePosition());
+        //SmartDashboard::PutNumber(fmt::v9::format("SPARKMAX_POS_{}: ", i), this->ANGLE_ENCODERS[i]->GetPosition());
         this->DRIVE_MOTORS[swerve_module]->Set(this->math_dest.wheel_speeds[swerve_module]);
 
         if(use_old)
@@ -152,14 +153,14 @@ void Swerve::Toggle_X_Wheels()
 {
     this->x_wheels = !this->x_wheels;
 
-    frc::SmartDashboard::PutBoolean("XWHEELS? ", this->x_wheels);
+    SmartDashboard::PutBoolean("XWHEELS? ", this->x_wheels);
 }
 
 /// @brief Method to print the wheel speeds and angles.
 /// @param wheel_information - The wheel information. 
 void Swerve::print_swerve_math(wheel_info wheel_information)
 {
-    std::cout << "\n";
+    //std::cout << "\n";
     for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
     {
         //std::cout << wheel_information.wheel_speeds[swerve_module] << " SPEED " << swerve_module << "\n";
@@ -191,7 +192,7 @@ void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants
 	float strafe  = str;
     float gyro    = navx.GetYaw();
 
-    frc::SmartDashboard::PutNumber("Gyro Input: ", gyro);
+    SmartDashboard::PutNumber("Gyro Input: ", gyro);
 
 	// If field centric take in account the gyro
     float temp =  (fwd * cosf(gyro * ANTIMAGIC_NUMBER)) + (str * sinf(gyro * ANTIMAGIC_NUMBER));

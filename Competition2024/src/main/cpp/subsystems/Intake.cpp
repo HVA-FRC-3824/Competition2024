@@ -1,9 +1,8 @@
-#include <iostream>
-
 #include <frc/smartdashboard/SmartDashboard.h>
 
 #include "../../include/subsystems/Intake.hpp"
 
+using namespace frc;
 using namespace ctre::phoenix6;
 
 /// @brief Constructor for the Intake class.
@@ -57,21 +56,21 @@ Intake::Intake()
 /// @brief Method called periodically every operator control packet.
 void Intake::Robot_Periodic()
 {
-    frc::SmartDashboard::PutNumber("Intake State: ", this->m_state);
+    SmartDashboard::PutNumber("Intake State: ", this->m_state);
 
     StatusSignal getPosition = this->m_intake_angle_motor.GetPosition();
     units::angle::turn_t position = getPosition.GetValue();
-    frc::SmartDashboard::PutNumber("Intake Position: ", (double) position);
+    SmartDashboard::PutNumber("Intake Position: ", (double) position);
 
     StatusSignal getVelocity = this->m_intake_angle_motor.GetVelocity();
     units::angular_velocity::turns_per_second_t velocity = getVelocity.GetValue();
-    frc::SmartDashboard::PutNumber("Intake Velocity: ", (double) velocity);
+    SmartDashboard::PutNumber("Intake Velocity: ", (double) velocity);
 
     // Determine the intake is extending
     if (m_state == GoingToFeed)
     {
         // If close to the extend position, then set the intake state to extended
-        if ((double) position > intake_feed_position - INTAKE_POSITION_REACHED_POSITION)
+        if ((double) position > m_intake_feed_position - INTAKE_POSITION_REACHED_POSITION)
             m_state = Feed;
     }
 
@@ -79,7 +78,7 @@ void Intake::Robot_Periodic()
     if (m_state == GoingToAmp)
     {
         // If close to the retract position, then set the intake state to retracted
-        if ((double) position < intake_amp_position + INTAKE_POSITION_REACHED_POSITION)
+        if ((double) position < m_intake_amp_position + INTAKE_POSITION_REACHED_POSITION)
             m_state = Amp;
     }
 }
@@ -98,13 +97,11 @@ void Intake::MoveToFeed()
     // Determine if the intake is retracted
     if (m_state == Amp || m_state == Start)
     {
-        std::cout << "Intake Extending\n";
-
         // Intake should now be extending
         m_state = GoingToFeed;
 
         // Set the intake angle to extended
-        Set_Position(intake_feed_position);
+        Set_Position(m_intake_feed_position);
     }
 }
 
@@ -113,44 +110,12 @@ void Intake::MoveToAmp()
 {
     if ((m_state == Feed))
     {
-        std::cout << "Intake Retracting\n";
-
         // Intake should now be retracting
         m_state = GoingToAmp;
 
         // Set the intake angle to retracted
-        Set_Position(intake_amp_position);
+        Set_Position(m_intake_amp_position);
     }
-}
-
-/// @brief Method to add/subtrat the specified offset to the intake offset to account for belt slippage.
-/// @param offset - The offset to add/subtract to the intake offset.
-void Intake::AddIntakeOffset(double offset)
-{
-    // Add the intake offset to the amp, feed and preset set position (subtract if the offset if negative)
-    intake_amp_position  += offset;
-    intake_feed_position += offset;
-    present_set_position += offset;
-
-    frc::SmartDashboard::PutNumber("intake_amp_position: ",   intake_amp_position);
-    frc::SmartDashboard::PutNumber("Iintake_feed_position: ", intake_feed_position);
-    frc::SmartDashboard::PutNumber("present_set_position: ",  present_set_position);
-
-    // Update the intak positoin
-    Set_Position(present_set_position);
-}
-
-/// @brief Method to set the intake angle.
-/// @param angle - The angle to set the intake.
-void Intake::Set_Angle(double angle) 
-{
-    // Convert angle to encoder position.
-    int encoder_position = Angle_To_Encoder(angle);
-
-    std::cout << "angle: " << angle << ", encoder_position: " << encoder_position << ".\n";
-
-    // Set the magic motion position to encoder position.
-    Set_Position(encoder_position);
 }
 
 /// @brief Method to flip the intake subassembly from extend to retracted.
@@ -159,24 +124,37 @@ void Intake::Flip_Retraction()
     // Determine if the intake is retracted
     if (m_state == Amp || m_state == Start)
     {
-        std::cout << "Intake Extending\n";
-
         // Intake should now be extending
         m_state = GoingToFeed;
 
         // Set the intake angle to extended
-        Set_Position(intake_feed_position);
+        Set_Position(m_intake_feed_position);
     } 
     else if ((m_state == Feed))
     {
-        std::cout << "*ntake Retracting\n";
-
         // Intake should now be retracting
         m_state = GoingToAmp;
 
         // Set the intake angle to retracted
-        Set_Position(intake_amp_position);
+        Set_Position(m_intake_amp_position);
     }
+}
+
+/// @brief Method to add/subtrat the specified offset to the intake offset to account for belt slippage.
+/// @param offset - The offset to add/subtract to the intake offset.
+void Intake::AddIntakeOffset(double offset)
+{
+    // Add the intake offset to the amp, feed and preset set position (subtract if the offset if negative)
+    m_intake_amp_position  += offset;
+    m_intake_feed_position += offset;
+    m_present_set_position += offset;
+
+    SmartDashboard::PutNumber("m_intake_amp_position: ",   m_intake_amp_position);
+    SmartDashboard::PutNumber("Iintake_feed_position: ", m_intake_feed_position);
+    SmartDashboard::PutNumber("m_present_set_position: ",  m_present_set_position);
+
+    // Update the intak positoin
+    Set_Position(m_present_set_position);
 }
 
 /// @brief Method to set the intake subassembly to the specified position.
@@ -184,20 +162,10 @@ void Intake::Flip_Retraction()
 void Intake::Set_Position(double position)
 {
     // Calculate the set position based on the specified position and the intake offset
-    present_set_position = position;
-
-    std::cout << "Set_Position:  " << present_set_position << "\n";
+    m_present_set_position = position;
 
     // Set the move motion position setpoint 
     // Note: The position 0_tr in the control is overwritten using WithPosition
     controls::MotionMagicVoltage motionMagicVoltate{0_tr};
-    this->m_intake_angle_motor.SetControl(motionMagicVoltate.WithPosition(present_set_position * 1_tr).WithSlot(0));
-}
-
-/// @brief Method to convert intake angle to encoder value.
-/// @param angle - The angle to convert.
-int Intake::Angle_To_Encoder(double angle)
-{
-    // Converting the intake angle to encoder value.
-    return angle * ((INTAKE_ENCODER_90_DEGREES - INTAKE_ENCODER_0_DEGREES) / 90) + INTAKE_ENCODER_0_DEGREES;
+    this->m_intake_angle_motor.SetControl(motionMagicVoltate.WithPosition(m_present_set_position * 1_tr).WithSlot(0));
 }

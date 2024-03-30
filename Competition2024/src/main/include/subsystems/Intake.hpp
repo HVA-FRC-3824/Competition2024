@@ -4,14 +4,10 @@
 
 #include <frc2/command/SubsystemBase.h>
 
-#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
-#include <ctre/phoenix/motorcontrol/can/WPI_TalonFX.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-#include <rev/SparkmaxAbsoluteEncoder.h>
 #include "rev/CANSparkMax.h"
 
-using namespace ctre::phoenix6::hardware;
 using namespace rev;
 
 class Intake : frc2::SubsystemBase
@@ -33,16 +29,12 @@ class Intake : frc2::SubsystemBase
         /// @brief Method to retract the intake.
         void MoveToAmp();
 
+        /// @brief Method to flip the intake subassembly from extend to retracted.
+        void Flip_Retraction();
+
         /// @brief Method to add/subtrat the specified offset to the intake offset to account for belt slippage.
         /// @param offset - The offset to add/subtract to the intake offset.
         void AddIntakeOffset(double offset);
-
-        /// @brief Method to set the intake angle.
-        /// @param angle - The angle to set the intake.
-        void Set_Angle(double angle);
-
-        /// @brief Method to flip the intake subassembly from extend to retracted.
-        void Flip_Retraction();
 
     private:
         enum Intake_State
@@ -54,9 +46,9 @@ class Intake : frc2::SubsystemBase
             GoingToAmp
         };
 
-        double present_set_position = 0.0;                    // The preset intake set position
-        double intake_amp_position  = INTAKE_AMP_POSITION;    // The intake amplifier position
-        double intake_feed_position = INTAKE_FEED_POSITION;   // The intake feed position
+        double m_present_set_position = 0.0;                    // The preset intake set position
+        double m_intake_amp_position  = INTAKE_AMP_POSITION;    // The intake amplifier position
+        double m_intake_feed_position = INTAKE_FEED_POSITION;   // The intake feed position
 
         /// @brief The intake state.
         Intake_State m_state = Start;
@@ -70,8 +62,4 @@ class Intake : frc2::SubsystemBase
         /// @brief Method to set the intake subassembly to the specified position.
         /// @param position - The position to set the intake subassembly.
         void Set_Position(double position);
-
-        /// @brief Method to convert intake angle to encoder value.
-        /// @param angle - The angle to convert.
-        int Angle_To_Encoder(double angle);
 };

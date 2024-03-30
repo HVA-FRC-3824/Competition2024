@@ -48,8 +48,6 @@
 #define JOYSTICK_POV_180                       180
 #define JOYSTICK_POV_270                       270
 
-#define BUTTON_DEBOUNCE_COUNTS                  10
-
 // #### Swerve ####
 #define CHASSIS_LENGTH                          30
 #define CHASSIS_WIDTH                           30
@@ -77,6 +75,7 @@
 
 // ### Intake variables ###
 #define INTAKE_ROLLER_MOTOR_JOYSTICK_DEADBAND  0.1
+#define INTAKE_MAXIMUM_ROLLER_POWER            0.5  // MAximum power to the roller motor
 
 #define INTAKE_ACTUATION_SENSOR_RATIO          1.0  // Adjust per robot (could set to 1 and just use encoder counts)
 
@@ -92,37 +91,19 @@
 #define INTAKE_ACTUATION_VELOCITY          100.000  // Maximum Move Velocity   - SETS MAXIMUM SPEED
 #define INTAKE_ACTUATION_JERK              200.000  // Acceleration Derivative - INCREASE FOR MORE SPEED (200 - 500)
 
-#define INTAKE_START_POSITION                0.000
-#define INTAKE_AMP_POSITION                  5.000
-#define INTAKE_FEED_POSITION                10.000
-#define INTAKE_POSITION_REACHED_POSITION     0.500
+#define INTAKE_START_POSITION                0.000  // Should always start at zero
+#define INTAKE_AMP_POSITION                  5.000  // Adjust to the desired Amp position
+#define INTAKE_FEED_POSITION                10.000  // Adjust to the desired Feed position
+#define INTAKE_POSITION_REACHED_POSITION     0.500  // Indicates the position offset to change intake position (Amp or Feed)
 
-#define INTAKE_POSITION_STEP_VALUE           0.100
+#define INTAKE_POSITION_STEP_VALUE           0.100  // Sets the "jog" step size
 
-#define INTAKE_MAX_AMPERAGE                     30
-
-#define INTAKE_ENCODER_90_DEGREES              150
-#define INTAKE_ENCODER_0_DEGREES               250
+#define INTAKE_MAX_AMPERAGE                     30  // The maximum intake motor amperage
 
 // ### Climber Variable ###
 #define CLIMBER_MOTORS                           2
 
-#define CLIMB_MAXIMUM_OUTPUT_CURRENT            30
-
-#define CLIMBER_ACTUATION_SENSOR_RATIO           1  // Adjust per robot (could set to 1 and just use encoder counts)
-#define CLIMBER_ACTUATION_P                  1.000
-#define CLIMBER_ACTUATION_I                  0.000
-#define CLIMBER_ACTUATION_D                  0.000
-#define CLIMBER_ACTUATION_V                  0.000
-#define CLIMBER_ACTUATION_S                  0.000  // Approximately 0.1V to get the mechanism moving
-
-#define CLIMBER_ACTUATION_VELOCITY              30
-#define CLIMBER_ACTUATION_ACCELERATION          20
-#define CLIMBER_ACTUATION_JERK                   5
-
-#define CLIMBER_RETRACTED_POSITION             100
-#define CLIMBER_EXTENDED_POSITION                0
-#define CLIMBER_OFFSET_POSITION_COUNT           50
+#define CLIMB_MAXIMUM_OUTPUT_CURRENT            30  // Threshold to disable the climb motors (reached full climb)
 
 #define CLIMBER_UP_POWER                       1.0
 #define CLIMBER_DOWN_POWER                    -1.0
@@ -144,4 +125,3 @@
 
 #define AUTO_DRIVE_ACROSS_LINE_SPEED           0.2
 #define AUTO_DRIVE_ACROSS_LINE_TIME    1000 * 1000
-

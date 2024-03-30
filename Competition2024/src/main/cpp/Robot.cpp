@@ -2,9 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#include "Robot.hpp"
+
 #include <iostream>
 
-#include "Robot.hpp"
+#include <frc/smartdashboard/SmartDashboard.h>
+
+using namespace frc;
 
 /// @brief Called when the robot is started.
 void Robot::RobotInit()
@@ -14,7 +18,7 @@ void Robot::RobotInit()
     m_chooser.AddOption(kAuto_Place_Amp_Red,      kAuto_Place_Amp_Red);
     m_chooser.AddOption(kAuto_Place_Amp_Blue,     kAuto_Place_Amp_Blue);
 
-    frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+    SmartDashboard::PutData("Auto Modes", &m_chooser);
 
     // We need to run our vision program in a separate thread. If not, our robot
     // program will not run.
@@ -119,6 +123,6 @@ void Robot::SimulationPeriodic()
 #ifndef RUNNING_FRC_TESTS
 int main()
 {
-    return frc::StartRobot<Robot>();
+    return StartRobot<Robot>();
 }
 #endif

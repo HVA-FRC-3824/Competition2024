@@ -4,21 +4,14 @@
 
 #pragma once
 
-#include <string>
-
 #include <fmt/core.h>
 
-#include <cameraserver/CameraServer.h>
 #include <frc/TimedRobot.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/core/types.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
+#include <frc/smartdashboard/SendableChooser.h>
 
-#include <frc/TimedRobot.h>
-#include <frc/smartdashboard/SendableChooser.h>
-#include <frc/Joystick.h>
-#include <frc/smartdashboard/SendableChooser.h>
-#include <frc/smartdashboard/SmartDashboard.h>
+#include <cameraserver/CameraServer.h>
+
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include "../include/io/OperatorController.hpp"
 #include "../include/io/DriverController.hpp"
