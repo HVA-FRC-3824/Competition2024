@@ -29,6 +29,9 @@ class Intake : frc2::SubsystemBase
         /// @brief Method to retract the intake.
         void MoveToAmp();
 
+        /// @brief Method to get out of the way for climb..
+        void MoveToClimb();
+
         /// @brief Method to flip the intake subassembly from extend to retracted.
         void Flip_Retraction();
 
@@ -40,6 +43,7 @@ class Intake : frc2::SubsystemBase
         enum Intake_State
         {
             Start,
+            Climb,
             Amp,
             GoingToFeed,
             Feed,

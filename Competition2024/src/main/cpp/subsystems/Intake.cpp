@@ -95,7 +95,7 @@ void Intake::Set_Roller_Motors(double motor_set_value)
 void Intake::MoveToFeed()
 {
     // Determine if the intake is retracted
-    if (m_state == Amp || m_state == Start)
+    //if (m_state == Amp || m_state == Start)
     {
         // Intake should now be extending
         m_state = GoingToFeed;
@@ -108,7 +108,7 @@ void Intake::MoveToFeed()
 /// @brief Method to retract the intake.
 void Intake::MoveToAmp()
 {
-    if ((m_state == Feed))
+    //if ((m_state == Feed) || (m_state == Climb))
     {
         // Intake should now be retracting
         m_state = GoingToAmp;
@@ -116,6 +116,16 @@ void Intake::MoveToAmp()
         // Set the intake angle to retracted
         Set_Position(m_intake_amp_position);
     }
+}
+
+/// @brief Method to get out of the way for climb.
+void Intake::MoveToClimb()
+{
+    // Intake to be set away from climb.
+    m_state = Climb;
+
+    // Set the motor position away from Climb
+    Set_Position(INTAKE_CLIMB_POSITION);
 }
 
 /// @brief Method to flip the intake subassembly from extend to retracted.
@@ -130,7 +140,7 @@ void Intake::Flip_Retraction()
         // Set the intake angle to extended
         Set_Position(m_intake_feed_position);
     } 
-    else if ((m_state == Feed))
+    else if ((m_state == Feed) || (m_state == Climb))
     {
         // Intake should now be retracting
         m_state = GoingToAmp;

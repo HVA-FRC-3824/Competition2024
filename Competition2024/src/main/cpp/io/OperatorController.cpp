@@ -21,12 +21,14 @@ OperatorController::OperatorController(Intake *intake, Climb *climb)
 ///    Button POV_180:      Intake move to Amp.
 ///
 ///    Button A:            Step intake negative.
+///    Button B:            Intake to Climb Position.
 ///    Button Y:            Step intake positive.
-///    Button X:            Flib intake to opposite position.
+///    Button X:            Flip intake to opposite position.
 ///
 ///    Button Bumper Right: Climb retract (Climb).
 ///    Button Bumper Left:  Climb extend.
-///
+///     
+///     D-Pad buttons
 ///    Button POV_90:       Enable cliber motors.
 ///    Button POV_270:      Disable cliber motors.
 void OperatorController::Robot_Periodic()
@@ -46,7 +48,11 @@ void OperatorController::Robot_Periodic()
     // Check for intake angle lower offset (in case belt slips)
     if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_A))
        m_intake->AddIntakeOffset(-INTAKE_POSITION_STEP_VALUE);
-        
+    
+    // Check for intake angle lower offset (in case belt slips)
+    if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_B))
+       m_intake->MoveToClimb();
+
     // Check for intake angle raise offset (in case belt slips)
     else if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_Y))
         m_intake->AddIntakeOffset(INTAKE_POSITION_STEP_VALUE);
@@ -62,12 +68,10 @@ void OperatorController::Robot_Periodic()
        m_climb->Set_Motor_Output(CLIMBER_DOWN_POWER);  // Retract
     else
         m_climb->Set_Motor_Output(0.0);  // Stop
- 
-    // Enable the climber motors
-    if (m_operator_joystick.GetPOV(JOYSTICK_POV_90))
-        m_climb->Enable_Climber_Motors(true);
 
-    // Disable the climber motors
-    if (m_operator_joystick.GetPOV(JOYSTICK_POV_270))
-        m_climb->Enable_Climber_Motors(false);
+    // Check for climber enable or disable.
+    if (m_operator_joystick.GetPOV() == JOYSTICK_POV_90)
+        m_climb->Enable_Climber_Motors(true);   // Enable the climber motors
+    else if (m_operator_joystick.GetPOV() == JOYSTICK_POV_270) 
+        m_climb->Enable_Climber_Motors(false); // Disable the climber motors
 }
