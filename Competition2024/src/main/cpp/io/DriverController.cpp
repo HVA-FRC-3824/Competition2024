@@ -22,5 +22,8 @@ void DriverController::Robot_Periodic()
         m_swerve->Toggle_X_Wheels();
 
     // Get the joystick axis for the robot swerve drive control
-    this->m_swerve->Drive(m_driver_joystick.GetRawAxis(1), -m_driver_joystick.GetRawAxis(0), m_driver_joystick.GetRawAxis(2), this->m_swerve->navx.GetYaw());
+    this->m_swerve->Drive(m_driver_joystick.GetRawAxis(1), 
+                         -m_driver_joystick.GetRawAxis(0), 
+                          m_driver_joystick.GetRawAxis(4), 
+                          this->m_swerve->navx.GetYaw());
 }
