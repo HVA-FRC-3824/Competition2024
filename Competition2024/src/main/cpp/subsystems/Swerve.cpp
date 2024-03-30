@@ -104,7 +104,8 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
     DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]);
     DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]);
     DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
-    // Angle Motors Movement (set changed for encoders)
+    // Angle Motors Movement I do not think that this will work, it will likely have to be put through the encoders, 
+    // but it says that it uses "rotational value" which I'm not sure how to implement at this point.
     ANGLE_MOTORS[0]->Set(SwerveMovement[1][1]);
     ANGLE_MOTORS[1]->Set(SwerveMovement[0][1]);
     ANGLE_MOTORS[2]->Set(SwerveMovement[2][1]);
