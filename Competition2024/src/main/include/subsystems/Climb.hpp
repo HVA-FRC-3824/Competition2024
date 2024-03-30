@@ -17,7 +17,7 @@ class Climb : frc2::SubsystemBase
 
         /// @brief Method to set the motor output.
         /// @param output - The motor output percentage (-1.0 to 1.0)
-        void Set_Motor_Output(double output);
+        void Set_Motor_Output(int motor, double output);
 
         /// @brief Methos to enable the climber motors.
         /// @param state - The state of the motor enable 

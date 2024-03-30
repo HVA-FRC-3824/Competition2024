@@ -28,7 +28,7 @@ OperatorController::OperatorController(Intake *intake, Climb *climb)
 ///    Button Bumper Right: Climb retract (Climb).
 ///    Button Bumper Left:  Climb extend.
 ///     
-///     D-Pad buttons
+///     D-Pad
 ///    Button POV_90:       Enable cliber motors.
 ///    Button POV_270:      Disable cliber motors.
 void OperatorController::Robot_Periodic()
@@ -61,13 +61,21 @@ void OperatorController::Robot_Periodic()
     if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_X))
         m_intake->Flip_Retraction();
         
-    // Climb control 
-    if (m_operator_joystick.GetRawButton(JOYSTICK_BUMPER_LEFT))
-        m_climb->Set_Motor_Output(CLIMBER_UP_POWER);  // Extend
-    else if (m_operator_joystick.GetRawButton(JOYSTICK_BUMPER_RIGHT))
-       m_climb->Set_Motor_Output(CLIMBER_DOWN_POWER);  // Retract
+    // Climb control Right
+    if (m_operator_joystick.GetRawButton(JOYSTICK_BUMPER_RIGHT))
+        m_climb->Set_Motor_Output(CLIMBER_MOTOR_RIGHT, CLIMBER_UP_POWER);  // Extend
+    else if (m_operator_joystick.GetRawAxis(RIGHT_TRIGGER_AXIS) > TRIGGER_THRESHOLD_VALUE)
+       m_climb->Set_Motor_Output(CLIMBER_MOTOR_RIGHT, CLIMBER_DOWN_POWER);  // Retract
     else
-        m_climb->Set_Motor_Output(0.0);  // Stop
+        m_climb->Set_Motor_Output(CLIMBER_MOTOR_RIGHT, 0.0);  // Stop
+        
+    // Climb control Left
+    if (m_operator_joystick.GetRawButton(JOYSTICK_BUMPER_RIGHT))
+        m_climb->Set_Motor_Output(CLIMBER_MOTOR_LEFT, CLIMBER_UP_POWER);  // Extend
+    else if (m_operator_joystick.GetRawAxis(LEFT_TRIGGER_AXIS) > TRIGGER_THRESHOLD_VALUE)
+       m_climb->Set_Motor_Output(CLIMBER_MOTOR_LEFT, CLIMBER_DOWN_POWER);  // Retract
+    else
+        m_climb->Set_Motor_Output(CLIMBER_MOTOR_LEFT, 0.0);  // Stop
 
     // Check for climber enable or disable.
     if (m_operator_joystick.GetPOV() == JOYSTICK_POV_90)

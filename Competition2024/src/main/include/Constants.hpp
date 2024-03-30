@@ -48,6 +48,10 @@
 #define JOYSTICK_POV_180                       180
 #define JOYSTICK_POV_270                       270
 
+#define LEFT_TRIGGER_AXIS                         2
+#define RIGHT_TRIGGER_AXIS                        3
+#define TRIGGER_THRESHOLD_VALUE                 0.5
+
 // #### Swerve ####
 #define CHASSIS_LENGTH                          30
 #define CHASSIS_WIDTH                           30
@@ -103,6 +107,9 @@
 
 // ### Climber Variable ###
 #define CLIMBER_MOTORS                           2
+
+#define CLIMBER_MOTOR_RIGHT                       0
+#define CLIMBER_MOTOR_LEFT                        1
 
 #define CLIMB_MAXIMUM_OUTPUT_CURRENT            30  // Threshold to disable the climb motors (reached full climb)
 

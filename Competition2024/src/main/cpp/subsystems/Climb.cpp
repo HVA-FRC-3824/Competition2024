@@ -19,30 +19,27 @@ void Climb::Robot_Periodic()
 
 /// @brief Method to set the motor output.
 /// @param output - The motor output percentage (-1.0 to 1.0)
-void Climb::Set_Motor_Output(double output)
+void Climb::Set_Motor_Output(int motor, double output)
 {
     // Set the motor output 
-    for (int motor = 0; motor < CLIMBER_MOTORS; motor++)
-    {
-        // Ensure the motor is enabled
-        if (m_motor_enable[motor] == true)
-           this->m_climb_motors[motor]->Set(ControlMode::PercentOutput, output);
-        else
-           this->m_climb_motors[motor]->Set(ControlMode::PercentOutput, 0.0);
+    // Ensure the motor is enabled
+    if (m_motor_enable[motor] == true)
+       this->m_climb_motors[motor]->Set(ControlMode::PercentOutput, output);
+    else
+       this->m_climb_motors[motor]->Set(ControlMode::PercentOutput, 0.0);
 
-        // Get the motor current
-        double current = this->m_climb_motors[motor]->GetOutputCurrent();
+    // Get the motor current
+    double current = this->m_climb_motors[motor]->GetOutputCurrent();
 
-        // Determine which motor is being checked
-        if (motor == 0)
-           SmartDashboard::PutNumber("Climb Right Current: ", current);
-        else
-           SmartDashboard::PutNumber("Climb Left Current: ", current);
+    // Determine which motor is being checked
+    if (motor == 0)
+       SmartDashboard::PutNumber("Climb Right Current: ", current);
+    else
+       SmartDashboard::PutNumber("Climb Left Current: ", current);
 
-        // Disable the motor is climb motor current is exceeded (i.e., reached end of climb)
-        if (current > CLIMB_MAXIMUM_OUTPUT_CURRENT)
-            m_motor_enable[motor] = false;
-    }
+    // Disable the motor is climb motor current is exceeded (i.e., reached end of climb)
+    if (current > CLIMB_MAXIMUM_OUTPUT_CURRENT)
+        m_motor_enable[motor] = false;
 }
 
 /// @brief Methos to enable the climber motors.
