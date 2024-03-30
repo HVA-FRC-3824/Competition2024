@@ -5,6 +5,7 @@
 #include <ctre/phoenix6/configs/Configs.hpp>
 
 #include "../../include/subsystems/Swerve.hpp"
+#include "main/SwerveLib/RobotDriveSwerve.h"
 
 using namespace frc;
 using namespace ctre::phoenix6;
@@ -64,13 +65,17 @@ Swerve::Swerve(float length, float width)
 };
 
 /// @brief The method to drive the robot.
-/// @param y - The operator y stick value.
-/// @param x - The operator x stick value.
-/// @param x2 - The operator second x stick value.
+/// @param y - The operator y stick value - forwards.
+/// @param x - The operator x stick value - strafe.
+/// @param x2 - The operator second x stick value - yaw
 /// @param gyro - The robot gyro heading.
+/// 
+ 
 void Swerve::Drive(float y, float x, float x2, float gyro)
 {
-    // Lock wheels in x position
+    // Correct/Sanitize our inputs
+    deadzone_correction(&x, &y, &x2);
+
     if (this->x_wheels)
     {
         for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
@@ -84,44 +89,26 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
         return;
     }
 
-    // Correct/Sanitize our inputs
-    deadzone_correction(&x, &y, &x2);
+    //new code using lib
+    
+    // This fuction produces the "R" of the robot, likely means Radius
+    SwerveMath(CHASSIS_LENGTH,CHASSIS_WIDTH);
 
-    // Generate our math and store in dest struct to be converted / used
-    calculate_wheel_information(&this->math_dest,this->chassis_info, y, x, x2);
+    // Magically (trigonomotry) returns a multidimensional array with angle rotation values and motor speeds
+    // Giving this 4 agruments makes it field centric.
+    double** SwerveMovement = Calculate(y,x,x2,gyro);
 
-    // Find the percent to max angle (180 or -180) and then multiple by the counts required to get to that required angle.
-    // Equivalent to x / SWERVE_WHEEL_COUNTS_PER_REVOLUTION = y / 360 where y is angle and x is raw sensor units for the encoder
-    for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
-    { 
-        this->raw_usable[swerve_module] = ((this->math_dest.wheel_angle[swerve_module] / 360) * SWERVE_WHEEL_COUNTS_PER_REVOLUTION); 
-    }
-
-    print_swerve_math(this->math_dest);
-
-    // Only run our motors once everything is calculated
-    for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
-    {
-        SmartDashboard::PutNumber(fmt::v10::format("CANCODER_POS_{}: ", swerve_module), this->ABS_ENCODERS[swerve_module].GetAbsolutePosition());
-        //SmartDashboard::PutNumber(fmt::v9::format("SPARKMAX_POS_{}: ", i), this->ANGLE_ENCODERS[i]->GetPosition());
-        this->DRIVE_MOTORS[swerve_module]->Set(this->math_dest.wheel_speeds[swerve_module]);
-
-        if(use_old)
-        {
-            this->PID_CONTROLLERS[swerve_module]->SetReference(this->last_units[swerve_module], CANSparkMax::ControlType::kPosition);
-            //std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Old_Desired: " << this->last_units[i] <<"\n";
-        } else 
-        {
-            this->PID_CONTROLLERS[swerve_module]->SetReference(this->raw_usable[swerve_module], CANSparkMax::ControlType::kPosition);
-            //std::cout << i << "Actual: " << this->ANGLE_ENCODERS[i]->GetPosition() << " Desired: " << this->raw_usable[i] <<"\n";
-            this->last_units[swerve_module] = this->raw_usable[swerve_module];
-        }
-
-        // Clear "sticky" values that are stuck in memory, if the robot is receiving input this doesn't matter anyways.
-        // Only affects the robot when stopped!!
-        this->math_dest.wheel_speeds[swerve_module] = 0;
-    }
-    this->use_old = false;
+    // Incrementing is weird because the library uses a different motor order.
+    // Drive Motors movement
+    DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]);
+    DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]);
+    DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]);
+    DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
+    // Angle Motors Movement (set changed for encoders)
+    ANGLE_MOTORS[0]->Set(SwerveMovement[1][1]);
+    ANGLE_MOTORS[1]->Set(SwerveMovement[0][1]);
+    ANGLE_MOTORS[2]->Set(SwerveMovement[2][1]);
+    ANGLE_MOTORS[3]->Set(SwerveMovement[3][1]);
 }
 
 /// @brief Method to toggle the field centricity.
@@ -148,7 +135,7 @@ void Swerve::Snap_Wheels_To_Absolute_Position()
 
 // When field centric mode is disabled 'gyro' is ignored
 
-/// @brief Method to ??? 
+/// @brief Method to ??? "Locks wheels so that the robot cannot move for better defence" - paraphrasing Dr. Maples
 void Swerve::Toggle_X_Wheels()
 {
     this->x_wheels = !this->x_wheels;
