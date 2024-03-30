@@ -50,7 +50,7 @@ Intake::Intake()
     this->m_intake_angle_motor.SetPosition((units::angle::turn_t) INTAKE_START_POSITION);
 
     // Enable the intake motor PID
-    Set_Position(INTAKE_START_POSITION);
+    MoveToAmp();
 }
 
 /// @brief Method called periodically every operator control packet.

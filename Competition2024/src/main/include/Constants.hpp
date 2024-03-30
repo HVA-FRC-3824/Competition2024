@@ -96,8 +96,8 @@
 #define INTAKE_ACTUATION_JERK              200.000  // Acceleration Derivative - INCREASE FOR MORE SPEED (200 - 500)
 
 #define INTAKE_START_POSITION                0.000  // Should always start at zero
-#define INTAKE_AMP_POSITION                  5.000  // Adjust to the desired Amp position
-#define INTAKE_FEED_POSITION                10.000  // Adjust to the desired Feed position
+#define INTAKE_AMP_POSITION                  5.700  // Adjust to the desired Amp position
+#define INTAKE_FEED_POSITION                 8.500  // Adjust to the desired Feed position
 #define INTAKE_CLIMB_POSITION               12.000 // Adust to be out of the way for climb.
 #define INTAKE_POSITION_REACHED_POSITION     0.500  // Indicates the position offset to change intake position (Amp or Feed)
 
@@ -122,14 +122,14 @@
 #define AUTO_DRIVE_FORWARD_TIME        2000 * 1000  // Two seconds
 
 // Autonomous place AMP and move
-#define AUTO_SCOOT_TO_AMP_SPEED               -0.2
-#define AUTO_SCOOT_TO_AMP_TIME         1000 * 1000
+#define AUTO_SCOOT_TO_AMP_SPEED                0.2
+#define AUTO_SCOOT_TO_AMP_TIME          800 * 1000
 
 #define AUTO_DRIVE_TO_AMP_SPEED                0.2
-#define AUTO_DRIVE_TO_AMP_TIME         1000 * 1000
+#define AUTO_DRIVE_TO_AMP_TIME         1200 * 1000
 
-#define AUTO_PLACE_NOTE                        0.5
-#define AUTO_PLACE_NOTE_TIME           2000 * 1000
+#define AUTO_PLACE_NOTE                        1.0
+#define AUTO_PLACE_NOTE_TIME           1200 * 1000
 
 #define AUTO_DRIVE_ACROSS_LINE_SPEED           0.2
 #define AUTO_DRIVE_ACROSS_LINE_TIME    1000 * 1000

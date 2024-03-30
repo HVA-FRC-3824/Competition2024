@@ -34,7 +34,7 @@ class Swerve : frc2::SubsystemBase
 {
     public:
         /// @brief Indicates the field centricity of the swerve drive.
-        bool field_centered = false;
+        bool field_centered = true;
 
         /// @brief Constructor for the Swerve class.
         /// @param length - The length of the robot.
