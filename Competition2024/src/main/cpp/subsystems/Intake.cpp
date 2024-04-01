@@ -94,28 +94,21 @@ void Intake::Set_Roller_Motors(double motor_set_value)
 /// @brief Method to extend the intake.
 void Intake::MoveToFeed()
 {
-    // Determine if the intake is retracted
-    //if (m_state == Amp || m_state == Start)
-    {
-        // Intake should now be extending
-        m_state = GoingToFeed;
+    // Intake should now be extending
+    m_state = GoingToFeed;
 
-        // Set the intake angle to extended
-        Set_Position(m_intake_feed_position);
-    }
+    // Set the intake angle to extended
+    Set_Position(m_intake_feed_position);
 }
 
 /// @brief Method to retract the intake.
 void Intake::MoveToAmp()
 {
-    //if ((m_state == Feed) || (m_state == Climb))
-    {
-        // Intake should now be retracting
-        m_state = GoingToAmp;
+    // Intake should now be retracting
+    m_state = GoingToAmp;
 
-        // Set the intake angle to retracted
-        Set_Position(m_intake_amp_position);
-    }
+    // Set the intake angle to retracted
+    Set_Position(m_intake_amp_position);
 }
 
 /// @brief Method to get out of the way for climb.
@@ -154,14 +147,18 @@ void Intake::Flip_Retraction()
 /// @param offset - The offset to add/subtract to the intake offset.
 void Intake::AddIntakeOffset(double offset)
 {
+    // Determine if the intake is at the Amp
+    if (m_state == Amp)
+       m_intake_amp_position  += offset;    
+    else if (m_state == Feed)
+       m_intake_feed_position += offset;
+    
     // Add the intake offset to the amp, feed and preset set position (subtract if the offset if negative)
-    m_intake_amp_position  += offset;
-    m_intake_feed_position += offset;
     m_present_set_position += offset;
 
-    SmartDashboard::PutNumber("m_intake_amp_position: ",   m_intake_amp_position);
-    SmartDashboard::PutNumber("Iintake_feed_position: ", m_intake_feed_position);
-    SmartDashboard::PutNumber("m_present_set_position: ",  m_present_set_position);
+    SmartDashboard::PutNumber("m_intake_amp_position: ",  m_intake_amp_position);
+    SmartDashboard::PutNumber("m_intake_feed_position: ", m_intake_feed_position);
+    SmartDashboard::PutNumber("m_present_set_position: ", m_present_set_position);
 
     // Update the intak positoin
     Set_Position(m_present_set_position);
