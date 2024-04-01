@@ -10,23 +10,6 @@
 #include <ctre/phoenix/sensors/CANCoder.h>
 #include <ctre/phoenix6/TalonFX.hpp>
 
-struct wheel_information
-{
-	// Order of wheels as in the real world:
-	//    0 = front right, 1 = front left
-	//    2 = rear left,   3 = rear right
-	float wheel_speeds[4]; 
-	float wheel_angle[4];
-};
-
-typedef struct wheel_information wheel_info;
-
-struct size_constants
-{
-	float length;
-	float width;
-};
-
 using namespace ctre::phoenix6::hardware;
 using namespace rev;
 
@@ -62,40 +45,13 @@ class Swerve : frc2::SubsystemBase
         AHRS navx{frc::SerialPort::SerialPort::Port::kMXP};
 
     private:
-        /// @brief Method to print the wheel speeds and angles.
-        /// @param wheel_information - The wheel information. 
-        void print_swerve_math(wheel_info wheel_information);            // debug
-
-        /// @brief Method to clear the swerve_module state memory arrays.
-        void clear_swerve_memory(); 
-         
-        /// @brief Method to calculate the new wheel drive and rotation values.
-        /// @param dest - The requested move parameters.
-        /// @param cons - Robot width and length.
-        /// @param fwd - The move forward value.
-        /// @param str - The move strafe value.
-        /// @param rotate - The move rotate value.
-        void calculate_wheel_information(wheel_info *dest, struct size_constants cons, float fwd, float str, float rotate);
-
         // @brief Method to create dead zones for the controller joysticks.
         /// @param x - Pointer to the x stick value to return the value used.
         /// @param y - Pointer to the y stick value to return the value used.
         /// @param x2 - Pointer to the second x stick value to return the value used.
         void deadzone_correction(float *x, float *y, float *x2);
 
-        double last_units[4]; 
-
-        bool use_old  = false;
         bool x_wheels = false;
-
-        // Save point for speed and angle values
-        wheel_info math_dest;
-
-        // Width and Height
-        struct size_constants chassis_info;
-
-        // Stores the raw usable units for the motor controllers
-        double raw_usable[4];
 
         ctre::phoenix6::hardware::TalonFX FR_MOTOR_M{FR_M_CAN_ID, CANBUS_NAME};
         ctre::phoenix6::hardware::TalonFX FL_MOTOR_M{FL_M_CAN_ID, CANBUS_NAME};
@@ -122,7 +78,7 @@ class Swerve : frc2::SubsystemBase
             &RR_MOTOR_A
         };
 
-        SparkRelativeEncoder* ANGLE_ENCODERS[4];
+        SparkRelativeEncoder*  ANGLE_ENCODERS[4];
         SparkMaxPIDController* PID_CONTROLLERS[4];
 
         ctre::phoenix::sensors::CANCoder ABS_ENCODERS[4]
@@ -132,4 +88,37 @@ class Swerve : frc2::SubsystemBase
             RL_E_CAN_ID,
             RR_E_CAN_ID
         };
+
+    static constexpr double NO_ANGLE = -999;
+	static constexpr double PI = acos(-1.0);
+
+    /*
+    * Uses foward speed, strafing speed, and rotational speed values to calculate
+    * the required angle and speed for each wheel.  An angle can also be given so
+    * that field centric mode can be used.  If no angle is given (or equal to -999)
+    *  robot centric will be used.
+    *
+    * FORWARD: positive value = forward movement, negative value = backward
+    * movement
+    * STRAFE: positive value = right direction, negative value = left direction
+    * ROTATION: positive value = clockwise rotation, negative value =
+    * counterclockwise rotation
+    *
+    * Method outputs an array of speed and rotation value for each wheel.
+    * 		0					1
+    * 	0	Front Left Speed	Front Left Angle
+    * 	1	Front Right Speed	Front Right Angle
+    * 	2	Rear Left Speed		Rear Left Angle
+    * 	3	Rear Right Speed	Rear Right Angle
+    */
+    double** Calculate(double fwd, double str, double rot, double angle = -999);    
+
+	/*
+	 * Copies the speed and angle values into a pointer in order to be used by
+	 * the enclosures
+	 */
+	double** CopyArray(double array[][2]);
+
+	double LENGTH, WIDTH;
+	double R;
 };

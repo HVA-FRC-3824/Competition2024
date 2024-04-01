@@ -5,7 +5,6 @@
 #include <ctre/phoenix6/configs/Configs.hpp>
 
 #include "../../include/subsystems/Swerve.hpp"
-#include "../../SwerveLib/SwerveMath.h"
 
 using namespace frc;
 using namespace ctre::phoenix6;
@@ -15,12 +14,12 @@ using namespace ctre::phoenix6;
 /// @param width - The width of the robot.
 Swerve::Swerve(float length, float width)
 {
-    // Remember the chassis length and width
-    this->chassis_info.length = length;
-    this->chassis_info.width = width;
+    if(length == 0.0 || width == 0.0)
+	   throw std::invalid_argument("Width and Length cannot be zero");
 
-    // Clear the swerver module angle and power memory
-    clear_swerve_memory();
+	LENGTH = length;
+	WIDTH  = width;
+	R = sqrt((LENGTH*LENGTH) + (WIDTH*WIDTH));
 
     // Initialize the swerve motors
     for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
@@ -48,7 +47,8 @@ Swerve::Swerve(float length, float width)
 
         configs::TalonFXConfiguration swerve_motor_configuration{};
 
-        //### DRIVE MOTORS ###  TODO: Add SWERVE_MAX_AMPERACE and brake mode
+        //### DRIVE MOTORS ###  
+        /// @todo: Add SWERVE_MAX_AMPERACE and brake mode
         configs::Slot0Configs slot0Configs = swerve_motor_configuration.Slot0;
         slot0Configs.kP = SWERVE_P; // An error of 0.5 rotations results in 12 V output
         slot0Configs.kI = SWERVE_I; // no output for integrated error
@@ -89,14 +89,9 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
         return;
     }
 
-    //new code using lib
-    
-    // This fuction produces the "R" of the robot, likely means Radius
-    SwerveMath(CHASSIS_LENGTH,CHASSIS_WIDTH);
-
     // Magically (trigonomotry) returns a multidimensional array with angle rotation values and motor speeds
     // Giving this 4 agruments makes it field centric.
-    double** SwerveMovement = Calculate(y,x,x2,gyro);
+    double** SwerveMovement = Calculate(y, x, x2, gyro);
 
     // Incrementing is weird because the library uses a different motor order.
     // Drive Motors movement
@@ -105,13 +100,14 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
     DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]);
     DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]);
     DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
+
     // Angle Motors Movement I do not think that this will work, it will likely have to be put through the encoders, 
     // but it says that it uses "rotational value" which I'm not sure how to implement at this point.
     // SetPosition should set the angle motor to an angle. (not sure if its an encoder value or not)
-    ANGLE_MOTORS[0]->Set(SwerveMovement[1][1]);
-    ANGLE_MOTORS[1]->Set(SwerveMovement[0][1]);
-    ANGLE_MOTORS[2]->Set(SwerveMovement[2][1]);
-    ANGLE_MOTORS[3]->Set(SwerveMovement[3][1]);
+    ANGLE_ENCODERS[0]->SetPosition(SwerveMovement[1][1]);
+    ANGLE_ENCODERS[1]->SetPosition(SwerveMovement[0][1]);
+    ANGLE_ENCODERS[2]->SetPosition(SwerveMovement[2][1]);
+    ANGLE_ENCODERS[3]->SetPosition(SwerveMovement[3][1]);
 }
 
 /// @brief Method to toggle the field centricity.
@@ -144,115 +140,6 @@ void Swerve::Toggle_X_Wheels()
     this->x_wheels = !this->x_wheels;
 
     SmartDashboard::PutBoolean("XWHEELS? ", this->x_wheels);
-}
-
-/// @brief Method to print the wheel speeds and angles.
-/// @param wheel_information - The wheel information. 
-void Swerve::print_swerve_math(wheel_info wheel_information)
-{
-    //std::cout << "\n";
-    for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
-    {
-        //std::cout << wheel_information.wheel_speeds[swerve_module] << " SPEED " << swerve_module << "\n";
-        //std::cout << wheel_information.wheel_angle[swerve_module]  << " ANGLE " << swerve_module << "\n";
-    }
-}
-
-/// @brief Method to clear the swerve_module state memory arrays.
-void Swerve::clear_swerve_memory()
-{
-    for(int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
-    {
-        this->math_dest.wheel_angle[swerve_module]  = 0;
-        this->math_dest.wheel_speeds[swerve_module] = 0;
-        this->raw_usable[swerve_module]             = 0;
-        this->last_units[swerve_module]             = 0; 
-    }
-}
-
-/// @brief Method to calculate the new wheel drive and rotation values.
-/// @param dest - The requested move parameters.
-/// @param cons - Robot width and length.
-/// @param fwd - The move forward value.
-/// @param str - The move strafe value.
-/// @param rotate - The move rotate value.
-void Swerve::calculate_wheel_information(wheel_info *dest, struct size_constants cons, float fwd, float str, float rotate)
-{
-    float forward = fwd;
-	float strafe  = str;
-    float gyro    = navx.GetYaw();
-
-    SmartDashboard::PutNumber("Gyro Input: ", gyro);
-
-	// If field centric take in account the gyro
-    float temp =  (fwd * cosf(gyro * ANTIMAGIC_NUMBER)) + (str * sinf(gyro * ANTIMAGIC_NUMBER));
-    strafe     = -(fwd * sinf(gyro * ANTIMAGIC_NUMBER)) + (str * cosf(gyro * ANTIMAGIC_NUMBER));
-	forward    = temp;
-
-	float R = sqrtf((cons.length * cons.length) + (cons.width * cons.width));
-
-	float A = strafe  - rotate * (cons.length / R);
-	float B = strafe  + rotate * (cons.length / R);
-	float C = forward - rotate * (cons.width  / R);
-	float D = forward + rotate * (cons.width  / R);
-
-	// Fill out our dest struct
-	float a_sqrd = A * A;
-	float b_sqrd = B * B;
-	float c_sqrd = C * C;
-	float d_sqrd = D * D;
-
-	dest->wheel_speeds[0] = sqrtf((b_sqrd) + (c_sqrd));
-	dest->wheel_speeds[1] = sqrtf((b_sqrd) + (d_sqrd));
-	dest->wheel_speeds[2] = sqrtf((a_sqrd) + (d_sqrd));
-	dest->wheel_speeds[3] = sqrtf((a_sqrd) + (c_sqrd));
-
-	float max = dest->wheel_speeds[0];
-
-	// Do normalisation on the wheel speeds, so that they are 0.0 <-> +1.0
-    for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
-	{
-		if (dest->wheel_speeds[swerve_module] > max) 
-        {
-            max = dest->wheel_speeds[swerve_module];
-        }
-	}
-
-	if (max > 1)
-	{
-        for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
-        {
-            dest->wheel_speeds[swerve_module] = dest->wheel_speeds[swerve_module] / max; 
-        }
-	}
-
-	dest->wheel_angle[0] = atan2f(B,C) * MAGIC_NUMBER;
-	dest->wheel_angle[1] = atan2f(B,D) * MAGIC_NUMBER;
-	dest->wheel_angle[2] = atan2f(A,D) * MAGIC_NUMBER;
-	dest->wheel_angle[3] = atan2f(A,C) * MAGIC_NUMBER;
-
-    // Instead of flippig 180 just reverse our speeds, this might be a problem and needs testing
-    for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
-    {
-        if (dest->wheel_angle[swerve_module] == 180)
-        {
-            dest->wheel_speeds[swerve_module] = dest->wheel_speeds[swerve_module] * -1; 
-            continue;
-        }
-
-        if (dest->wheel_angle[swerve_module] < -90)
-        {
-            dest->wheel_angle[swerve_module] += 180;
-            dest->wheel_speeds[swerve_module] = dest->wheel_speeds[swerve_module] * -1;
-        }
-
-        if (dest->wheel_angle[swerve_module] > 90)
-        {
-            dest->wheel_angle[swerve_module] -= 180;
-            dest->wheel_speeds[swerve_module] = dest->wheel_speeds[swerve_module] * -1;
-        }
-    } 
-	return;
 }
 
 /// @brief Method to create dead zones for the controller joysticks.
@@ -289,33 +176,79 @@ void Swerve::deadzone_correction(float *x, float *y, float *x2)
         *x2 = 0;
     }
 
-    // Allows for forward movement even when X is in deadzone
-    if (y_move_abs)
-    {
-        for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
-        {
-            this->math_dest.wheel_speeds[swerve_module] = abs(*y);
-        }
-    }
-
-    // IF DEADZONE IS REACHED WE USED LAST KNOWN VALUE, WE SHOULD NEVER RESET ANGLE (according to dr hart)
-
-    // Allows for sideways movement even when Y is in deadzone
-    if (y_deadzone)
-    {
-        for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
-        {
-            this->math_dest.wheel_speeds[swerve_module] = abs(*x);
-        }
-    }
-
-    // Re Use old units instead of spinning again
-    if (y_deadzone && x_deadzone)
-    {
-        this->use_old = true;
-    }
-
     y_deadzone = false;
     x_deadzone = false;
     y_move_abs = false;
+}
+
+double** Swerve::Calculate(double x, double y, double z, double angle)
+{
+	if(angle != -999.0)
+	{
+		angle = angle * PI / 180;
+		double temp = x * cos(angle) + y * sin(angle);
+		y = -x * sin(angle) + y * cos(angle);
+		x = temp;
+	}
+
+	double A = y - z*(LENGTH/R);
+	double B = y + z*(LENGTH/R);
+	double C = x - z*(WIDTH/R);
+	double D = x + z*(WIDTH/R);
+
+	double wSpeed1 = sqrt(B*B + C*C);
+	double wAngle1 = atan2(B,C) * 180/PI;
+
+	double wSpeed2 = sqrt(B*B + D*D);
+	double wAngle2 = atan2(B,D) * 180/PI;
+
+	double wSpeed3 = sqrt(A*A + D*D);
+	double wAngle3 = atan2(A,D) * 180/PI;
+
+	double wSpeed4 = sqrt(A*A + C*C);
+	double wAngle4 = atan2(A,C) * 180/PI;
+
+	//normalizes speeds so they're within the ranges of -1 to 1
+	double maxSpeed = wSpeed1;
+	if(wSpeed2 > maxSpeed) maxSpeed = wSpeed2;
+	if(wSpeed3 > maxSpeed) maxSpeed = wSpeed3;
+	if(wSpeed4 > maxSpeed) maxSpeed = wSpeed4;
+
+	if(maxSpeed > 1)
+	{
+		wSpeed1/=maxSpeed;
+		wSpeed2/=maxSpeed;
+		wSpeed3/=maxSpeed;
+		wSpeed4/=maxSpeed;
+	}
+
+	//Normalizes angles so they are within -1 to 1
+	wAngle1 = wAngle1 / 360.0;
+	wAngle2 = wAngle2 / 360.0;
+	wAngle3 = wAngle3 / 360.0;
+	wAngle4 = wAngle4 / 360.0;
+
+	double temp[4][2] =	{	{wSpeed2, wAngle2},
+							{wSpeed1, wAngle1},
+							{wSpeed4, wAngle4},
+							{wSpeed3, wAngle3}
+						};
+	double** output = CopyArray(temp);
+
+	return output;
+}
+
+double** Swerve::CopyArray(double array[][2])
+{
+	double** output = new double*[4];
+	for(int i = 0; i < 4; i++)
+	{
+		output[i] = new double[2];
+		for(int k = 0; k < 2; k++)
+		{
+			output[i][k] = array[i][k];
+		}
+	}
+
+	return output;
 }
