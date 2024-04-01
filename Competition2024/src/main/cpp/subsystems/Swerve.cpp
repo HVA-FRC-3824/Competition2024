@@ -88,27 +88,6 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
         this->PID_CONTROLLERS[3]->SetReference(-2.625, CANSparkMax::ControlType::kPosition);
         return;
     }
-
-    //new code using lib
-    
-    // This fuction produces the "R" of the robot, likely means Radius
-    SwerveMath(CHASSIS_LENGTH,CHASSIS_WIDTH);
-
-    // Magically (trigonomotry) returns a multidimensional array with angle rotation values and motor speeds
-    // Giving this 4 agruments makes it field centric.
-    double** SwerveMovement = Calculate(y,x,x2,gyro);
-
-    // Incrementing is weird because the library uses a different motor order.
-    // Drive Motors movement
-    DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]);
-    DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]);
-    DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]);
-    DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
-    // Angle Motors Movement (set changed for encoders)
-    ANGLE_MOTORS[0]->Set(SwerveMovement[1][1]);
-    ANGLE_MOTORS[1]->Set(SwerveMovement[0][1]);
-    ANGLE_MOTORS[2]->Set(SwerveMovement[2][1]);
-    ANGLE_MOTORS[3]->Set(SwerveMovement[3][1]);
 }
 
 /// @brief Method to toggle the field centricity.
