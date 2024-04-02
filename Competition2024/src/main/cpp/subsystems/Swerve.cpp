@@ -131,17 +131,6 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
     SmartDashboard::PutNumber("Position 3: ", SwerveMovement[3][1]);
 }
 
-/// @brief Method to toggle the field centricity.
-/// @return The new field centricity state.
-bool Swerve::Toggle_Field_Centricity()
-{
-    // Toggle the field centricity
-    this->field_centered = !this->field_centered;
-    
-    // Return the new field centricity state
-    return this->field_centered;
-}
-
 /// @brief Method to set the wheens to the aboslute position.
 void Swerve::Snap_Wheels_To_Absolute_Position()
 {
