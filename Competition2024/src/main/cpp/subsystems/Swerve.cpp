@@ -17,6 +17,8 @@ Swerve::Swerve(float length, float width)
     if(length == 0.0 || width == 0.0)
 	   throw std::invalid_argument("Width and Length cannot be zero");
 
+    this->m_gyro_offset = this->navx.GetRoll();
+
 	LENGTH = length;
 	WIDTH  = width;
 	R = sqrt((LENGTH*LENGTH) + (WIDTH*WIDTH));
@@ -47,8 +49,7 @@ Swerve::Swerve(float length, float width)
 
         configs::TalonFXConfiguration swerve_motor_configuration{};
 
-        //### DRIVE MOTORS ###  
-        /// @todo: Add SWERVE_MAX_AMPERACE and brake mode
+        //### DRIVE MOTORS ###  TODO: Add SWERVE_MAX_AMPERACE and brake mode
         configs::Slot0Configs slot0Configs = swerve_motor_configuration.Slot0;
         slot0Configs.kP = SWERVE_P; // An error of 0.5 rotations results in 12 V output
         slot0Configs.kI = SWERVE_I; // no output for integrated error
@@ -69,13 +70,9 @@ Swerve::Swerve(float length, float width)
 /// @param x - The operator x stick value - strafe.
 /// @param x2 - The operator second x stick value - yaw
 /// @param gyro - The robot gyro heading.
-/// 
- 
 void Swerve::Drive(float y, float x, float x2, float gyro)
 {
-    // Correct/Sanitize our inputs
-    deadzone_correction(&x, &y, &x2);
-
+    // Lock wheels in x position
     if (this->x_wheels)
     {
         for (int swerve_module = 0; swerve_module < SWERVE_MODULES; swerve_module++)
@@ -88,6 +85,9 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
         this->PID_CONTROLLERS[3]->SetReference(-2.625, CANSparkMax::ControlType::kPosition);
         return;
     }
+
+    // Correct/Sanitize our inputs
+    deadzone_correction(&x, &y, &x2);
 
     // Magically (trigonomotry) returns a multidimensional array with angle rotation values and motor speeds
     // Giving this 4 agruments makes it field centric.
@@ -104,10 +104,25 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
     // Angle Motors Movement I do not think that this will work, it will likely have to be put through the encoders, 
     // but it says that it uses "rotational value" which I'm not sure how to implement at this point.
     // SetPosition should set the angle motor to an angle. (not sure if its an encoder value or not)
-    ANGLE_ENCODERS[0]->SetPosition(SwerveMovement[1][1]);
-    ANGLE_ENCODERS[1]->SetPosition(SwerveMovement[0][1]);
-    ANGLE_ENCODERS[2]->SetPosition(SwerveMovement[2][1]);
-    ANGLE_ENCODERS[3]->SetPosition(SwerveMovement[3][1]);
+
+    this->PID_CONTROLLERS[0]->SetReference(SwerveMovement[1][1] * SWERVE_WHEEL_COUNTS_PER_REVOLUTION, CANSparkMax::ControlType::kPosition);
+    this->PID_CONTROLLERS[1]->SetReference(SwerveMovement[0][1] * SWERVE_WHEEL_COUNTS_PER_REVOLUTION, CANSparkMax::ControlType::kPosition);
+    this->PID_CONTROLLERS[3]->SetReference(SwerveMovement[2][1] * SWERVE_WHEEL_COUNTS_PER_REVOLUTION, CANSparkMax::ControlType::kPosition);
+    this->PID_CONTROLLERS[2]->SetReference(SwerveMovement[3][1] * SWERVE_WHEEL_COUNTS_PER_REVOLUTION, CANSparkMax::ControlType::kPosition);
+
+    SmartDashboard::PutNumber("Driver Angle: ", gyro);
+
+    SmartDashboard::PutNumber("Drive 0: ",    SwerveMovement[0][0]);
+    SmartDashboard::PutNumber("Position 0: ", SwerveMovement[0][1]);
+
+    SmartDashboard::PutNumber("Drive 1: ",    SwerveMovement[1][0]);
+    SmartDashboard::PutNumber("Position 1: ", SwerveMovement[1][1]);
+
+    SmartDashboard::PutNumber("Drive 2: ",    SwerveMovement[2][0]);
+    SmartDashboard::PutNumber("Position 2: ", SwerveMovement[2][1]);
+
+    SmartDashboard::PutNumber("Drive 3: ",    SwerveMovement[3][0]);
+    SmartDashboard::PutNumber("Position 3: ", SwerveMovement[3][1]);
 }
 
 /// @brief Method to toggle the field centricity.
@@ -128,7 +143,7 @@ void Swerve::Snap_Wheels_To_Absolute_Position()
     {
         // Snap to abs then set to zero
         //this->PID_CONTROLLERS[i]->SetReference(-(this->ABS_ENCODERS[i].GetAbsolutePosition()/360)*SWERVE_WHEEL_COUNTS_PER_REVOLUTION,CANSparkMax::ControlType::kPosition);
-        this->ANGLE_ENCODERS[swerve_module]->SetPosition((this->ABS_ENCODERS[swerve_module].GetAbsolutePosition() / 360) * SWERVE_WHEEL_COUNTS_PER_REVOLUTION);
+        this->ANGLE_ENCODERS[swerve_module]->SetPosition((this->ABS_ENCODERS[swerve_module].GetAbsolutePosition() / 360 * SWERVE_WHEEL_COUNTS_PER_REVOLUTION));
     }
 }
 
@@ -183,46 +198,46 @@ void Swerve::deadzone_correction(float *x, float *y, float *x2)
 
 double** Swerve::Calculate(double x, double y, double z, double angle)
 {
-	if(angle != -999.0)
+	if (angle != -999.0)
 	{
-		angle = angle * PI / 180;
-		double temp = x * cos(angle) + y * sin(angle);
-		y = -x * sin(angle) + y * cos(angle);
-		x = temp;
+		angle       = angle * PI / 180;
+		double temp =  x * cos(angle) + y * sin(angle);
+		y           = -x * sin(angle) + y * cos(angle);
+		x           = temp;
 	}
 
-	double A = y - z*(LENGTH/R);
-	double B = y + z*(LENGTH/R);
-	double C = x - z*(WIDTH/R);
-	double D = x + z*(WIDTH/R);
+	double A = y - z * (LENGTH / R);
+	double B = y + z * (LENGTH / R);
+	double C = x - z * (WIDTH  / R);
+	double D = x + z * (WIDTH  / R);
 
-	double wSpeed1 = sqrt(B*B + C*C);
-	double wAngle1 = atan2(B,C) * 180/PI;
+	double wSpeed1 = sqrt(B * B + C * C);
+	double wAngle1 = atan2(B, C) * 180 / PI;
 
-	double wSpeed2 = sqrt(B*B + D*D);
-	double wAngle2 = atan2(B,D) * 180/PI;
+	double wSpeed2 = sqrt(B * B + D * D);
+	double wAngle2 = atan2(B, D) * 180 / PI;
 
-	double wSpeed3 = sqrt(A*A + D*D);
-	double wAngle3 = atan2(A,D) * 180/PI;
+	double wSpeed3 = sqrt(A * A + D * D);
+	double wAngle3 = atan2(A, D) * 180 / PI;
 
-	double wSpeed4 = sqrt(A*A + C*C);
-	double wAngle4 = atan2(A,C) * 180/PI;
+	double wSpeed4 = sqrt(A * A + C * C);
+	double wAngle4 = atan2(A, C) * 180 / PI;
 
-	//normalizes speeds so they're within the ranges of -1 to 1
+	// Normalizes speeds so they're within the ranges of -1 to 1
 	double maxSpeed = wSpeed1;
-	if(wSpeed2 > maxSpeed) maxSpeed = wSpeed2;
-	if(wSpeed3 > maxSpeed) maxSpeed = wSpeed3;
-	if(wSpeed4 > maxSpeed) maxSpeed = wSpeed4;
+	if (wSpeed2 > maxSpeed) maxSpeed = wSpeed2;
+	if (wSpeed3 > maxSpeed) maxSpeed = wSpeed3;
+	if (wSpeed4 > maxSpeed) maxSpeed = wSpeed4;
 
-	if(maxSpeed > 1)
+	if (maxSpeed > 1)
 	{
-		wSpeed1/=maxSpeed;
-		wSpeed2/=maxSpeed;
-		wSpeed3/=maxSpeed;
-		wSpeed4/=maxSpeed;
+		wSpeed1 /= maxSpeed;
+		wSpeed2 /= maxSpeed;
+		wSpeed3 /= maxSpeed;
+		wSpeed4 /= maxSpeed;
 	}
 
-	//Normalizes angles so they are within -1 to 1
+	// Normalizes angles so they are within -1 to 1
 	wAngle1 = wAngle1 / 360.0;
 	wAngle2 = wAngle2 / 360.0;
 	wAngle3 = wAngle3 / 360.0;

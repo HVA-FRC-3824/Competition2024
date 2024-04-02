@@ -26,9 +26,9 @@ void AutoCommands::Auto_Do_Nothing()
 void AutoCommands::Auto_Move()
 {
     // Drive forward
-    m_swerve->Drive(AUTO_DRIVE_FORWARD_SPEED, 0, 0, 0);
-    usleep(AUTO_DRIVE_FORWARD_TIME);   // Timed drive
-    m_swerve->Drive(0, 0, 0, 0);       // Stop
+    m_swerve->Drive(AUTO_DRIVE_FORWARD_SPEED, 0, 0, -999.0);
+    usleep(AUTO_DRIVE_FORWARD_TIME);  // Timed drive
+    m_swerve->Drive(0, 0, 0, -999.0);   // Stop
 }
 
 /// @brief  Autonomous comand to place a note in the Amp, and move out of the tape.
@@ -45,14 +45,14 @@ void AutoCommands::Auto_Place_Amp_And_Move(bool red_alliance)
     m_intake->MoveToAmp();
 
     // Move left in front of amp
-    m_swerve->Drive(0, drive_direction * AUTO_SCOOT_TO_AMP_SPEED, 0, 0);
+    m_swerve->Drive(0, drive_direction * AUTO_SCOOT_TO_AMP_SPEED, 0, -999.0);
     usleep(AUTO_SCOOT_TO_AMP_TIME);       // Timed drive
-    m_swerve->Drive(0, 0, 0, 0);          // Stop
+    m_swerve->Drive(0, 0, 0, -999.0);       // Stop
 
     // Move forward in front of amp
-    m_swerve->Drive(AUTO_DRIVE_TO_AMP_SPEED, 0, 0, 0); 
+    m_swerve->Drive(AUTO_DRIVE_TO_AMP_SPEED, 0, 0, -999.0); 
     usleep(AUTO_DRIVE_TO_AMP_TIME);       // Timed drive
-    m_swerve->Drive(0, 0, 0, 0);          // Stop
+    m_swerve->Drive(0, 0, 0, -999.0);       // Stop
     
     // Place note in amp
     m_intake->Set_Roller_Motors(AUTO_PLACE_NOTE);
@@ -60,12 +60,12 @@ void AutoCommands::Auto_Place_Amp_And_Move(bool red_alliance)
     m_intake->Set_Roller_Motors(0);       // Stop Roller Motors
 
     // Back up to remove intake from AMP
-    m_swerve->Drive(-AUTO_DRIVE_TO_AMP_SPEED, 0, 0, 0); 
+    m_swerve->Drive(-AUTO_DRIVE_TO_AMP_SPEED, 0, 0, -999.0); 
     usleep(AUTO_DRIVE_TO_AMP_TIME);       // Timed drive
-    m_swerve->Drive(0, 0, 0, 0);          // Stop
+    m_swerve->Drive(0, 0, 0, -999.0);       // Stop
 
     // Move across line
-    m_swerve->Drive(0, drive_direction * AUTO_DRIVE_ACROSS_LINE_SPEED, 0, 0);
+    m_swerve->Drive(0, drive_direction * AUTO_DRIVE_ACROSS_LINE_SPEED, 0, -999.0);
     usleep(AUTO_DRIVE_ACROSS_LINE_TIME);  // Timed drive
-    m_swerve->Drive(0, 0, 0, 0);          // Stop
+    m_swerve->Drive(0, 0, 0, -999.0);       // Stop
 }

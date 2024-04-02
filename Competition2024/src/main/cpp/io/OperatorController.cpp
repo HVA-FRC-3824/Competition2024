@@ -70,7 +70,7 @@ void OperatorController::Robot_Periodic()
         m_climb->Set_Motor_Output(CLIMBER_MOTOR_RIGHT, 0.0);  // Stop
         
     // Climb control Left
-    if (m_operator_joystick.GetRawButton(JOYSTICK_BUMPER_RIGHT))
+    if (m_operator_joystick.GetRawButton(JOYSTICK_BUMPER_LEFT))
         m_climb->Set_Motor_Output(CLIMBER_MOTOR_LEFT, CLIMBER_UP_POWER);  // Extend
     else if (m_operator_joystick.GetRawAxis(LEFT_TRIGGER_AXIS) > TRIGGER_THRESHOLD_VALUE)
        m_climb->Set_Motor_Output(CLIMBER_MOTOR_LEFT, CLIMBER_DOWN_POWER);  // Retract

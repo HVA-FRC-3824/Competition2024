@@ -32,8 +32,8 @@
 #define ANTIMAGIC_NUMBER                   0.01745f
  
 // ### Controller constants ###
-#define OPERATOR_CONTROLLER                      0
-#define DRIVER_CONTROLLER                        1
+#define OPERATOR_CONTROLLER                      1
+#define DRIVER_CONTROLLER                        0
 
 #define JOYSTICK_BUTTON_A                        1
 #define JOYSTICK_BUTTON_B                        2
@@ -108,10 +108,10 @@
 // ### Climber Variable ###
 #define CLIMBER_MOTORS                           2
 
-#define CLIMBER_MOTOR_RIGHT                       0
-#define CLIMBER_MOTOR_LEFT                        1
+#define CLIMBER_MOTOR_RIGHT                      0
+#define CLIMBER_MOTOR_LEFT                       1
 
-#define CLIMB_MAXIMUM_OUTPUT_CURRENT            30  // Threshold to disable the climb motors (reached full climb)
+#define CLIMB_MAXIMUM_OUTPUT_CURRENT            60  // Threshold to disable the climb motors (reached full climb)
 
 #define CLIMBER_UP_POWER                       1.0
 #define CLIMBER_DOWN_POWER                    -1.0

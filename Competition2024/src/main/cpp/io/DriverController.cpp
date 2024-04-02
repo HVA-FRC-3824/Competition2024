@@ -24,6 +24,6 @@ void DriverController::Robot_Periodic()
     // Get the joystick axis for the robot swerve drive control
     this->m_swerve->Drive(-m_driver_joystick.GetRawAxis(1), 
                            m_driver_joystick.GetRawAxis(0), 
-                           m_driver_joystick.GetRawAxis(4) * 0.5, 
-                           this->m_swerve->navx.GetYaw());
+                           m_driver_joystick.GetRawAxis(4), -999.0);
+                           //this->m_swerve->navx.GetRoll() - m_swerve->m_gyro_offset);
 }

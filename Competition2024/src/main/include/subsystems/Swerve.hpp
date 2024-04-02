@@ -19,6 +19,9 @@ class Swerve : frc2::SubsystemBase
         /// @brief Indicates the field centricity of the swerve drive.
         bool field_centered = true;
 
+        /// @brief Offset to the gyro "angle" (row value)
+        float m_gyro_offset;
+
         /// @brief Constructor for the Swerve class.
         /// @param length - The length of the robot.
         /// @param width - The width of the robot.
@@ -78,8 +81,8 @@ class Swerve : frc2::SubsystemBase
             &RR_MOTOR_A
         };
 
-        SparkRelativeEncoder*  ANGLE_ENCODERS[4];
-        SparkMaxPIDController* PID_CONTROLLERS[4];
+        SparkRelativeEncoder  *ANGLE_ENCODERS[4];
+        SparkMaxPIDController *PID_CONTROLLERS[4];
 
         ctre::phoenix::sensors::CANCoder ABS_ENCODERS[4]
         {
@@ -89,8 +92,8 @@ class Swerve : frc2::SubsystemBase
             RR_E_CAN_ID
         };
 
-    static constexpr double NO_ANGLE = -999;
-	static constexpr double PI = acos(-1.0);
+    static constexpr double NO_ANGLE = -999.0;
+	static constexpr double PI       = acos(-1.0);
 
     /*
     * Uses foward speed, strafing speed, and rotational speed values to calculate
@@ -98,11 +101,9 @@ class Swerve : frc2::SubsystemBase
     * that field centric mode can be used.  If no angle is given (or equal to -999)
     *  robot centric will be used.
     *
-    * FORWARD: positive value = forward movement, negative value = backward
-    * movement
-    * STRAFE: positive value = right direction, negative value = left direction
-    * ROTATION: positive value = clockwise rotation, negative value =
-    * counterclockwise rotation
+    * FORWARD:  positive value = forward movement,   negative value = backward movement
+    * STRAFE:   positive value = right direction,    negative value = left direction
+    * ROTATION: positive value = clockwise rotation, negative value = counterclockwise rotation
     *
     * Method outputs an array of speed and rotation value for each wheel.
     * 		0					1
