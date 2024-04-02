@@ -96,11 +96,19 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
     // Incrementing is weird because the library uses a different motor order.
     // Drive Motors movement
     // Set is the speed value.
-    DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]);
-    DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]);
-    DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]);
-    DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
-
+    if (this->fast_wheels) 
+    {
+    	DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]);
+    	DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]);
+    	DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]);
+    	DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
+    } else if (!this->fast_wheels)
+    {
+    	DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]/1.25);
+    	DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]/1.25);
+    	DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]/1.25);
+    	DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]/1.25);
+    }
     // Angle Motors Movement I do not think that this will work, it will likely have to be put through the encoders, 
     // but it says that it uses "rotational value" which I'm not sure how to implement at this point.
     // SetPosition should set the angle motor to an angle. (not sure if its an encoder value or not)
@@ -155,6 +163,13 @@ void Swerve::Toggle_X_Wheels()
     this->x_wheels = !this->x_wheels;
 
     SmartDashboard::PutBoolean("XWHEELS? ", this->x_wheels);
+}
+
+void Swerve::Toggle_Fast_Wheels() 
+{
+    this->fast_wheels = !this->fast_wheels;
+    
+    SmartDashboard::PutBoolean("Sonic Mode??? ", this->fast_wheels);
 }
 
 /// @brief Method to create dead zones for the controller joysticks.
