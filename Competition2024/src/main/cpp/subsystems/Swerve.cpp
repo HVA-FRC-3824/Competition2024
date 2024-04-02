@@ -17,8 +17,6 @@ Swerve::Swerve(float length, float width)
     if(length == 0.0 || width == 0.0)
 	   throw std::invalid_argument("Width and Length cannot be zero");
 
-    this->m_gyro_offset = this->navx.GetRoll();
-
 	LENGTH = length;
 	WIDTH  = width;
 	R = sqrt((LENGTH*LENGTH) + (WIDTH*WIDTH));
