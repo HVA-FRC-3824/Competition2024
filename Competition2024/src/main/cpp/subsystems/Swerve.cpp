@@ -102,10 +102,10 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
     	DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
     } else if (!this->fast_wheels)
     {
-    	DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]/1.25);
-    	DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]/1.25);
-    	DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]/1.25);
-    	DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]/1.25);
+    	DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]);
+    	DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]);
+    	DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]);
+    	DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
     }
     // Angle Motors Movement I do not think that this will work, it will likely have to be put through the encoders, 
     // but it says that it uses "rotational value" which I'm not sure how to implement at this point.
@@ -156,7 +156,7 @@ void Swerve::Toggle_Fast_Wheels()
 {
     this->fast_wheels = !this->fast_wheels;
     
-    SmartDashboard::PutBoolean("Sonic Mode??? ", this->fast_wheels);
+    SmartDashboard::PutBoolean("Fast Wheels? ", this->fast_wheels);
 }
 
 /// @brief Method to create dead zones for the controller joysticks.
@@ -238,6 +238,14 @@ double** Swerve::Calculate(double x, double y, double z, double angle)
 		wSpeed3 /= maxSpeed;
 		wSpeed4 /= maxSpeed;
 	}
+
+    if (this->fast_wheels)
+    {
+        wSpeed1 = wSpeed1 / 2;
+        wSpeed2 = wSpeed2 / 2;
+        wSpeed3 = wSpeed3 / 2;
+        wSpeed4 = wSpeed4 / 2;
+    }
 
 	// Normalizes angles so they are within -1 to 1
 	wAngle1 = wAngle1 / 360.0;

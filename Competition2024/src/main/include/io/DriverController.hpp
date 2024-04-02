@@ -8,6 +8,7 @@
 class DriverController
 {
     public:
+
         /// @brief Constructor for the DriverController class.
         /// @param swerve - Pointer to the swerve drive class.
         DriverController(Swerve *swerve);

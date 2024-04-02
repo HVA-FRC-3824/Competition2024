@@ -6,6 +6,7 @@
  /// @param swerve - Pointer to the swerve drive class.
 DriverController::DriverController(Swerve *swerve)
 {
+    m_swerve->navx.Reset();
     // Remember the swerve pointer
     this->m_swerve = swerve;
 }
@@ -14,16 +15,17 @@ DriverController::DriverController(Swerve *swerve)
 void DriverController::Robot_Periodic()
 {
     // Determine if the reset gyro joystick button was pressed
-    if (m_driver_joystick.GetRawButtonPressed(1))
-        m_swerve->navx.Reset();
+    //if (m_driver_joystick.GetRawButtonPressed(1))
+    //    m_swerve->navx.Reset();
 
     // Determine if the toggle X wheels button was pressed.
     if (m_driver_joystick.GetRawButtonPressed(2))
         m_swerve->Toggle_X_Wheels();
 
-    // Determine if right bumper is pressed, makes it go faster/slower.
+    // If the button is pressed down, do Toggle_Fast_Wheels().
     if (m_driver_joystick.GetRawButtonPressed(6))
         m_swerve->Toggle_Fast_Wheels();
+
  
     // Get the joystick axis for the robot swerve drive control
     this->m_swerve->Drive(-m_driver_joystick.GetRawAxis(1), 
