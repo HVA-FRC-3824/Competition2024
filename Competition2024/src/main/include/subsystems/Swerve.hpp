@@ -17,10 +17,7 @@ class Swerve : frc2::SubsystemBase
 {
     public:
         /// @brief Indicates the field centricity of the swerve drive.
-        bool field_centered = true;
-
-        /// @brief Offset to the gyro "angle" (row value)
-        float m_gyro_offset;
+        // bool field_centered = true;
 
         /// @brief Constructor for the Swerve class.
         /// @param length - The length of the robot.
@@ -41,8 +38,10 @@ class Swerve : frc2::SubsystemBase
         /// @brief Method to set the wheens to the aboslute position.
         void Snap_Wheels_To_Absolute_Position();
 
-        /// @brief /// @brief Method to ??? 
+        /// @brief /// @brief Method to "x" the wheels, prevents the robot from moving. 
         void Toggle_X_Wheels();
+
+	void Toggle_Fast_Wheels();
 
         /// @brief Create an attitude and heading reference system (AHRS).
         AHRS navx{frc::SerialPort::SerialPort::Port::kMXP};
@@ -55,6 +54,7 @@ class Swerve : frc2::SubsystemBase
         void deadzone_correction(float *x, float *y, float *x2);
 
         bool x_wheels = false;
+	bool fast_wheels = true;
 
         ctre::phoenix6::hardware::TalonFX FR_MOTOR_M{FR_M_CAN_ID, CANBUS_NAME};
         ctre::phoenix6::hardware::TalonFX FL_MOTOR_M{FL_M_CAN_ID, CANBUS_NAME};
