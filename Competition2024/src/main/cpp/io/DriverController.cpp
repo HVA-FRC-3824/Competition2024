@@ -18,9 +18,13 @@ void DriverController::Robot_Periodic()
         m_swerve->navx.Reset();
 
     // Determine if the toggle X wheels button was pressed.
-    if (m_driver_joystick.GetRawButtonPressed(6))
+    if (m_driver_joystick.GetRawButtonPressed(2))
         m_swerve->Toggle_X_Wheels();
 
+    // Determine if right bumper is pressed, makes it go faster/slower.
+    if (m_driver_joystick.GetRawButtonPressed(6))
+        m_swerve->Toggle_Fast_Wheels();
+ 
     // Get the joystick axis for the robot swerve drive control
     this->m_swerve->Drive(-m_driver_joystick.GetRawAxis(1), 
                            m_driver_joystick.GetRawAxis(0), 
