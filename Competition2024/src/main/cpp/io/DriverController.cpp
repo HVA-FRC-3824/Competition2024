@@ -10,7 +10,7 @@ DriverController::DriverController(Swerve *swerve)
     this->m_swerve = swerve;
 }
 
-// @brief Method called periodically every dirver/operator control packet.
+// @brief Method called periodically every driver/operator control packet.
 void DriverController::Robot_Periodic()
 {
     // Determine if the reset gyro joystick button was pressed
@@ -24,6 +24,7 @@ void DriverController::Robot_Periodic()
     // Get the joystick axis for the robot swerve drive control
     this->m_swerve->Drive(-m_driver_joystick.GetRawAxis(1), 
                            m_driver_joystick.GetRawAxis(0), 
-                           m_driver_joystick.GetRawAxis(4), -999.0);
+                           m_driver_joystick.GetRawAxis(4), 
+                           this->m_swerve->navx.GetYaw());
                            //this->m_swerve->navx.GetRoll() - m_swerve->m_gyro_offset);
 }
