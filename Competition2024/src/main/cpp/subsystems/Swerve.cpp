@@ -278,6 +278,26 @@ double** Swerve::Calculate(double x, double y, double z, double angle)
 
 	//  Given the previous example; this should set a negative value to wAngle1, which is then passed to the motors
 	// And we can repeat this for every subsequent motor.
+
+	//  Now we reach another problem where the Angle motors still go back to zero.
+	//  For this I'll add an exception where it can never reach the 0 default state unless its already there.
+
+	// if (x2 != 0) 
+	// {
+	// 	this->tSpeed1 = wSpeed1;
+        //	this->tSpeed2 = wSpeed2;
+        //	this->tSpeed3 = wSpeed3;
+        //	this->tSpeed4 = wSpeed4;
+	// } else if (x2 == 0)
+	// {
+        //	wSpeed1 = this->tSpeed1;
+        //	wSpeed2 = this->tSpeed2;
+        //	wSpeed3 = this->tSpeed3;
+        //	wSpeed4 = this->tSpeed4;
+	// }
+
+
+	
 	
 	// ### End of Experimental code ###
 
