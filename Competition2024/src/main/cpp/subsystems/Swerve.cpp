@@ -200,6 +200,9 @@ void Swerve::deadzone_correction(float *x, float *y, float *x2)
 
 double** Swerve::Calculate(double x, double y, double z, double angle)
 {
+	/// @todo Have angle variables in a double* array, speed doesn't *need* this but it would be consistent.
+	
+	// Check for Field or Robot Centricity, if you put any number for "angle" it becomes Field.
 	if (angle != -999.0)
 	{
 		angle       = angle * PI / 180;
@@ -208,11 +211,13 @@ double** Swerve::Calculate(double x, double y, double z, double angle)
 		x           = temp;
 	}
 
+	// Not sure what this is for, but these are the variables used for math
 	double A = y - z * (LENGTH / R);
 	double B = y + z * (LENGTH / R);
 	double C = x - z * (WIDTH  / R);
 	double D = x + z * (WIDTH  / R);
 
+	// Calculate Target Speeds and Angles
 	double wSpeed1 = sqrt(B * B + C * C);
 	double wAngle1 = atan2(B, C) * 180 / PI;
 
@@ -252,6 +257,29 @@ double** Swerve::Calculate(double x, double y, double z, double angle)
 	wAngle2 = wAngle2 / 360.0;
 	wAngle3 = wAngle3 / 360.0;
 	wAngle4 = wAngle4 / 360.0;
+
+	// ### Experimental code, this will not work and will not be used until after the competition ###
+
+	//  c angle; current angle.
+	// cAngle1 = ABS_ENCODERS[1].ReadAngle(some way to read current angle from angle motors);
+	// cAngle2 = ABS_ENCODERS[2].ReadAngle(some way to read current angle from angle motors);
+	// cAngle3 = ABS_ENCODERS[3].ReadAngle(some way to read current angle from angle motors);
+	// cAngle4 = ABS_ENCODERS[4].ReadAngle(some way to read current angle from angle motors);
+	
+	// ex: cAngle1 == 90; wAngle1 == 270; 270 - 90 == 180 (this should be a positive value since we want it to go up)
+	// ex: cAngle1 == 10; wAngle1 == 270; 270 - 10 == 260 (this is slow since it would be faster to go -100 degrees, we want a negative number)
+	//  to solve this we can do the following calculation
+
+	//  If the wanted angle is above 180 then we will probably want it to be negative, if we don't that's fine and we will fix that
+	// if (wAngle1>180) {double iwAngle1 = 360 - wAngle1;}
+
+	//  This checks if it would be faster to go negative or Positive, then it decides which is better.
+	// if (sqrt((iwAngle1-cAngle1)**2) < sqrt((wAngle1-cAngle1)**2)) {wAngle = iwAngle;}
+
+	//  Given the previous example; this should set a negative value to wAngle1, which is then passed to the motors
+	// And we can repeat this for every subsequent motor.
+	
+	// ### End of Experimental code ###
 
 	double temp[4][2] =	{	{wSpeed2, wAngle2},
 							{wSpeed1, wAngle1},
