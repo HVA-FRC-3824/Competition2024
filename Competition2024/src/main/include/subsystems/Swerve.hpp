@@ -50,7 +50,12 @@ class Swerve : frc2::SubsystemBase
         void deadzone_correction(float *x, float *y, float *x2);
 
         bool x_wheels = false;
-	    bool fast_wheels = true;
+	bool fast_wheels = true;
+
+        //  double tSpeed1 = 0;
+        //  double tSpeed2 = 0;
+        //  double tSpeed3 = 0;
+        //  double tSpeed4 = 0;
 
         ctre::phoenix6::hardware::TalonFX FR_MOTOR_M{FR_M_CAN_ID, CANBUS_NAME};
         ctre::phoenix6::hardware::TalonFX FL_MOTOR_M{FL_M_CAN_ID, CANBUS_NAME};
