@@ -34,28 +34,23 @@ class Swerve : frc2::SubsystemBase
         /// @brief Method to set the wheens to the aboslute position.
         void Snap_Wheels_To_Absolute_Position();
 
-        /// @brief /// @brief Method to "x" the wheels, prevents the robot from moving. 
+        /// @brief Method to "x" the wheels, prevents the robot from moving. 
         void Toggle_X_Wheels();
 
+	    /// @brief Makes the wheels go 30% of their normal speed.
 	    void Toggle_Fast_Wheels();
 
         /// @brief Create an attitude and heading reference system (AHRS).
         AHRS navx{frc::SerialPort::SerialPort::Port::kMXP};
 
     private:
-        // @brief Method to create dead zones for the controller joysticks.
-        /// @param x - Pointer to the x stick value to return the value used.
-        /// @param y - Pointer to the y stick value to return the value used.
-        /// @param x2 - Pointer to the second x stick value to return the value used.
-        void deadzone_correction(float *x, float *y, float *x2);
-
         bool x_wheels = false;
-	bool fast_wheels = true;
+	    bool fast_wheels = true;
 
-        //  double tSpeed1 = 0;
-        //  double tSpeed2 = 0;
-        //  double tSpeed3 = 0;
-        //  double tSpeed4 = 0;
+         double tAngle1 = 0;
+         double tAngle2 = 0;
+         double tAngle3 = 0;
+         double tAngle4 = 0;
 
         ctre::phoenix6::hardware::TalonFX FR_MOTOR_M{FR_M_CAN_ID, CANBUS_NAME};
         ctre::phoenix6::hardware::TalonFX FL_MOTOR_M{FL_M_CAN_ID, CANBUS_NAME};
@@ -92,6 +87,12 @@ class Swerve : frc2::SubsystemBase
             RL_E_CAN_ID,
             RR_E_CAN_ID
         };
+
+
+    double** getMotorControl(double x,double y,double x2,double gyro);
+
+    double** angleProtection(double** APmotorMovements, double x2);
+
 
     static constexpr double NO_ANGLE = -999.0;
 	static constexpr double PI       = acos(-1.0);
