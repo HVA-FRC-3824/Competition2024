@@ -121,6 +121,15 @@ void Intake::MoveToClimb()
     Set_Position(INTAKE_CLIMB_POSITION);
 }
 
+void Intake::MoveToStart()
+{
+    // Intake will be set to start.
+    m_state = Start;
+
+    // Set the motor position to start.
+    Set_Position(INTAKE_START_POSITION);
+}
+
 /// @brief Method to flip the intake subassembly from extend to retracted.
 void Intake::Flip_Retraction()
 {

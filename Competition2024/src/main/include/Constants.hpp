@@ -32,8 +32,8 @@
 #define ANTIMAGIC_NUMBER                   0.01745f
  
 // ### Controller constants ###
-#define OPERATOR_CONTROLLER                      1
 #define DRIVER_CONTROLLER                        0
+#define OPERATOR_CONTROLLER                      1
 
 #define JOYSTICK_BUTTON_A                        1
 #define JOYSTICK_BUTTON_B                        2

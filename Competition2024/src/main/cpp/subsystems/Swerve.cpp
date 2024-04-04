@@ -166,11 +166,11 @@ double** Swerve::getMotorControl(double x, double y, double x2, double gyro)
     double** angles_speeds = Calculate(y, x, x2, gyro);
 
     // Pass into function that fixes some things.
-    angles_speeds = angleProtection((double**)angles_speeds, x2);
+    //angles_speeds = angleProtection((double**)angles_speeds, x2);
 
-    if (this->fast_wheels)
-        for (int i = 0; i > 4; i++)
-            angles_speeds[i][0] = angles_speeds[i][0] * 0.3;
+    // if (this->fast_wheels)
+    //     for (int i = 0; i > 4; i++)
+    //         angles_speeds[i][0] = angles_speeds[i][0] * 0.3;
 
     return angles_speeds;
 
@@ -181,16 +181,16 @@ double** Swerve::getMotorControl(double x, double y, double x2, double gyro)
 double** Swerve::angleProtection(double** APmotorMovements, double x2)
 {
     // converts motorMovements into previously used angles (I just reused code)
-    double wAngle1 = APmotorMovements[0][0];
-    double wAngle2 = APmotorMovements[1][0];
-    double wAngle3 = APmotorMovements[2][0];
-    double wAngle4 = APmotorMovements[3][0];
+    double wAngle1 = APmotorMovements[0][1];
+    double wAngle2 = APmotorMovements[1][1];
+    double wAngle3 = APmotorMovements[2][1];
+    double wAngle4 = APmotorMovements[3][1];
 
-    // Makes code into useable degrees
-    wAngle1 = wAngle1 * 360;
-    wAngle2 = wAngle2 * 360;
-    wAngle3 = wAngle3 * 360;
-    wAngle4 = wAngle4 * 360;
+    // // Makes code into useable degrees
+    // wAngle1 = wAngle1 * 360;
+    // wAngle2 = wAngle2 * 360;
+    // wAngle3 = wAngle3 * 360;
+    // wAngle4 = wAngle4 * 360;
 
 	// c angle; current angle.
     double cAngle1 = this->ANGLE_ENCODERS[1]->GetPosition();
@@ -221,36 +221,36 @@ double** Swerve::angleProtection(double** APmotorMovements, double x2)
 
 	// This checks if it would be faster to go negative or Positive, then it decides which is better.
     // This takes the absolute of each (by squaring them then taking the root) then compares
-	if (sqrt((iwAngle1 - cAngle1) * (iwAngle1 - cAngle1)) 
-      < sqrt((wAngle1 - cAngle1) * (wAngle1 - cAngle1))) {wAngle1 = iwAngle1;}
+	if (abs(iwAngle1 - cAngle1) 
+      < abs(wAngle1 - cAngle1)) {wAngle1 = iwAngle1;}
 
-    if (sqrt((iwAngle2 - cAngle2) * (iwAngle2 - cAngle2)) 
-      < sqrt((wAngle2 - cAngle2) * (wAngle2 - cAngle2))) {wAngle2 = iwAngle2;}
+    if (abs(iwAngle2 - cAngle2) 
+      < abs(wAngle2 - cAngle2)) {wAngle2 = iwAngle2;}
 
-    if (sqrt((iwAngle3 - cAngle3) * (iwAngle3 - cAngle3)) 
-      < sqrt((wAngle3 - cAngle3) * (wAngle3 - cAngle3))) {wAngle3 = iwAngle3;}
-    
-    if (sqrt((iwAngle4 - cAngle4) * (iwAngle4 - cAngle4))
-      < sqrt((wAngle4 - cAngle4) * (wAngle3 - cAngle3))) {wAngle4 = iwAngle4;}
+    if (abs(iwAngle3 - cAngle3) 
+      < abs(wAngle3 - cAngle3)) {wAngle3 = iwAngle3;}
+
+    if (abs(iwAngle4 - cAngle4) 
+      < abs(wAngle4 - cAngle4)) {wAngle4 = iwAngle4;}
 
 	// Given the previous example; this should set a negative value to wAngle1, which is then passed to the motors
 	// and we can repeat this for every subsequent motor.
 
 	//  Now we reach another problem where the Angle motors still go back to zero.
 	//  For this I'll add an exception where it can never reach the 0 default state unless its already there.
-    if (x2 != 0) 
-	{
-		this->tAngle1 = wAngle1;
-        this->tAngle2 = wAngle2;
-        this->tAngle3 = wAngle3;
-        this->tAngle4 = wAngle4;
-	} else if (x2 == 0)
-	{
-        wAngle1 = this->tAngle1;
-        wAngle2 = this->tAngle2;
-        wAngle3 = this->tAngle3;
-        wAngle4 = this->tAngle4;
-	}
+    // if (x2 != 0) 
+	// {
+	// 	this->tAngle1 = wAngle1;
+    //     this->tAngle2 = wAngle2;
+    //     this->tAngle3 = wAngle3;
+    //     this->tAngle4 = wAngle4;
+	// } else if (x2 == 0)
+	// {
+    //     wAngle1 = this->tAngle1;
+    //     wAngle2 = this->tAngle2;
+    //     wAngle3 = this->tAngle3;
+    //     wAngle4 = this->tAngle4;
+	// }
 
     // Makes code into 1 to -1 motor drivers.
     wAngle1 = wAngle1 / 360;
@@ -259,10 +259,10 @@ double** Swerve::angleProtection(double** APmotorMovements, double x2)
     wAngle4 = wAngle4 / 360;
 
     // Sets to array then outputs it
-    APmotorMovements[0][0] = wAngle1;
-    APmotorMovements[1][0] = wAngle2;
-    APmotorMovements[2][0] = wAngle3;
-    APmotorMovements[3][0] = wAngle4;
+    APmotorMovements[0][1] = wAngle1;
+    APmotorMovements[1][1] = wAngle2;
+    APmotorMovements[2][1] = wAngle3;
+    APmotorMovements[3][1] = wAngle4;
     
     return APmotorMovements;
 }
@@ -322,10 +322,10 @@ double** Swerve::Calculate(double x, double y, double z, double angle)
     }
 
 	// Normalizes angles so they are within -1 to 1
-	wAngle1 = wAngle1 / 360.0;
-	wAngle2 = wAngle2 / 360.0;
-	wAngle3 = wAngle3 / 360.0;
-	wAngle4 = wAngle4 / 360.0;
+	// wAngle1 = wAngle1 / 360.0;
+	// wAngle2 = wAngle2 / 360.0;
+	// wAngle3 = wAngle3 / 360.0;
+	// wAngle4 = wAngle4 / 360.0;
 
 	double temp[4][2] =	{	{wSpeed2, wAngle2},
 							{wSpeed1, wAngle1},

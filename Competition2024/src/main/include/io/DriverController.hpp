@@ -29,5 +29,5 @@ class DriverController
 
         /// @brief The driver controller (joystick).
         frc::Joystick m_driver_joystick{DRIVER_CONTROLLER};
-        frc::XboxController m_grahams_special_stick{0}
+        // frc::XboxController m_grahams_special_stick{0}
 };

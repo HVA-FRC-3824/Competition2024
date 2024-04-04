@@ -56,6 +56,8 @@ void OperatorController::Robot_Periodic()
     // Check for intake angle raise offset (in case belt slips)
     else if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_Y))
         m_intake->AddIntakeOffset(INTAKE_POSITION_STEP_VALUE);
+    
+    // Set intake to start position.
 
     // Flip the intake
     if (m_operator_joystick.GetRawButtonPressed(JOYSTICK_BUTTON_X))
