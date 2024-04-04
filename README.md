@@ -14,8 +14,11 @@ This repo uses [WPIlib](https://docs.wpilib.org/en/stable/index.html), [Rev Robo
 ## Most importantly, What are the controls?
 This code uses 2 controllers, and operator and a driver. obviously one just does swerve, and the other one does everything else. 
 
+
 ### Operator
+
 **climb**
+
 Bumpers: raises respecive climbers
 
 Triggers: lowers respective climbers
@@ -48,7 +51,9 @@ y-button: add intake offset
 
 
 **intake rollers**
+
 left joystick up: blow
+
 left joystick up: suck
 
 ### Driver
