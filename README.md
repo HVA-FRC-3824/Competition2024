@@ -17,30 +17,55 @@ This code uses 2 controllers, and operator and a driver. obviously one just does
 ### Operator
 **climb**
 Bumpers: raises respecive climbers
+
 Triggers: lowers respective climbers
+
 b-button: raises intake into an upwards position thats out of the way.
+
 NOTE: bumbers and triggers can reverse if pushed all the way, due to the winch functionality.
+
+
 **intake movement**
+
 d-pad:
   up: source position
-  down: amp position     
+  
+  down: amp position   
+  
   left: turn off motors aka start position (all the way down)
+
+  
   right: turn on motors
+  
   NOTE: get into the amp first in source position then move to amp.
+  
 b-button: raises intake into an upwards position, out of the way for climb.
+
+
 x-button: flip between amp and source
+
 y-button: add intake offset
+
+
 **intake rollers**
 left joystick up: blow
 left joystick up: suck
 
 ### Driver
+
 ***IMPORTANT***
+
 after auto align yourself straight-forwards and press A
 a-button: resets field centricity
+
 **movement**
+
 left joystick: standard up;forward side-to-side;strafe
+
 right joystick: side-to-side does turning
+
 right bumper: toggles faster or slower movement (30% of max)
+
 **defense**
+
 b-button: toggles x-wheels, this puts the wheels into an X so that it can't move despite being pushed.
