@@ -59,7 +59,7 @@
 #define SWERVE_MODULES                           4
 
 // Hardware Constants
-#define SWERVE_MAX_AMPERAGE                     30
+#define SWERVE_MAX_AMPERAGE                     28
 
 // Swerve Constants
 #define DEADZONE_THRESHOLD                     0.1   // Raise to counter joystick drift this number is on a controller to controller basis
