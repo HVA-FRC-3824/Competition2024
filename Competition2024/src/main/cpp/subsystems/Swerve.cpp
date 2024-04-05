@@ -17,8 +17,6 @@ Swerve::Swerve(float length, float width)
     if(length == 0.0 || width == 0.0)
 	   throw std::invalid_argument("Width and Length cannot be zero");
 
-    this->m_gyro_offset = this->navx.GetRoll();
-
 	LENGTH = length;
 	WIDTH  = width;
 	R = sqrt((LENGTH*LENGTH) + (WIDTH*WIDTH));
@@ -96,11 +94,19 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
     // Incrementing is weird because the library uses a different motor order.
     // Drive Motors movement
     // Set is the speed value.
-    DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]);
-    DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]);
-    DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]);
-    DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
-
+    if (this->fast_wheels) 
+    {
+    	DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]);
+    	DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]);
+    	DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]);
+    	DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
+    } else if (!this->fast_wheels)
+    {
+    	DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]/1.25);
+    	DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]/1.25);
+    	DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]/1.25);
+    	DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]/1.25);
+    }
     // Angle Motors Movement I do not think that this will work, it will likely have to be put through the encoders, 
     // but it says that it uses "rotational value" which I'm not sure how to implement at this point.
     // SetPosition should set the angle motor to an angle. (not sure if its an encoder value or not)
@@ -125,17 +131,6 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
     SmartDashboard::PutNumber("Position 3: ", SwerveMovement[3][1]);
 }
 
-/// @brief Method to toggle the field centricity.
-/// @return The new field centricity state.
-bool Swerve::Toggle_Field_Centricity()
-{
-    // Toggle the field centricity
-    this->field_centered = !this->field_centered;
-    
-    // Return the new field centricity state
-    return this->field_centered;
-}
-
 /// @brief Method to set the wheens to the aboslute position.
 void Swerve::Snap_Wheels_To_Absolute_Position()
 {
@@ -155,6 +150,13 @@ void Swerve::Toggle_X_Wheels()
     this->x_wheels = !this->x_wheels;
 
     SmartDashboard::PutBoolean("XWHEELS? ", this->x_wheels);
+}
+
+void Swerve::Toggle_Fast_Wheels() 
+{
+    this->fast_wheels = !this->fast_wheels;
+    
+    SmartDashboard::PutBoolean("Sonic Mode??? ", this->fast_wheels);
 }
 
 /// @brief Method to create dead zones for the controller joysticks.
