@@ -84,6 +84,9 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
         return;
     }
 
+    if (!this->field_centricity)
+        gyro = -999;
+
     // Magically (trigonomotry) returns a multidimensional array with angle rotation values and motor speeds
     // Giving this 4 agruments makes it field centric.
     double** SwerveMovement = getMotorControl(x,y,x2,gyro);
@@ -144,6 +147,13 @@ void Swerve::Toggle_X_Wheels()
 void Swerve::Toggle_Fast_Wheels() 
 {
     this->fast_wheels = !this->fast_wheels;
+    
+    SmartDashboard::PutBoolean("Fast Wheels? ", this->fast_wheels);
+}
+
+void Swerve::Toggle_Field_Centricity() 
+{
+    this->field_centricity = !this->field_centricity;
     
     SmartDashboard::PutBoolean("Fast Wheels? ", this->fast_wheels);
 }

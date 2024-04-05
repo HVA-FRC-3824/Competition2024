@@ -29,6 +29,7 @@ void DriverController::Robot_Periodic()
     // Determine if the reset gyro joystick button was pressed
     if (m_driver_joystick.GetRawButtonPressed(1))
        m_swerve->navx.Reset();
+       m_swerve->Toggle_Field_Centricity();
 
     // Determine if the toggle X wheels button was pressed.
     if (m_driver_joystick.GetRawButtonPressed(2))
