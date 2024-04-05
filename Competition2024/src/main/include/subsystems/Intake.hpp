@@ -29,11 +29,8 @@ class Intake : frc2::SubsystemBase
         /// @brief Method to retract the intake.
         void MoveToAmp();
 
-        /// @brief Method to get out of the way for climb.
+        /// @brief Method to get out of the way for climb..
         void MoveToClimb();
-
-        /// @brief Method to move to start.
-        void MoveToStart();
 
         /// @brief Method to flip the intake subassembly from extend to retracted.
         void Flip_Retraction();
@@ -50,7 +47,7 @@ class Intake : frc2::SubsystemBase
             Amp,
             GoingToFeed,
             Feed,
-            GoingToAmp,
+            GoingToAmp
         };
 
         double m_present_set_position = 0.0;                    // The preset intake set position

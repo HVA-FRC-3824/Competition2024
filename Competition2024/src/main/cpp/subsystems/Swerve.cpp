@@ -17,6 +17,8 @@ Swerve::Swerve(float length, float width)
     if(length == 0.0 || width == 0.0)
 	   throw std::invalid_argument("Width and Length cannot be zero");
 
+    this->m_gyro_offset = this->navx.GetRoll();
+
 	LENGTH = length;
 	WIDTH  = width;
 	R = sqrt((LENGTH*LENGTH) + (WIDTH*WIDTH));
@@ -84,21 +86,21 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
         return;
     }
 
-    if (!this->field_centricity)
-        gyro = -999;
+    // Correct/Sanitize our inputs
+    deadzone_correction(&x, &y, &x2);
 
     // Magically (trigonomotry) returns a multidimensional array with angle rotation values and motor speeds
     // Giving this 4 agruments makes it field centric.
-    double** SwerveMovement = getMotorControl(x,y,x2,gyro);
+    double** SwerveMovement = Calculate(y, x, x2, gyro);
 
     // Incrementing is weird because the library uses a different motor order.
     // Drive Motors movement
     // Set is the speed value.
-    
-    DRIVE_MOTORS[0]->Set(SwerveMovement[1][0] * 0.3);
-    DRIVE_MOTORS[1]->Set(SwerveMovement[0][0] * 0.3);
-    DRIVE_MOTORS[2]->Set(SwerveMovement[2][0] * 0.3);
-    DRIVE_MOTORS[3]->Set(SwerveMovement[3][0] * 0.3);
+    DRIVE_MOTORS[0]->Set(SwerveMovement[1][0]);
+    DRIVE_MOTORS[1]->Set(SwerveMovement[0][0]);
+    DRIVE_MOTORS[2]->Set(SwerveMovement[2][0]);
+    DRIVE_MOTORS[3]->Set(SwerveMovement[3][0]);
+
     // Angle Motors Movement I do not think that this will work, it will likely have to be put through the encoders, 
     // but it says that it uses "rotational value" which I'm not sure how to implement at this point.
     // SetPosition should set the angle motor to an angle. (not sure if its an encoder value or not)
@@ -123,6 +125,17 @@ void Swerve::Drive(float y, float x, float x2, float gyro)
     SmartDashboard::PutNumber("Position 3: ", SwerveMovement[3][1]);
 }
 
+/// @brief Method to toggle the field centricity.
+/// @return The new field centricity state.
+bool Swerve::Toggle_Field_Centricity()
+{
+    // Toggle the field centricity
+    this->field_centered = !this->field_centered;
+    
+    // Return the new field centricity state
+    return this->field_centered;
+}
+
 /// @brief Method to set the wheens to the aboslute position.
 void Swerve::Snap_Wheels_To_Absolute_Position()
 {
@@ -144,144 +157,47 @@ void Swerve::Toggle_X_Wheels()
     SmartDashboard::PutBoolean("XWHEELS? ", this->x_wheels);
 }
 
-void Swerve::Toggle_Fast_Wheels() 
+/// @brief Method to create dead zones for the controller joysticks.
+/// @param x - Pointer to the x stick value to return the value used.
+/// @param y - Pointer to the y stick value to return the value used.
+/// @param x2 - Pointer to the second x stick value to return the value used.
+void Swerve::deadzone_correction(float *x, float *y, float *x2)
 {
-    this->fast_wheels = !this->fast_wheels;
-    
-    SmartDashboard::PutBoolean("Fast Wheels? ", this->fast_wheels);
-}
+    // Pass in the values and they are corrected
+    bool y_deadzone = false;
+    bool x_deadzone = false;
+    bool y_move_abs = false;
 
-void Swerve::Toggle_Field_Centricity() 
-{
-    this->field_centricity = !this->field_centricity;
-    
-    SmartDashboard::PutBoolean("Fast Wheels? ", this->fast_wheels);
-}
+    // Ignore our deadzone and fix the moving forward issue
+    if (*y < DEADZONE_THRESHOLD && *y > -DEADZONE_THRESHOLD)
+    {
+        *y = 0;
+        y_deadzone = true;
+    }   
 
+    if (*x < DEADZONE_THRESHOLD && *x > -DEADZONE_THRESHOLD)
+    {
+        *x = 0;
+        x_deadzone = true;
+        if (!y_deadzone)
+        {
+            // Sets so that the true forward value is used incase of no strafing
+            y_move_abs = true;
+        }
+    } 
 
-double** Swerve::getMotorControl(double x, double y, double x2, double gyro) 
-{
-    // Set backup angle variables.
-    this->tAngle1 = this->ANGLE_ENCODERS[1]->GetPosition();
-    this->tAngle2 = this->ANGLE_ENCODERS[2]->GetPosition();
-    this->tAngle3 = this->ANGLE_ENCODERS[3]->GetPosition();
-    this->tAngle4 = this->ANGLE_ENCODERS[4]->GetPosition();
-    // Converting them to be usable
-	this->ANGLE_ENCODERS[1]->SetPositionConversionFactor(tAngle1);
-	this->ANGLE_ENCODERS[2]->SetPositionConversionFactor(tAngle2);
-	this->ANGLE_ENCODERS[3]->SetPositionConversionFactor(tAngle3);
-	this->ANGLE_ENCODERS[4]->SetPositionConversionFactor(tAngle4);
+    if (*x2 < DEADZONE_THRESHOLD && *x2 > -DEADZONE_THRESHOLD)
+    {
+        *x2 = 0;
+    }
 
-    // Calculate the angles and speeds for the robot.
-    double** angles_speeds = Calculate(y, x, x2, gyro);
-
-    // Pass into function that fixes some things.
-    //angles_speeds = angleProtection((double**)angles_speeds, x2);
-
-    // if (this->fast_wheels)
-    //     for (int i = 0; i > 4; i++)
-    //         angles_speeds[i][0] = angles_speeds[i][0] * 0.3;
-
-    return angles_speeds;
-
-
-}
-
-/// @breif Makes it so that while turning it both doesn't go straight back to 0 and it takes a quicker route to the desired angle.
-double** Swerve::angleProtection(double** APmotorMovements, double x2)
-{
-    // converts motorMovements into previously used angles (I just reused code)
-    double wAngle1 = APmotorMovements[0][1];
-    double wAngle2 = APmotorMovements[1][1];
-    double wAngle3 = APmotorMovements[2][1];
-    double wAngle4 = APmotorMovements[3][1];
-
-    // // Makes code into useable degrees
-    // wAngle1 = wAngle1 * 360;
-    // wAngle2 = wAngle2 * 360;
-    // wAngle3 = wAngle3 * 360;
-    // wAngle4 = wAngle4 * 360;
-
-	// c angle; current angle.
-    double cAngle1 = this->ANGLE_ENCODERS[1]->GetPosition();
-    double cAngle2 = this->ANGLE_ENCODERS[2]->GetPosition();
-    double cAngle3 = this->ANGLE_ENCODERS[3]->GetPosition();
-    double cAngle4 = this->ANGLE_ENCODERS[4]->GetPosition();
-	this->ANGLE_ENCODERS[1]->SetPositionConversionFactor(cAngle1);
-	this->ANGLE_ENCODERS[2]->SetPositionConversionFactor(cAngle2);
-	this->ANGLE_ENCODERS[3]->SetPositionConversionFactor(cAngle3);
-	this->ANGLE_ENCODERS[4]->SetPositionConversionFactor(cAngle4);
-	
-	// ex: cAngle1 == 90; wAngle1 == 270; 270 - 90 == 180 (this should be a positive value since we want it to go up)
-	// ex: cAngle1 == 10; wAngle1 == 270; 270 - 10 == 260 (this is slow since it would be faster to go -100 degrees, we want a negative number)
-	//  to solve this we can do the following calculation
-
-	//  If the wanted angle is above 180 then we will probably want it to be negative, if we don't that's fine and we will fix that.
-    //  Arbitrary high number
-    double iwAngle1 = 1000*1000;
-    double iwAngle2 = 1000*1000;
-    double iwAngle3 = 1000*1000;
-    double iwAngle4 = 1000*1000;
-    // Actual Solution
-	if (wAngle1 > 180) {iwAngle1 = 360 - wAngle1;}
-    if (wAngle2 > 180) {iwAngle2 = 360 - wAngle2;}
-    if (wAngle3 > 180) {iwAngle3 = 360 - wAngle3;}
-    if (wAngle4 > 180) {iwAngle4 = 360 - wAngle4;}
-
-
-	// This checks if it would be faster to go negative or Positive, then it decides which is better.
-    // This takes the absolute of each (by squaring them then taking the root) then compares
-	if (abs(iwAngle1 - cAngle1) 
-      < abs(wAngle1 - cAngle1)) {wAngle1 = iwAngle1;}
-
-    if (abs(iwAngle2 - cAngle2) 
-      < abs(wAngle2 - cAngle2)) {wAngle2 = iwAngle2;}
-
-    if (abs(iwAngle3 - cAngle3) 
-      < abs(wAngle3 - cAngle3)) {wAngle3 = iwAngle3;}
-
-    if (abs(iwAngle4 - cAngle4) 
-      < abs(wAngle4 - cAngle4)) {wAngle4 = iwAngle4;}
-
-	// Given the previous example; this should set a negative value to wAngle1, which is then passed to the motors
-	// and we can repeat this for every subsequent motor.
-
-	//  Now we reach another problem where the Angle motors still go back to zero.
-	//  For this I'll add an exception where it can never reach the 0 default state unless its already there.
-    // if (x2 != 0) 
-	// {
-	// 	this->tAngle1 = wAngle1;
-    //     this->tAngle2 = wAngle2;
-    //     this->tAngle3 = wAngle3;
-    //     this->tAngle4 = wAngle4;
-	// } else if (x2 == 0)
-	// {
-    //     wAngle1 = this->tAngle1;
-    //     wAngle2 = this->tAngle2;
-    //     wAngle3 = this->tAngle3;
-    //     wAngle4 = this->tAngle4;
-	// }
-
-    // Makes code into 1 to -1 motor drivers.
-    wAngle1 = wAngle1 / 360;
-    wAngle2 = wAngle2 / 360;
-    wAngle3 = wAngle3 / 360;
-    wAngle4 = wAngle4 / 360;
-
-    // Sets to array then outputs it
-    APmotorMovements[0][1] = wAngle1;
-    APmotorMovements[1][1] = wAngle2;
-    APmotorMovements[2][1] = wAngle3;
-    APmotorMovements[3][1] = wAngle4;
-    
-    return APmotorMovements;
+    y_deadzone = false;
+    x_deadzone = false;
+    y_move_abs = false;
 }
 
 double** Swerve::Calculate(double x, double y, double z, double angle)
 {
-	/// @todo Have angle variables in a double* array, speed doesn't *need* this but it would be consistent.
-	
-	// Check for Field or Robot Centricity, if you put any number for "angle" it becomes Field.
 	if (angle != -999.0)
 	{
 		angle       = angle * PI / 180;
@@ -290,13 +206,11 @@ double** Swerve::Calculate(double x, double y, double z, double angle)
 		x           = temp;
 	}
 
-	// Not sure what this is for, but these are the variables used for math
 	double A = y - z * (LENGTH / R);
 	double B = y + z * (LENGTH / R);
 	double C = x - z * (WIDTH  / R);
 	double D = x + z * (WIDTH  / R);
 
-	// Calculate Target Speeds and Angles
 	double wSpeed1 = sqrt(B * B + C * C);
 	double wAngle1 = atan2(B, C) * 180 / PI;
 
@@ -323,19 +237,11 @@ double** Swerve::Calculate(double x, double y, double z, double angle)
 		wSpeed4 /= maxSpeed;
 	}
 
-    if (this->fast_wheels)
-    {
-        wSpeed1 = wSpeed1 / 2;
-        wSpeed2 = wSpeed2 / 2;
-        wSpeed3 = wSpeed3 / 2;
-        wSpeed4 = wSpeed4 / 2;
-    }
-
 	// Normalizes angles so they are within -1 to 1
-	// wAngle1 = wAngle1 / 360.0;
-	// wAngle2 = wAngle2 / 360.0;
-	// wAngle3 = wAngle3 / 360.0;
-	// wAngle4 = wAngle4 / 360.0;
+	wAngle1 = wAngle1 / 360.0;
+	wAngle2 = wAngle2 / 360.0;
+	wAngle3 = wAngle3 / 360.0;
+	wAngle4 = wAngle4 / 360.0;
 
 	double temp[4][2] =	{	{wSpeed2, wAngle2},
 							{wSpeed1, wAngle1},

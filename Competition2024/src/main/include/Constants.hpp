@@ -32,8 +32,8 @@
 #define ANTIMAGIC_NUMBER                   0.01745f
  
 // ### Controller constants ###
-#define DRIVER_CONTROLLER                        0
 #define OPERATOR_CONTROLLER                      1
+#define DRIVER_CONTROLLER                        0
 
 #define JOYSTICK_BUTTON_A                        1
 #define JOYSTICK_BUTTON_B                        2
@@ -59,7 +59,7 @@
 #define SWERVE_MODULES                           4
 
 // Hardware Constants
-#define SWERVE_MAX_AMPERAGE                     28
+#define SWERVE_MAX_AMPERAGE                     30
 
 // Swerve Constants
 #define DEADZONE_THRESHOLD                     0.1   // Raise to counter joystick drift this number is on a controller to controller basis
