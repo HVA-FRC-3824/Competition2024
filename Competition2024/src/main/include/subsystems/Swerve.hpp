@@ -40,12 +40,16 @@ class Swerve : frc2::SubsystemBase
 	    /// @brief Makes the wheels go 30% of their normal speed.
 	    void Toggle_Fast_Wheels();
 
+        /// @brief field centricity turns on and off
+        void Toggle_Field_Centricity();
+
         /// @brief Create an attitude and heading reference system (AHRS).
         AHRS navx{frc::SerialPort::SerialPort::Port::kMXP};
 
     private:
         bool x_wheels = false;
 	    bool fast_wheels = true;
+        bool field_centricity = false;
 
          double tAngle1 = 0;
          double tAngle2 = 0;
